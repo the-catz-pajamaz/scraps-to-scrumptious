@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b6648b3b-826c-4e82-a35a-297b9e36a609" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/epic/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -106,7 +106,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="180c09c8-6e3a-46b7-b1d5-f96363dcb5a7" name="Default Changelist" comment="" />
+      <changelist id="b6648b3b-826c-4e82-a35a-297b9e36a609" name="Default Changelist" comment="" />
       <created>1556577179758</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -114,16 +114,17 @@
       <workItem from="1556577181252" duration="218000" />
       <workItem from="1556633432124" duration="14000" />
       <workItem from="1556738266213" duration="1114000" />
+      <workItem from="1556746523957" duration="247000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1499000" />
+    <option name="totallyTimeSpent" value="2125000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="-8" width="1291" height="704" extended-state="0" />
+    <frame x="1912" y="-8" width="1936" height="1056" extended-state="7" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17221771" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17377399" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
