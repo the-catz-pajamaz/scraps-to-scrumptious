@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="1c08ec0a-38cb-46fb-a6d2-7c659ec1cb6b" name="scaps-to-scrumptious" url="http://bootcamp-coders.cnm.edu/~dginsburg/scraps-to-scrumptious">
+        <fileTransfer host="bootcamp-coders.cnm.edu" port="22" rootFolder="/home/dginsburg/public_html" accessType="SFTP" authAgent="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
