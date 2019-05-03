@@ -13,9 +13,9 @@ drop table if exists cookbookRecipe;
 create table user (
 	userId binary(16) not null,
 	userEmail varchar(32) not null,
+	userFirstName varchar(32) not null,
 	userHandle varchar(32) not null,
 	userHash varchar(32) not null,
-	userFirstName varchar(32) not null,
 	userLastName varchar(32) not null,
 	primary key(userId),
 	index(userId)
@@ -24,13 +24,25 @@ create table user (
 -- creates recipe entity
 create table recipe (
 	recipeId binary(16) not null,
-	recipeTitle varchar(32) not null,
-	recipeText varchar(32) not null,
+	recipeAuthor varchar(32) not null,
+	recipeIngredientId varchar(32) not null,
 	recipeIngredients varchar(32) not null,
 	recipeMedia varchar(32) not null,
-	recipeAuthor varchar(32) not null,
 	recipeTags varchar(32) not null,
-	primary key(userId),
-	index(userId)
+	recipeText varchar(32) not null,
+	recipeTitle varchar(32) not null,
+	primary key(recipeId),
+	primary key(recipeTitle),
+	index(recipeId),
+);
+
+-- creates cookbook entity
+create table cookbook (
+	cookbookId binary(16) not null,
+	cookbookRecipeId varchar(32) not null,
+	cookbookRecipeTitle varchar(32) not null,
+	cookbookUserId varchar(32) not null,
+	primary key(cookbookId),
+	index(cookbookId)
 );
 
