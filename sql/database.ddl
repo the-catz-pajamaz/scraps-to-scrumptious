@@ -16,7 +16,21 @@ create table user (
 	userHandle varchar(32) not null,
 	userHash varchar(32) not null,
 	userFirstName varchar(32) not null,
-	user varchar(32) not null,
+	userLastName varchar(32) not null,
 	primary key(userId),
 	index(userId)
 );
+
+-- creates recipe entity
+create table recipe (
+	recipeId binary(16) not null,
+	recipeTitle varchar(32) not null,
+	recipeText varchar(32) not null,
+	recipeIngredients varchar(32) not null,
+	recipeMedia varchar(32) not null,
+	recipeAuthor varchar(32) not null,
+	recipeTags varchar(32) not null,
+	primary key(userId),
+	index(userId)
+);
+
