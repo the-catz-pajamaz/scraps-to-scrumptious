@@ -11,11 +11,12 @@ drop table if exists user;
 -- creates user entity
 create table user (
 	userId binary(16) not null,
-	userEmail varchar(32) not null,
+	userEmail varchar(32) not null unique,
 	userFirstName varchar(32) not null,
-	userHandle varchar(32) not null,
+	userHandle varchar(32) not null unique,
 	userHash varchar(32) not null,
 	userLastName varchar(32) not null,
+	index(userEmail),
 	primary key(userId)
 );
 
@@ -28,18 +29,19 @@ create table recipe (
 	recipeMedia varchar(32) not null,
 	recipeSteps varchar(32) not null,
 	recipeTitle varchar(32) not null,
+	index(recipeUserId),
 	primary key(recipeId),
-	foreign key(recipeUserId) references user(userId),
-	index(recipeUserId)
+	foreign key(recipeUserId) references user(userId)
 );
 
 -- creates cookbook entity
 create table cookbook (
 	cookbookRecipeId binary(16) not null,
 	cookbookUserId binary(16) not null,
-	foreign key(cookbookRecipeId) references recipe(recipeId),
-	foreign key(cookbookUserId) references user(userId),
 	index(cookbookRecipeId),
-	index(cookbookUserId)
+	index(cookbookUserId),
+	primary key(cookbookRecipeId, cookbookUserId),
+	foreign key(cookbookRecipeId) references recipe(recipeId),
+	foreign key(cookbookUserId) references user(userId)
 );
 
