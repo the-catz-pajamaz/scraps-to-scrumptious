@@ -11,10 +11,10 @@ drop table if exists user;
 -- creates user entity
 create table user (
 	userId binary(16) not null,
-	userEmail varchar(32) not null unique,
+	userEmail varchar(128) not null unique,
 	userFirstName varchar(32) not null,
-	userHandle varchar(32) not null unique,
-	userHash varchar(32) not null,
+	userHandle varchar(64) not null unique,
+	userHash char(97) not null,
 	userLastName varchar(32) not null,
 	index(userEmail),
 	primary key(userId)
@@ -24,11 +24,11 @@ create table user (
 create table recipe (
 	recipeId binary(16) not null,
 	recipeUserId binary(16) not null,
-	recipeDescription varchar(32) not null,
-	recipeIngredients varchar(32) not null,
-	recipeMedia varchar(32) not null,
-	recipeSteps varchar(32) not null,
-	recipeTitle varchar(32) not null,
+	recipeDescription blob,
+	recipeIngredients blob,
+	recipeMedia varchar(255),
+	recipeSteps blob,
+	recipeTitle varchar(128) not null,
 	index(recipeUserId),
 	primary key(recipeId),
 	foreign key(recipeUserId) references user(userId)
