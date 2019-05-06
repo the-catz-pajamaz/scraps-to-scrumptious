@@ -34,8 +34,8 @@ create table recipe (
 
 -- creates cookbook entity
 create table cookbook (
-	cookbookRecipeId varchar(32) not null,
-	cookbookUserId varchar(32) not null,
+	cookbookRecipeId binary(16) not null,
+	cookbookUserId binary(16) not null,
 	foreign key(cookbookRecipeId) references recipe(recipeId),
 	foreign key(cookbookUserId) references user(userId),
 	index(cookbookRecipeId),
