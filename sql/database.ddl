@@ -2,11 +2,9 @@
 alter database snelson54 character set utf8 collate utf8_unicode_ci;
 
 -- these statements will drop the tables and re-add them
-drop table if exists user;
-drop table if exists recipe;
 drop table if exists cookbook;
-drop table if exists cookbookRecipe;
-
+drop table if exists recipe;
+drop table if exists 'user';
 
 
 -- creates user entity
@@ -18,30 +16,29 @@ create table user (
 	userHash varchar(32) not null,
 	userLastName varchar(32) not null,
 	primary key(userId),
-	index(userId)
 );
 
 -- creates recipe entity
 create table recipe (
 	recipeId binary(16) not null,
-	recipeAuthor varchar(32) not null,
-	recipeIngredientId varchar(32) not null,
+	recipeUserId binary(16) not null,
+	recipeDescription varchar(32) not null,
 	recipeIngredients varchar(32) not null,
 	recipeMedia varchar(32) not null,
-	recipeDescription varchar(32) not null,
+	recipeSteps varchar(32) not null,
 	recipeTitle varchar(32) not null,
 	primary key(recipeId),
-	primary key(recipeTitle),
-	index(recipeId),
+	foreign key(recipeUserId) references user(userId),
+	index(recipeUserId)
 );
 
 -- creates cookbook entity
 create table cookbook (
-	cookbookId binary(16) not null,
 	cookbookRecipeId varchar(32) not null,
-	cookbookRecipeTitle varchar(32) not null,
 	cookbookUserId varchar(32) not null,
-	primary key(cookbookId),
-	index(cookbookId)
+	foreign key(cookbookRecipeId) references recipe(recipeId),
+	foreign key(cookbookUserId) references user(userId),
+	index(cookbookRecipeId),
+	index(cookbookUserId)
 );
 
