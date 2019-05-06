@@ -28,7 +28,7 @@ create table recipe (
 	recipeIngredientId varchar(32) not null,
 	recipeIngredients varchar(32) not null,
 	recipeMedia varchar(32) not null,
-	recipeText varchar(32) not null,
+	recipeDescription varchar(32) not null,
 	recipeTitle varchar(32) not null,
 	primary key(recipeId),
 	primary key(recipeTitle),
