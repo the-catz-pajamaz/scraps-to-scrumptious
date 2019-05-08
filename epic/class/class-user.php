@@ -32,12 +32,70 @@ user{
 			$this->setUserLastName($newUserLastName);
 		}
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
 
 
 
+	/**
+	 * accessor method for UserId
+	 */
+	public function getUserId() {
+		return $this->userId;
+	}
 
+	/**
+	 * mutator method for userId
+	 *
+	 * @param Uuid| string $newUserId
+	 * @throws \RangeException if $newUserId value is too large
+	 * @throws \TypeError if the userId is not positive
+	 * @throws \TypeError if the userId is not
+	 */
+
+	public function setUserId($newUserId): void {
+		try {
+			$uuid = self::validateUuid($newUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		// convert and store userId
+		$this->userId = $uuid;
+	}
+
+	/**
+	 * Accessor method for userActivationToken
+	 */
+	public function getUserActivationToken() {
+		return $this->userActivationToken;
+	}
+
+	/**
+	 * mutator method for userActivationToken
+	 * @param string $userActivationToken
+	 * @throws if not hexidecimal
+	 * @throws if not exactly __ characters
+	 */
+
+		public function setUserActivationToken(?string $newUserActivationToken): void {
+			if($newUserActivationToken === null) {
+				$this->userActivationToken = null;
+				return;
+			}
+		if(ctype_xdigit($newUserActivationToken) === false) {
+			throw(new\RangeException("user activation is not valid"));
+		}
+		$this->userActivationToken = $newUserActivationToken;
+	}
+
+	/**
+	 * accessor method for userEmail :)
+	 */
+	public function getUserEmail() {
+		return $this->userEmail;
+	}
 
 }
