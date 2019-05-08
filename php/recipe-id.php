@@ -1,6 +1,28 @@
 <?php
 
 /**
+ * constructor for recipe
+ *
+ *
+ *
+ */
+
+	public function__construct(string $newRecipeId, string $newRecipeDescription, string $newRecipeSteps, string $newRecipetTitle, string $newRecipeIngredients, string $newRecipeMedia string $newRecipeUserId) {
+		try {
+			$this->setRecipeId($newRecipeId);
+			$this->setRecipeDescription($newRecipeDescription);
+			$this->setRecipeSteps($newResipeSteps)
+			$this->setRecipeTitle($newRecipeTitle);
+			$this->setRecipeIngredients($newRecipeIngredients);
+			$this->setRecipeMedia($newRecipeMedia);
+			$this->setRecipeUserId($newRecipeUserId);
+		}
+		catch(\InvalidArgumentException | \RangeException | \Exception |\TypeError $exception) {
+			echo"Try Again";
+		}
+	}
+
+/**
  * gets the recipe by recipeId
  *
  *@param \PDO $pdo PDO connection object
@@ -70,3 +92,8 @@ $statement->execute($parameters);
 		// convert and store the recipe id
 		$this->recipeId = $uuid;
 }
+
+/**
+ * gets recipe by recipeUserId
+ *
+ */
