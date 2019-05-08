@@ -50,6 +50,7 @@ $statement->execute($parameters);
 	public function getRecipeId(): Uuid {
 				return (this->recipeId);
 }
+
 	/**
 	 * mutator method for recipe id
 	 *
@@ -57,3 +58,15 @@ $statement->execute($parameters);
 	 * @throws \RangeException if $newAuthorId value is not positive
 	 * @throws \TypeError if the id is not
 	 **/
+
+	public function setRecipeId( $newRecipeId): void {
+		try {
+			$uuid = self::validateUuid($newRecipeId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+		// convert and store the recipe id
+		$this->recipeId = $uuid;
+}
