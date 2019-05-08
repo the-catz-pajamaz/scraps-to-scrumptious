@@ -42,3 +42,18 @@ $statement->execute($parameters);
 	return($recipe);
 }
 
+	/**
+	 *  accesor method for recipeId
+	 * @return Uuid value of recipeId (or null if new Recipe)
+	 */
+
+	public function getRecipeId(): Uuid {
+				return (this->recipeId);
+}
+	/**
+	 * mutator method for recipe id
+	 *
+	 * @param Uuid| string $newRecipeId value of new recipe id
+	 * @throws \RangeException if $newAuthorId value is not positive
+	 * @throws \TypeError if the id is not
+	 **/
