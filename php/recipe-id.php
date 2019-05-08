@@ -1,5 +1,46 @@
 <?php
 
+
+
+
+class Recipe {
+	use ValidateUuid;
+	/**
+	 * id for this Recipe: this is the primary key
+	 * @var Uuid $recipeId
+	 **/
+	private $recipeId;
+	/**
+	 * at handle for this Recipe; this is a unique index
+	 * @var string $recipeDescription
+	 **/
+	private $recipeDescription;
+	/**
+	 * description for this recipe; this is a unique index
+	 * @var $recipeSteps
+	 */
+	private $recipeSteps;
+	/**
+	 * title for this recipe, this is a unique index
+	 * @var recipeTitle
+	 */
+	private $recipeTitle;
+	/**
+	 * ingredients for this recipe, this is a unique index
+	 * @var recipeIngredients
+	 */
+	private $recipeIngredients;
+	/**
+	 *
+	 *
+	 */
+	private $recipeMedia;
+	/**
+	 * recipe user id for this recipe, this is a unique index
+	 * @var recipeUserId
+	 */
+	private $recipeUserId;
+}
 /**
  * constructor for recipe
  *
@@ -11,7 +52,7 @@
 		try {
 			$this->setRecipeId($newRecipeId);
 			$this->setRecipeDescription($newRecipeDescription);
-			$this->setRecipeSteps($newResipeSteps)
+			$this->setRecipeSteps($newResipeSteps);
 			$this->setRecipeTitle($newRecipeTitle);
 			$this->setRecipeIngredients($newRecipeIngredients);
 			$this->setRecipeMedia($newRecipeMedia);
@@ -49,19 +90,6 @@ $statement = $pdo->prepare($query);
 $parameters = [“recipeId => $recipeId->getBytes()];
 $statement->execute($parameters);
 
-	// grab the recipe from mySQL
-	try {
-		$recipe = null;
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		$row = $statement->fetch();
-		If($row !== false) {
-		$recipe = new recipe($row[“recipeId], $row[recipeUserId], $row[recipeMedia], $row[recipeIngredients], $row[recipeDescription], $row[recipeSteps], $row[recipeTitle]);
-		}
-	} catch(\Exception $exception) {
-		//if the row couldn't be converted, rethrow it
-		throw(new \PDOException($exception>getMessage(), 0, $exception));
-	}
-	return($recipe);
 }
 
 	/**
@@ -97,3 +125,16 @@ $statement->execute($parameters);
  * gets recipe by recipeUserId
  *
  */
+	// grab the recipe from mySQL
+	try {
+		$recipe = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		If($row !== false) {
+			$recipe = new recipe($row[“recipeId], $row[recipeUserId], $row[recipeMedia], $row[recipeIngredients], $row[recipeDescription], $row[recipeSteps], $row[recipeTitle]);
+		}
+	} catch(\Exception $exception) {
+		//if the row couldn't be converted, rethrow it
+		throw(new \PDOException($exception>getMessage(), 0, $exception));
+	}
+	return($recipe);
