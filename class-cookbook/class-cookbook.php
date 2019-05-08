@@ -27,4 +27,11 @@ class Cookbook {
 			echo "Invalid request, Id not found";
 		}
 	}
+	/**
+	 * accessor method for cookbookRecipeId
+	 * @return Uuid value of cookbookRecipeId
+	 */
+	public function getCookbookRecipeId(): Uuid {
+		return ($this->cookbookRecipeId);
+	}
 }
