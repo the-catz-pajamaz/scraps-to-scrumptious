@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>scraps-to-scrumptious</title>
-		<link rel="stylesheet" type="text/css" href="power-style.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="../power-style.css" media="screen" />
 	</head>
 		<h1>Power User</h1>
 	<body>

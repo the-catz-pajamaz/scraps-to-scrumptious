@@ -1,8 +1,0 @@
-.container {
-	display: flex;
-	justify-content: space-evenly;
-}
-
-.container img {
-	transform: scale(.75,.75);
-}
