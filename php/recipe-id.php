@@ -116,8 +116,32 @@ $statement->execute($parameters);
 
 }
 
+	/**
+	 * accesor method for recipeUserID
+	 * @return Uuid value of recipeId (or null if new Recipe Id)
+	 */
+	public function getRecipeUserID(): Uuid {
+		return (this->recipeUserId);
+	}
 
+	/**
+	 * mutator method for recipe user id
+	 *
+	 * @param Uuid| string $newRecipeUserId value of new recipe user id
+	 * @throws |RangeException if $newRecipeUserId value is not
+	 */
 
+	public function setRecipeUserId($newRecipeUserId): void {
+		try {
+			$uuid = self::validateUuid($newRecipeUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exceptiom));
+		}
+		// convert and store the recipe user id
+		$this->recipeUserId = $uuid;
+	}
 	/**
 	 * gets recipe by recipeUserId
 	 *
