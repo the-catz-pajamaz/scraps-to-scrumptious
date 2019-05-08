@@ -70,7 +70,7 @@ user{
 	/**
 	 * Accessor method for userActivationToken
 	 */
-	public function getUserActivationToken(): ?string {
+	public function getUserActivationToken(): string {
 		return $this->userActivationToken;
 	}
 
@@ -81,7 +81,7 @@ user{
 	 * @throws if not exactly __ characters
 	 */
 
-		public function setUserActivationToken(?string $newUserActivationToken): void {
+		public function setUserActivationToken(string $newUserActivationToken): void {
 			if($newUserActivationToken === null) {
 				$this->userActivationToken = null;
 				return;
@@ -125,7 +125,7 @@ user{
 	 * accessor method for userFirstName
 	 *
 	 */
-	public function getUserFirstName():?string {
+	public function getUserFirstName():string {
 		return $this->userFirstName;
 	}
 
@@ -168,7 +168,7 @@ user{
 	 * @return string value userHash
 	 */
 
-	public function getUserHash():?string {
+	public function getUserHash():string {
 		return $this->userHash;
 	}
 
@@ -199,7 +199,7 @@ user{
 	 * accessor method for userLastName
 	 *
 	 */
-	public function getUserLastName():?string {
+	public function getUserLastName():string {
 		return $this->userLastName;
 	}
 
@@ -215,8 +215,66 @@ user{
 		}
 		$this->userLastName = $newUserLastName;
 	}
-	
-	
-	
-	
+
+	/**
+	 * insert statement for table user
+	 */
+	public function insert (\PDO $pdo) : void {
+
+		//query template
+		$query = "insert into user(userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName) 
+					values (:userId, :userActivationToken, :userEmail, :userFirstName, :userHandle, :userHash, :userLastName)";
+		$statement = $pdo->prepare($query);
+
+		//bind variables to template
+		$parameters = [
+			"userId" => $this->userId->getBytes(),
+			"userActivationToken" => $this->userActivationToken->getBytes(),
+			"userEmail" => $this->userEmail->userEmail(),
+			"userFirstName" => $this->userFirstName->userEmail(),
+			"userHandle" => $this->userHandle->userHandle(),
+			"userHash" => $this->userHash->getBytes(),
+			"userLastName" => $this->userLastName->userLastName(),
+		];
+		$statement->execute($parameters);
+	}
+
+	/**
+	 * delete statement for table user
+	 */
+	public function delete(\PDO $pdo) : void {
+
+		//query template
+		$query = "delete from user where userId = :userId";
+		$statement = $pdo->prepare($query);
+
+		//bind variables to template
+		$parameters = ["userIed" => $this->userId->getBytes()];
+		$statement->execute($parameters);
+	}
+
+	public function update(\PDO $pdo) : void {
+
+		//query template
+		$query = "UPDATE user SET 
+    		userActivationToken = :userActivationToken, 
+    		userEmail = :userEmail, 
+    		userFirstName = :userFirstName, 
+    		userHandle = :userHandle, 
+    		userHash = userHash, 
+    		userLastName = : UserFirstName 
+		where userId = :userId";
+		$statement = $pdo->prepare($query);
+
+		$parameters = [
+			"userId" => $this->userId->getBytes(),
+			"userActivationToken" => $this->userActivationToken->getBytes(),
+			"userEmail" => $this->userEmail->userEmail(),
+			"userFirstName" => $this->userFirstName->userEmail(),
+			"userHandle" => $this->userHandle->userHandle(),
+			"userHash" => $this->userHash->getBytes(),
+			"userLastName" => $this->userLastName->userLastName(),
+		];
+		$statement->execute($parameters);
+	}
 }
