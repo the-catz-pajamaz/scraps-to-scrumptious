@@ -90,4 +90,17 @@ class Cookbook {
   		$paramaters = ["cookbookRecipeId" => $this->cookbookRecipeId->getBytes(), $this->cookbookUserId];
   		$statement->execute($paramaters);
 	}
+	/**
+	 * deletes this cookbook from MySQL
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo
+	 */
+	public function delete(\PDO $pdo) : void {
+		$query = "DELETE FROM cookbook WHERE cookbookUserId = :cookbookId";
+		$statement = $pdo->prepare($query);
+		//bind the member variables to the place holder in the template
+		$parameters = ["cookbookUserId" =>$this->cookbookUserId->getBytes()];
+		$statement->execute($parameters);
+	}
 }
