@@ -97,7 +97,7 @@ class Cookbook {
 	 * @throws \TypeError if $pdo
 	 */
 	public function delete(\PDO $pdo) : void {
-		$query = "DELETE FROM cookbook WHERE cookbookUserId = :cookbookId";
+		$query = "DELETE FROM cookbook WHERE cookbookUserId = :cookbookUserId";
 		$statement = $pdo->prepare($query);
 		//bind the member variables to the place holder in the template
 		$parameters = ["cookbookUserId" =>$this->cookbookUserId->getBytes()];
