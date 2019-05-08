@@ -11,6 +11,7 @@ drop table if exists user;
 -- creates user entity
 create table user (
 	userId binary(16) not null,
+	userActivationToken char(32),
 	userEmail varchar(128) not null unique,
 	userFirstName varchar(32) not null,
 	userHandle varchar(64) not null unique,
