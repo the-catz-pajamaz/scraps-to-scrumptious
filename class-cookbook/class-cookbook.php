@@ -103,4 +103,19 @@ class Cookbook {
 		$parameters = ["cookbookUserId" =>$this->cookbookUserId->getBytes()];
 		$statement->execute($parameters);
 	}
+	/**
+	 * updates this cookbook in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+	public function update(\PDO $pdo) : void {
+		//create query template
+		$query = "UPDATE cookbook SET cookbookRecipeId = :cookbookRecipeId, cookbookUserId = :cookbookUserId";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["cookbookUserId" =>$this->cookbookUserId->getBytes(), "cookbookRecipeId" => $this->cookbookRecipeId->getBytes()];
+		$statement->execute($parameters);
+	}
 }
