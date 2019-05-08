@@ -40,15 +40,15 @@ class Recipe {
 	 * @var recipeUserId
 	 */
 	private $recipeUserId;
-}
-/**
- * constructor for recipe
- *
- *
- *
- */
 
-	public function__construct(string $newRecipeId, string $newRecipeDescription, string $newRecipeSteps, string $newRecipetTitle, string $newRecipeIngredients, string $newRecipeMedia string $newRecipeUserId) {
+	/**
+	 * constructor for recipe
+	 *
+	 *
+	 *
+	 */
+
+	public function __construct(string $newRecipeId, string $newRecipeDescription, string $newRecipeSteps, string $newRecipetTitle, string $newRecipeIngredients, string $newRecipeMedia, string $newRecipeUserId) {
 		try {
 			$this->setRecipeId($newRecipeId);
 			$this->setRecipeDescription($newRecipeDescription);
@@ -57,48 +57,17 @@ class Recipe {
 			$this->setRecipeIngredients($newRecipeIngredients);
 			$this->setRecipeMedia($newRecipeMedia);
 			$this->setRecipeUserId($newRecipeUserId);
-		}
-		catch(\InvalidArgumentException | \RangeException | \Exception |\TypeError $exception) {
-			echo"Try Again";
+		} catch(\InvalidArgumentException | \RangeException | \Exception |\TypeError $exception) {
+			echo "Try Again";
 		}
 	}
-
-/**
- * gets the recipe by recipeId
- *
- *@param \PDO $pdo PDO connection object
- *@param Uuid|string $recipeID recipe id to search for
- *@return Recipe|null Recipe found or null if not found
- *@throws \PDOException when mySQL related errors occur
- *@throws \TypeError when a variable are not the correct data type
- **/
-Public static function getRecipeByRecipeId($recipeId) : ?Recipe {
-	// sanitize the recipeId before searching
-	try {
-			$recipeId = self::validatedUuid($recipeId);
-	} catch(\InvalidArgumentException | \RaneException | \Exception | \TypeError $exception)
-
-	{
-		throw(new \PDOException($exception->getMessage(), 0, $exception));
-	}
-	//  create query template
-	$query = “SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeId = :authorId”;
-
-$statement = $pdo->prepare($query);
-
-// bind the recipe id to the place holder in the template
-$parameters = [“recipeId => $recipeId->getBytes()];
-$statement->execute($parameters);
-
-}
-
 	/**
 	 *  accesor method for recipeId
 	 * @return Uuid value of recipeId (or null if new Recipe)
 	 */
 
 	public function getRecipeId(): Uuid {
-				return (this->recipeId);
+		return (this->recipeId);
 }
 
 	/**
@@ -109,7 +78,7 @@ $statement->execute($parameters);
 	 * @throws \TypeError if the id is not
 	 **/
 
-	public function setRecipeId( $newRecipeId): void {
+	public function setRecipeId($newRecipeId): void {
 		try {
 			$uuid = self::validateUuid($newRecipeId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -119,22 +88,54 @@ $statement->execute($parameters);
 		}
 		// convert and store the recipe id
 		$this->recipeId = $uuid;
+	}
+	/**
+	 * gets the recipe by recipeId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $recipeID recipe id to search for
+	 * @return Recipe|null Recipe found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	Public static function getRecipeByRecipeId($recipeId): ?Recipe {
+		// sanitize the recipeId before searching
+		try {
+			$recipeId = self::validatedUuid($recipeId);
+		} catch(\InvalidArgumentException | \RaneException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		//  create query template
+		$query = “SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeId = :authorId”;
+
+$statement = $pdo->prepare($query);
+
+// bind the recipe id to the place holder in the template
+$parameters = [“recipeId => $recipeId->getBytes()];
+$statement->execute($parameters);
+
 }
 
-/**
- * gets recipe by recipeUserId
- *
- */
+
+
+	/**
+	 * gets recipe by recipeUserId
+	 *
+	 */
 	// grab the recipe from mySQL
-	try {
-		$recipe = null;
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		$row = $statement->fetch();
-		If($row !== false) {
-			$recipe = new recipe($row[“recipeId], $row[recipeUserId], $row[recipeMedia], $row[recipeIngredients], $row[recipeDescription], $row[recipeSteps], $row[recipeTitle]);
-		}
-	} catch(\Exception $exception) {
-		//if the row couldn't be converted, rethrow it
-		throw(new \PDOException($exception>getMessage(), 0, $exception));
+try {
+$recipe = null;
+$statement->setFetchMode(\PDO::FETCH_ASSOC);
+$row = $statement->fetch();
+If($row !== false) {
+$recipe = new recipe($row[“recipeId], $row[recipeUserId], $row[recipeMedia], $row[recipeIngredients], $row[recipeDescription], $row[recipeSteps], $row[recipeTitle]);
+}
+} catch
+(\Exception $exception) {
+	//if the row couldn't be converted, rethrow it
+	throw(new \PDOException($exception > getMessage(), 0, $exception));
+}
+	return ($recipe);
+
+
 	}
-	return($recipe);
