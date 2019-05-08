@@ -1,6 +1,6 @@
 <?php
-namespace Snelson54\ObjectOriented;
-require_once(dirname(__DIR__) . "/vendor/autoload.php");
+namespace ScrapsToScrumptious;
+require_once(dirname(__DIR__) . "class-cookbook/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
  * Trait to validate a uuid

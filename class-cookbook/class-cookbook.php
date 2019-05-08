@@ -1,4 +1,10 @@
 <?php
+namespace ScrapsToScrumptious;
+require_once(dirname(__DIR__) . "class-cookbook/autoload.php");
+use Ramsey\Uuid\Uuid;
+/**
+ * @author Sam Nelson <snelson54@cnm.edu>
+ **/
 class Cookbook {
 	use ValidateUuid;
 	/**
@@ -42,7 +48,7 @@ class Cookbook {
 	 * @throws \RangeException if $newCookbookRecipeId is not positive
 	 * @throws \TypeError if the cookbookRecipeId is not a string
 	 */
-	public function setCookbookRecipeId($cookbookRecipeId): void {
+	public function setCookbookRecipeId($newCookbookRecipeId): void {
 		try {
 			$uuid = self::validateUuid($newCookbookRecipeId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -68,7 +74,7 @@ class Cookbook {
 	 * @throws \RangeException if $newCookbookUserId is not positive
 	 * @throws \TypeError if the cookbookUserId is not a string
 	 */
-	public function setCookbookUserId($cookbookUserId): void {
+	public function setCookbookUserId($newCookbookUserId): void {
 		try {
 			$uuid = self::validateUuid($newCookbookUserId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
