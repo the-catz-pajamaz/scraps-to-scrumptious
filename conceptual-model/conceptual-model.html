@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Conceptual Model</title>
+	</head>
+	<body>
+		<div>
+			<ul>
+				<h3>User</h3>
+				<li>userId(pk)</li>
+				<li>userActivationToken</li>
+				<li>userEmail</li>
+				<li>userFirstName</li>
+				<li>userHandle</li>
+				<li>userHash</li>
+				<li>userLastName</li>
+			</ul>
+			<ul>
+				<h3>Recipe</h3>
+				<li>recipeId(pk)</li>
+				<li>recipeUserId(fk)</li>
+				<li>recipeDescription</li>
+				<li>recipeIngredients</li>
+				<li>recipeMedia</li>
+				<li>recipeSteps</li>
+				<li>recipeTitle</li>
+			</ul>
+			<ul>
+				<h3>Cookbook</h3>
+				<li>cookbookRecipeId(fk)</li>
+				<li>cookbookUserId(fk)</li>
+			</ul>
+		</div>
+	</body>
+</html>
