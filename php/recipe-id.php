@@ -66,7 +66,7 @@ class Recipe {
 	 */
 
 	public function getRecipeId(): Uuid {
-		return (this->recipeId);
+		return ($this->recipeId);
 }
 
 	/**
@@ -120,7 +120,7 @@ $statement->execute($parameters);
 	 * @return Uuid value of recipeId (or null if new Recipe Id)
 	 */
 	public function getRecipeUserID(): Uuid {
-		return (this->recipeUserId);
+		return ($this->recipeUserId);
 	}
 
 	/**
