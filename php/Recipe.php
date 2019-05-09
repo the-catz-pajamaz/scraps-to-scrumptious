@@ -22,12 +22,12 @@ class Recipe {
 	private $recipeSteps;
 	/**
 	 * title for this recipe, this is a unique index
-	 * @var recipeTitle
+	 * @var $recipeTitle
 	 */
 	private $recipeTitle;
 	/**
 	 * ingredients for this recipe, this is a unique index
-	 * @var recipeIngredients
+	 * @var $recipeIngredients
 	 */
 	private $recipeIngredients;
 	/**
@@ -37,7 +37,7 @@ class Recipe {
 	private $recipeMedia;
 	/**
 	 * recipe user id for this recipe, this is a unique index
-	 * @var recipeUserId
+	 * @var $recipeUserId
 	 */
 	private $recipeUserId;
 
@@ -263,7 +263,7 @@ class Recipe {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getRecipeByRecipeId($recipeId): ?Recipe {
+	public static function getRecipeByRecipeId(\PDO $pdo, $recipeId): Recipe {
 		// sanitize the recipeId before searching
 		try {
 			$recipeId = self::validatedUuid($recipeId);
@@ -271,16 +271,31 @@ class Recipe {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		//  create query template
-		$query = “SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeId = :authorId”;
+		$query = “SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeId = :recipeId”;
 
 $statement = $pdo->prepare($query);
 
 // bind the recipe id to the place holder in the template
-$parameters = [recipeId => $recipeId->getBytes()];
+$parameters = ["recipeId" => $recipeId->getBytes()];
 $statement->execute($parameters);
+
+// grab the recipe from mySQL
+	try {
+		$recipe = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if($row !== false) {
+			$recipe = new Recipe($row[“recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
+	} catch(\Exception $exception) {
+		//if the row couldn't be converted, rethrow it
+		throw(new \PDOException($exception->getMessage(), 0, $exception));
+	}
+	return($recipe);
+}
+}
 
 }
 
 
-	}
+
 
