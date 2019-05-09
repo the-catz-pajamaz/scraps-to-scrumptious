@@ -163,6 +163,36 @@ $statement->execute($parameters);
 		$this->recipeMedia = $newRecipeMedia;
 	}
 
+	/**
+ 	* accessor method for recipe title
+ 	*
+ 	* @return string value of recipe title
+ 	*/
+	public function getRecipeTitle(): string {
+		return $this->recipeTitle;
+	}
+
+	/** mutator method for recipe title
+	 *
+	 * @param string $newRecipeTitle new value of recipe title
+	 * @throws \InvalidArgumentException if $newRecipeTitle is not a valid title or insecure
+	 * @throws \RangeException if $newRecipeTitle is >128 characters
+	 * @throws \TypeError if $newRecipeTitle is not a string
+	 */
+	public function setRecipeTitle(string $newRecipeTitle): void {
+		// verify the recipe title is secure
+		$newRecipeTitle = trim($newRecipeTitle);
+		$newRecipeTitle = filter_var($newRecipeTitle, FILTER_VALIDATE_RECIPE_TITLE);
+		if(empty($newRecipeTitle) === true) {
+			throw(new \InvalidArgumentException("recipe title is too long or insecure"));
+		}
+		// verify the recipe title will fit in the database
+		if (strlen($newRecipeTitle) > 128) {
+			throw(new \RangeException("recipe title is too large"));
+		}
+		// store the recipe title
+		$this->recipeTitle = $newRecipeTitle;
+	}
 //	 grab the recipe from mySQL
 //try {
 //$recipe = null;
