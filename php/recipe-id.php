@@ -45,7 +45,6 @@ class Recipe {
 	 * constructor for recipe
 	 *
 	 *
-	 *
 	 */
 
 	public function __construct(string $newRecipeId, string $newRecipeDescription, string $newRecipeSteps, string $newRecipetTitle, string $newRecipeIngredients, string $newRecipeMedia, string $newRecipeUserId) {
@@ -98,7 +97,7 @@ class Recipe {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	Public static function getRecipeByRecipeId($recipeId): ?Recipe {
+	public static function getRecipeByRecipeId($recipeId): ?Recipe {
 		// sanitize the recipeId before searching
 		try {
 			$recipeId = self::validatedUuid($recipeId);
@@ -111,7 +110,7 @@ class Recipe {
 $statement = $pdo->prepare($query);
 
 // bind the recipe id to the place holder in the template
-$parameters = [“recipeId => $recipeId->getBytes()];
+$parameters = [recipeId => $recipeId->getBytes()];
 $statement->execute($parameters);
 
 }
@@ -146,20 +145,38 @@ $statement->execute($parameters);
 	 * gets recipe by recipeUserId
 	 *
 	 */
-	// grab the recipe from mySQL
-try {
-$recipe = null;
-$statement->setFetchMode(\PDO::FETCH_ASSOC);
-$row = $statement->fetch();
-If($row !== false) {
-$recipe = new recipe($row[“recipeId], $row[recipeUserId], $row[recipeMedia], $row[recipeIngredients], $row[recipeDescription], $row[recipeSteps], $row[recipeTitle]);
-}
-} catch
-(\Exception $exception) {
-	//if the row couldn't be converted, rethrow it
-	throw(new \PDOException($exception > getMessage(), 0, $exception));
-}
-	return ($recipe);
+
+	/**
+	 * accessor method for recipe media
+	 *
+	 * @param string $newRedipeMedia
+	 * @throws \InvalidArgumentException if $newRecipeMedia is not a string or insecure
+	 * @throws \RangeException if $newRecipeMedia is > 32 characters
+	 * @throws \TypeError if $newRecipeMedia is not a string
+	 */
+	public function setRecipeMedia(string $newRecipeMedia): void {
+		// verify the media will fit in the database
+		if(strlen($newRecipeMedia) > 32 {
+			throw(new \rangeException("media is too large"));
+		}
+		// store the media
+		$this->recipeMedia = $newRecipeMedia;
+	}
+
+//	 grab the recipe from mySQL
+//try {
+//$recipe = null;
+//$statement->setFetchMode(\PDO::FETCH_ASSOC);
+//$row = $statement->fetch();
+//If($row !== false) {
+//$recipe = new recipe($row[“recipeId], $row[recipeUserId], $row[recipeMedia], $row[recipeIngredients], $row[recipeDescription], $row[recipeSteps], $row[recipeTitle]);
+//}
+//} catch
+//(\Exception $exception) {
+//	//if the row couldn't be converted, rethrow it
+//	throw(new \PDOException($exception > getMessage(), 0, $exception));
+//}
+//	return ($recipe);
 
 
 	}
