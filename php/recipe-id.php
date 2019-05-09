@@ -249,6 +249,34 @@ $statement->execute($parameters);
 			throw(new \RangeException("recipe ingredients too large"));
 		}
 	}
+
+	/**
+	 * accessor method for recipe steps
+	 *
+	 * @return string value of recipe steps
+	 **/
+	public function getRecipeSteps(): string {
+		return ($this->recipeSteps);
+	}
+
+	/**
+	 * mutator method for recipe steps
+	 * @param string $newRecipeSteps new value of recipe description
+	 * @throws \TypeError if $newRecipeSteps is not a string
+	 **/
+	public function setRecipeSteps($newRecipeSteps): void {
+		$newRecipeSteps = trim($newRecipeSteps);
+		$newRecipeSteps = filter_var($newRecipeSteps, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newRecipeSteps) === true) {
+			throw(new \InvalidArgumentException("recipe steps is empty or insecure"));
+		}
+
+
+		// verify the recipe steps will fit in the database
+		if(strlen($newRecipeSteps) > 65535) {
+			throw(new \RangeException("recipe steps too large"));
+		}
+	}
 //	 grab the recipe from mySQL
 //try {
 //$recipe = null;
