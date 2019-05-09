@@ -101,7 +101,7 @@ class Recipe {
 		// sanitize the recipeId before searching
 		try {
 			$recipeId = self::validatedUuid($recipeId);
-		} catch(\InvalidArgumentException | \RaneException | \Exception | \TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		//  create query template
@@ -192,6 +192,62 @@ $statement->execute($parameters);
 		}
 		// store the recipe title
 		$this->recipeTitle = $newRecipeTitle;
+	}
+
+	/**
+	 * accessor method for recipe description
+	 *
+	 * @return string value of recipe description
+	 **/
+	public function getRecipeDescription(): string {
+		return ($this->recipeDescription);
+	}
+
+	/**
+	 * mutator method for recipe description
+	 * @param string $newRecipeDescription new value of recipe description
+	 * @throws \TypeError if $newRecipeDescription is not a string
+	 **/
+	public function setRecipeDescription($newRecipeDescription): void {
+		$newRecipeDescription = trim($newRecipeDescription);
+		$newRecipeDescription = filter_var($newRecipeDescription, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newRecipeDescription) === true) {
+			throw(new \InvalidArgumentException("recipe description is empty or insecure"));
+		}
+
+
+		// verify the recipe description will fit in the database
+		if(strlen($newRecipeDescription) > 65535) {
+			throw(new \RangeException("recipe description too large"));
+		}
+	}
+
+	/**
+	 * accessor method for recipe ingredients
+	 *
+	 * @return string value of recipe ingredients
+	 **/
+	public function getRecipeIngredients(): string {
+		return ($this->recipeIngredients);
+	}
+
+	/**
+	 * mutator method for recipe ingredients
+	 * @param string $newRecipeIngredients new value of recipe ingredients
+	 * @throws \TypeError if $newRecipeIngredients is not a string
+	 **/
+	public function setRecipeIngredients($newRecipeIngredients): void {
+		$newRecipeIngredients = trim($newRecipeIngredients);
+		$newRecipeIngredients = filter_var($newRecipeIngredients, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newRecipeIngredients) === true) {
+			throw(new \InvalidArgumentException("recipe ingredients is empty or insecure"));
+		}
+
+
+		// verify the recipe ingredients will fit in the database
+		if(strlen($newRecipeIngredients) > 65535) {
+			throw(new \RangeException("recipe ingredients too large"));
+		}
 	}
 //	 grab the recipe from mySQL
 //try {
