@@ -29,7 +29,8 @@ class Cookbook {
 			$this->cookbookRecipeId($newCookbookRecipeId);
 			$this->cookbookUserId($newCookbookUserId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			echo "Invalid request, Id not found";
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
 
@@ -125,3 +126,9 @@ class Cookbook {
 		$statement->execute($parameters);
 	}
 }
+
+/*
+ * get cookbook by user id,
+ * display all recipes within a given cookbook
+ *
+ */
