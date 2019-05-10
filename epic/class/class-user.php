@@ -43,14 +43,14 @@ user{
 	/**
 	 * accessor method for UserId
 	 */
-	public function getUserId() {
+	public function getUserId(): Uuid {
 		return $this->userId;
 	}
 
 	/**
 	 * mutator method for userId
 	 *
-	 * @param Uuid| string $newUserId
+	 * @param Uuid|string $newUserId
 	 * @throws \RangeException if $newUserId value is too large
 	 * @throws \TypeError if the userId is not positive
 	 * @throws \TypeError if the userId is not
@@ -95,7 +95,7 @@ user{
 	/**
 	 * accessor method for userEmail :)
 	 */
-	public function getUserEmail():?string {
+	public function getUserEmail():string {
 		return $this->userEmail;
 	}
 
@@ -111,7 +111,7 @@ user{
 
 	public function setUserEmail( string $newUserEmail): void{
 		$newUserEmail = trim($newUserEmail);
-		$newUserEmail = filter_var($newUserEmail, FILTER_VALIDATE_EMAIL);
+		$newUserEmail = filter_var($newUserEmail, FILTER_VALIDATE_EMAIL, FILTER_SANITIZE_EMAIL);
 		if(empty($newUserEmail) === true) {
 			throw(new \InvalidArgumentException("userEmail is empty or insecure"));
 		}
@@ -136,6 +136,10 @@ user{
 	 */
 	public function setUserFirstName($newUserFirstName): void {
 		$newUserFirstName = trim($newUserFirstName);
+		$newUserFirstName = filter_var($newUserFirstName (FILTER_SANITZE_STRING));
+		if(empty($newUserFirstName)=== true){
+			throw(new \InvalidArgumentException("You didn't put a name in here."));
+		}
 		if(strlen($newUserFirstName)>32){
 			throw(new \RangeException("First Name Not Valid"));
 		}
@@ -156,6 +160,7 @@ user{
 	 */
 	public function setUserHandle($newUserHandle): void {
 		$newUserHandle = trim($newUserHandle);
+		$newUserHandle = filter_var($newUserHandle(FILTER_SANITZE_STRING));
 		if(strlen($newUserHandle)>64){
 			throw(new \RangeException("User Handle Not Valid"));
 		}
@@ -181,6 +186,7 @@ user{
 	public function setUserHash(string $newUserHash): void {
 		//enforce hash formatting
 		$newUserHash = trim($newUserHash);
+		$newUserHash = filter_var($newUserHash(FILTER_SANITZE_STRING));
 		if(empty($newUserHash) === true) {
 			throw(new \InvalidArgumentException("User hash is not a valid hash"));
 		}
@@ -209,6 +215,7 @@ user{
 	 * @throw range exception
 	 */
 	public function setUserLastName($newUserLastName): void {
+		$newUserLastName = filter_var($newUserLastName(FILTER_SANITZE_STRING));
 		$newUserLastName = trim($newUserLastName);
 		if(strlen($newUserLastName)>32){
 			throw(new \RangeException("First Name Not Valid"));
@@ -256,7 +263,7 @@ user{
 	public function update(\PDO $pdo) : void {
 
 		//query template
-		$query = "UPDATE user SET 
+		$query = "update user set 
     		userActivationToken = :userActivationToken, 
     		userEmail = :userEmail, 
     		userFirstName = :userFirstName, 
