@@ -67,14 +67,14 @@ class Recipe {
 	 * @return Uuid value of recipeId (or null if new Recipe)
 	 */
 
-	public function getRecipeId(): Uuid {
+	public function getRecipeId() :Uuid {
 		return ($this->recipeId);
 }
 
 	/**
 	 * mutator method for recipe id
 	 *
-	 * @param Uuid| string $newRecipeId value of new recipe id
+	 * @param Uuid|string $newRecipeId value of new recipe id
 	 * @throws \RangeException if $newAuthorId value is not positive
 	 * @throws \TypeError if the id is not
 	 **/
@@ -103,7 +103,7 @@ class Recipe {
 	/**
 	 * mutator method for recipe user id
 	 *
-	 * @param Uuid| string $newRecipeUserId value of new recipe user id
+	 * @param Uuid|string $newRecipeUserId value of new recipe user id
 	 * @throws |RangeException if $newRecipeUserId value is not
 	 */
 
@@ -298,4 +298,4 @@ $statement->execute($parameters);
 
 
 
-
+}
