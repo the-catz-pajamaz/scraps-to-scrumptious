@@ -279,6 +279,7 @@ User{
 		where userId = :userId";
 		$statement = $pdo->prepare($query);
 
+		//bind variables to template
 		$parameters = [
 			"userId" => $this->userId->getBytes(),
 			"userActivationToken" => $this->userActivationToken->getBytes(),
@@ -291,6 +292,13 @@ User{
 		$statement->execute($parameters);
 	}
 
+	/**
+	 * gets user by user id
+	 * @param PDO $pdo
+	 * @param $uuid
+	 * @return User|null
+	 * @throws exception
+	 */
 	public static function getUserByUserId (\PDO $pdo, $userId) : ?user {
 		try{
 		$userId = self::validateUuid($userId);
@@ -319,11 +327,12 @@ User{
 	}
 
 
-	/**
+	/**g
 	 * get user by email
 	 * @param PDO $pdo
 	 * @param $userEmail
 	 * @return User
+	 * @throws RangeException
 	 */
 	public static function getUserByUserEmail (\PDO $pdo, $userEmail) : ?user {
 		$userEmail = trim($userEmail);
@@ -356,6 +365,13 @@ User{
 		return($user);
 	}
 
+	/**
+	 * gets user by activation token
+	 * @param PDO $pdo
+	 * @param $userActivationToken
+	 * @return User|null
+	 * @throws RangeException
+	 */
 	public static function getUserByUserActivationToken (\PDO $pdo, $userActivationToken) : ?user {
 		if(ctype_xdigit($userActivationToken) === false) {
 			throw(new\RangeException("user activation is not valid"));
@@ -383,17 +399,5 @@ User{
 
 
 
-
-
-
-
+	
 }
-	
-	
-
-/*
- * get user by user ID
- * get user by userEmail
- * get user by userHandle
- *
- */
