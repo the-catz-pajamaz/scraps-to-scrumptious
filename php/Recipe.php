@@ -270,8 +270,7 @@ class Recipe {
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$formattedDate = $this->recipeDate->format("Y-m-d H:i:s.u");
-		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia, "recipeIngredients"=> $this->recipeIngredients->getBytes()", "recipeDescription" => $this->recipeDescription->getBytes(), "recipeSteps" => $this->recipeSteps->getBytes(), "recipeTitle" => $this->recipeTitle->getBytes()" recipeDate => $formattedDate];
+		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia, "recipeIngredients"=> $this->recipeIngredients, "recipeDescription" => $this->recipeDescription, "recipeSteps" => $this->recipeSteps, "recipeTitle" => $this->recipeTitle];
 		$statement->execute($parameters);
 	}
 
@@ -303,12 +302,10 @@ class Recipe {
 	public function update(\PDO $pdo) : void {
 
 		// create query template
-		$query = "UPDATE recipew SET recipeId = :recipeId, recipeMedia = :recipeMedia, recipeDate = :recipDate WHERE recipeId = :recipeId";
+		$query = "UPDATE recipe SET recipeId = :recipeId, recipeUserId = :recipeUserId, recipeMedia = :recipeMedia, recipeIngredients = :recipeIngredients, recipeDescription = :recipedeDescription, recipeSteps = :recipeSteps, recipeTitle = :recipeTitle WHERE recipeId = :recipeId";
 		$statement = $pdo->prepare($query);
 
-
-		$formattedDate = $this->recipeDate->format("Y-m-d H:i:s.u");
-		$parameters = ["recipeId" => $this->recipeId->getBytes(),"recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeUserId, "recipeDate" => $formattedDate];
+		$parameters = ["recipeId" => $this->recipeId->getBytes(),"recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia];
 		$statement->execute($parameters);
 	}
 	/**
@@ -324,8 +321,7 @@ class Recipe {
 		// sanitize the recipeId before searching
 		try {
 			$recipeId = self::validatedUuid($recipeId);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception)
-		{
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException(($exception->getMessage()), 0, $exception));
 		}
 		//  create query template
