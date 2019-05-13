@@ -6,7 +6,7 @@
 //create class for table 'user'
 
 class
-user{
+User{
 	// validate uuid for pk, create private variables for all table elements
 	use ValidateUuid;
 	private $userId;
@@ -291,9 +291,105 @@ user{
 		$statement->execute($parameters);
 	}
 
-	public static function getUserByUserId
+	public static function getUserByUserId (\PDO $pdo, $userId) : ?user {
+		try{
+		$userId = self::validateUuid($userId);
+	}
+	catch (\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
+	throw(new \PDOException($exception->getMessage(), 0, $exception));
+	}
+	$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user` where userId = :userId";
+		$statement = $pdo->prepare($query);
+		
+		$parameters = [userId => $userId->getBytes()];
+		$statement->execute($parameters);
+
+		try{
+			$user = null;
+			$statement->setFetchMode(\PDO::fetch_assoc);
+			$row = $statement-fetch();
+			if($row !== false) {
+				$user = new user($row["userId"], $row["userActivationToken"], $row["userEmail"], $row["userFirstName"], $row["userHandle"], $row["userHash"], $row["userLastName"]);
+			}
+		}
+		catch(\Exception $exception) {
+			throw(new \PDOException($exception->getmessage(), 0, $exception));
+		}
+		return($user);
+	}
+
+
+	/**
+	 * get user by email
+	 * @param PDO $pdo
+	 * @param $userEmail
+	 * @return User
+	 */
+	public static function getUserByUserEmail (\PDO $pdo, $userEmail) : ?user {
+		$userEmail = trim($userEmail);
+		$userEmail = filter_var($userEmail, FILTER_VALIDATE_EMAIL, FILTER_SANITIZE_EMAIL);
+		if(empty($userEmail) === true) {
+			throw(new \InvalidArgumentException("userEmail is empty or insecure"));
+		}
+		if(strlen($userEmail) > 128) {
+			throw(new \RangeException("User Email is too large"));
+		}
+
+		$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user` where userEmail = :userEmail";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["userEmail" => $userEmail->userEmail];
+		$statement->execute($parameters);
+
+		try{
+			$user = null;
+			$statement->setFetchMode(\PDO::fetch_assoc);
+			$row = $statement-fetch();
+			if($row !== false) {
+				$user = new user($row["userId"], $row["userActivationToken"], $row["userEmail"], $row["userFirstName"], $row["userHandle"], $row["userHash"], $row["userLastName"]);
+			}
+		}
+
+		catch(\Exception $exception) {
+			throw(new \PDOException($exception->getmessage(), 0, $exception));
+		}
+		return($user);
+	}
+
+	public static function getUserByUserActivationToken (\PDO $pdo, $userActivationToken) : ?user {
+		if(ctype_xdigit($userActivationToken) === false) {
+			throw(new\RangeException("user activation is not valid"));
+		}
+		$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user` where userActivationToken = :userActivationToken";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["userActivationToken" => $userActivationToken->getBytes];
+		$statement->execute($parameters);
+
+		try{
+			$user = null;
+			$statement->setFetchMode(\PDO::fetch_assoc);
+			$row = $statement-fetch();
+			if($row !== false) {
+				$user = new user($row["userId"], $row["userActivationToken"], $row["userEmail"], $row["userFirstName"], $row["userHandle"], $row["userHash"], $row["userLastName"]);
+			}
+		}
+
+		catch(\Exception $exception) {
+			throw(new \PDOException($exception->getmessage(), 0, $exception));
+		}
+		return($user);
+	}
+
+
+
+
+
+
 
 }
+	
+	
 
 /*
  * get user by user ID
