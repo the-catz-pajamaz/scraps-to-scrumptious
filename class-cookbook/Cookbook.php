@@ -85,31 +85,34 @@ class Cookbook {
 		//convert and store the cookbookUserId
 		$this->cookbookUserId = $uuid;
 	}
+
 	/**
 	 * inserts cookbook into mySQL
 	 * @param \PDO $pdo
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 */
-	public function insert(\PDO $pdo) : void {
+	public function insert(\PDO $pdo): void {
 		$query = "insert into cookbook(cookbookRecipeId, cookbookUserId) values (:cookbookRecipeId, :cookbookUserId)";
-  		$statement = $pdo->prepare($query);
-  		$paramaters = ["cookbookRecipeId" => $this->cookbookRecipeId->getBytes(), $this->cookbookUserId];
-  		$statement->execute($paramaters);
+		$statement = $pdo->prepare($query);
+		$paramaters = ["cookbookRecipeId" => $this->cookbookRecipeId->getBytes(), $this->cookbookUserId];
+		$statement->execute($paramaters);
 	}
+
 	/**
 	 * deletes this cookbook from MySQL
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo
 	 */
-	public function delete(\PDO $pdo) : void {
+	public function delete(\PDO $pdo): void {
 		$query = "DELETE FROM cookbook WHERE cookbookUserId = :cookbookUserId";
 		$statement = $pdo->prepare($query);
 		//bind the member variables to the place holder in the template
-		$parameters = ["cookbookUserId" =>$this->cookbookUserId->getBytes()];
+		$parameters = ["cookbookUserId" => $this->cookbookUserId->getBytes()];
 		$statement->execute($parameters);
 	}
+
 	/**
 	 * updates this cookbook in mySQL
 	 *
@@ -117,90 +120,104 @@ class Cookbook {
 	 * @throws \PDOException when mySQL errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 */
-	public function update(\PDO $pdo) : void {
+	public function update(\PDO $pdo): void {
 		//create query template
 		$query = "UPDATE cookbook SET cookbookRecipeId = :cookbookRecipeId, cookbookUserId = :cookbookUserId";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["cookbookUserId" =>$this->cookbookUserId->getBytes(), "cookbookRecipeId" => $this->cookbookRecipeId->getBytes()];
+		$parameters = ["cookbookUserId" => $this->cookbookUserId->getBytes(), "cookbookRecipeId" => $this->cookbookRecipeId->getBytes()];
 		$statement->execute($parameters);
 	}
-}
 
-/**
- * @param \PDO $pdo
- * @param $cookbookRecipeId
- * @return \SplFixedArray
- * @throws \PDOException if can't be converted.
- */
-public static function getCookbooksByCookbookRecipeId(\PDO $pdo, $cookbookRecipeId) : \SplFixedArray {
-	//Sanitize the cookbookRecipeId before accessing
+	/**
+	 * @param \PDO $pdo
+	 * @param $cookbookRecipeId
+	 * @return \SplFixedArray
+	 * @throws \PDOException if can't be converted.
+	 */
+	public static function getCookbooksByCookbookRecipeId(\PDO $pdo, $cookbookRecipeId): \SplFixedArray {
+		//Sanitize the cookbookRecipeId before accessing
+		try {
+			$cookbookRecipeId = self::validateUuid($cookbookRecipeId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		//Create query template
+		$query = "SELECT cookbookRecipeId FROM cookbook WHERE cookbookRecipeId = :cookbookRecipeId";
+		$statement = $pdo->prepare($query);
+
+		//Bind the recipeId to the template placeholder.
+		$parameters = ["cookbookRecipeId" => $cookbookRecipeId->getBytes()];
+		$statement->execute($parameters);
+
+		//Build array of cookbookRecipeIds
+		$cookbookRecipeId = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				$cookbookRecipeId = new cookbookRecipeId($row["cookbookRecipeId"]);
+				$cookbookRecipeId->next();
+			} catch(\Exception $exception) {
+				//if the row can't be converted, rethrow
+				throw (new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($cookbookRecipeId);
+	}
+
+	/**
+	 * @param \PDO $pdo
+	 * @param $cookbookRecipeId
+	 * @return \SplFixedArray
+	 * @throws \PDOException if can't be converted.
+	 */
+	public static function getCookbooksByCookbookUserId(\PDO $pdo, $cookbookUserId): \SplFixedArray {
+		//Sanitize the cookbookUserId before accessing
+		try {
+			$cookbookUserId = self::validateUuid($cookbookUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		//Create query template
+		$query = "SELECT cookbookUserId FROM cookbook WHERE cookbookUserId = :cookbookUserId";
+		$statement = $pdo->prepare($query);
+
+		//Bind the userId to the template placeholder.
+		$parameters = ["cookbookUserId" => $cookbookUserId->getBytes()];
+		$statement->execute($parameters);
+
+		//Build array of cookbookUserIds
+		$cookbookUserId = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				$cookbookUserId = new cookbookRecipeId($row["cookbookRecipeId"]);
+				$cookbookUserId->next();
+			} catch(\Exception $exception) {
+				//if the row can't be converted, rethrow
+				throw (new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($cookbookUserId);
+	}
+
+public static function getCookbookByCookbookRecipeIdAndCookbookUserId(\PDO $pdo, $cookbookRecipeId, $cookbookUserId) : Cookbook {
+		//Sanitize the cookbookRecipeId and cookbookUserId before accessing
 	try {
 		$cookbookRecipeId = self::validateUuid($cookbookRecipeId);
 	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-		throw(new \PDOException($exception->getMessage(),0, $exception));
+		throw(new \PDOException($exception->getMessage(), 0, $exception));
 	}
-
-	//Create query template
-	$query = "SELECT cookbookRecipeId FROM cookbook WHERE cookbookRecipeId = :cookbookRecipeId";
-	$statement = $pdo->prepare($query);
-
-	//Bind the recipeId to the template placeholder.
-	$parameters = ["cookbookRecipeId" => $cookbookRecipeId->getBytes()];
-	$statement->execute($parameters);
-
-	//Build array of cookbookRecipeIds
-	$cookbookRecipeId = new \SplFixedArray($statement->rowCount());
-	$statement->setFetchMode(\PDO::FETCH_ASSOC);
-	while(($row = $statement->fetch()) !== false) {
-		try {
-			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			$cookbookRecipeId = new cookbookRecipeId($row["cookbookRecipeId"]);
-			$cookbookRecipeId->next();
-		} catch(\Exception $exception) {
-			//if the row can't be converted, rethrow
-			throw (new \PDOException($exception->getMessage(), 0, $exception));
-		}
-	}
-	return($cookbookRecipeId);
-}
-
-/**
- * @param \PDO $pdo
- * @param $cookbookRecipeId
- * @return \SplFixedArray
- * @throws \PDOException if can't be converted.
- */
-public static function getCookbooksByCookbookUserId(\PDO $pdo, $cookbookUserId) : \SplFixedArray {
-	//Sanitize the cookbookUserId before accessing
 	try {
 		$cookbookUserId = self::validateUuid($cookbookUserId);
 	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-		throw(new \PDOException($exception->getMessage(),0, $exception));
+		throw(new \PDOException($exception->getMessage(), 0, $exception));
 	}
-
-	//Create query template
-	$query = "SELECT cookbookUserId FROM cookbook WHERE cookbookUserId = :cookbookUserId";
-	$statement = $pdo->prepare($query);
-
-	//Bind the userId to the template placeholder.
-	$parameters = ["cookbookUserId" => $cookbookUserId->getBytes()];
-	$statement->execute($parameters);
-
-	//Build array of cookbookUserIds
-	$cookbookUserId = new \SplFixedArray($statement->rowCount());
-	$statement->setFetchMode(\PDO::FETCH_ASSOC);
-	while(($row = $statement->fetch()) !== false) {
-		try {
-			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			$cookbookUserId = new cookbookRecipeId($row["cookbookRecipeId"]);
-			$cookbookUserId->next();
-		} catch(\Exception $exception) {
-			//if the row can't be converted, rethrow
-			throw (new \PDOException($exception->getMessage(), 0, $exception));
-		}
-	}
-	return($cookbookUserId);
+}
 }
 
 /*
