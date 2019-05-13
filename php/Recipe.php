@@ -274,6 +274,24 @@ class Recipe {
 		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia, "recipeIngredients"=> $this->recipeIngredients->getBytes()", "recipeDescription" => $this->recipeDescription->getBytes(), "recipeSteps" => $this->recipeSteps->getBytes(), "recipeTitle" => $this->recipeTitle->getBytes()" recipeDate => $formattedDate];
 		$statement->execute($parameters);
 	}
+
+	/**
+	 * deletes this Recipe from mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function delete(\PDO $pdo) : void {
+
+		// create query template
+		$query = "DELETE FROM recipe WHERE recipeId = :recipeId";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holder in the template
+		$parameters = ["recipeId" => $this->recipeId->getBytes()];
+		$statement->execute($parameters);
+	}
 	/**
 	 * gets the recipe by recipeId
 	 *
