@@ -205,31 +205,38 @@ class Cookbook {
 		return ($cookbookUserId);
 	}
 
-public static function getCookbookByCookbookRecipeIdAndCookbookUserId(\PDO $pdo, $cookbookRecipeId, $cookbookUserId) : Cookbook {
+	public static function getCookbookByCookbookRecipeIdAndCookbookUserId(\PDO $pdo, $cookbookRecipeId, $cookbookUserId): Cookbook {
 		//Sanitize the cookbookRecipeId and cookbookUserId before accessing
-	try {
-		$cookbookRecipeId = self::validateUuid($cookbookRecipeId);
-	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-		throw(new \PDOException($exception->getMessage(), 0, $exception));
+		try {
+			$cookbookRecipeId = self::validateUuid($cookbookRecipeId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		try {
+			$cookbookUserId = self::validateUuid($cookbookUserId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		//Create the query template.
+		$query = "SELECT cookbookRecipeId, cookbookUserId FROM cookbook WHERE cookbookRecipeId = :cookbookRecipeId AND cookbookUserId = :cookbookUserId";
+		$statement = $pdo->prepare($query);
+		//Bind the cookbookRecipeId abd cookbookUserId to the template placeholder.
+		$parameters = ["cookbookRecipeId" => $cookbookRecipeId->getBytes(), "cookbookUserId" => $cookbookUserId->getBytes()];
+		$statement->execute($parameters);
+
+		//Grab the cookbook from mySQL
+		try {
+			$cookbook = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$cookbook = new Cookbook($row["cookbookRecipeId"], $row["cookbookUserId"]);
+			}
+		} catch(\Exception $exception) {
+			//if the row can't be converted, rethrow
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return ($cookbook);
 	}
-	try {
-		$cookbookUserId = self::validateUuid($cookbookUserId);
-	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-		throw(new \PDOException($exception->getMessage(), 0, $exception));
-	}
-
-	//Create the query template.
-	$query = "SELECT cookbookRecipeId, cookbookUserId FROM cookbook WHERE cookbookRecipeId = :cookbookRecipeId AND cookbookUserId = :cookbookUserId";
-	$statement = $pdo->prepare($query);
-	//Bind the cookbookRecipeId abd cookbookUserId to the template placeholder.
-	$parameters = ["cookbookRecipeId" => $cookbookRecipeId->getBytes(), "cookbookUserId" => $cookbookUserId->getBytes()];
-	$statement->execute($parameters);
-
 }
-}
-
-/*
- * get cookbook by user id,
- * display all recipes within a given cookbook
- *
- */
