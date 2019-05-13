@@ -217,6 +217,14 @@ public static function getCookbookByCookbookRecipeIdAndCookbookUserId(\PDO $pdo,
 	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 		throw(new \PDOException($exception->getMessage(), 0, $exception));
 	}
+
+	//Create the query template.
+	$query = "SELECT cookbookRecipeId, cookbookUserId FROM cookbook WHERE cookbookRecipeId = :cookbookRecipeId AND cookbookUserId = :cookbookUserId";
+	$statement = $pdo->prepare($query);
+	//Bind the cookbookRecipeId abd cookbookUserId to the template placeholder.
+	$parameters = ["cookbookRecipeId" => $cookbookRecipeId->getBytes(), "cookbookUserId" => $cookbookUserId->getBytes()];
+	$statement->execute($parameters);
+
 }
 }
 
