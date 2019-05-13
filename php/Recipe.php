@@ -267,13 +267,14 @@ class Recipe {
 		// sanitize the recipeId before searching
 		try {
 			$recipeId = self::validatedUuid($recipeId);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception)
+		{
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		//  create query template
-		$query = “SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeId = :recipeId”;
+		//$query = “SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeId = :recipeId”;
 
-$statement = $pdo->prepare($query);
+	$statement = $pdo->prepare($query);
 
 // bind the recipe id to the place holder in the template
 $parameters = ["recipeId" => $recipeId->getBytes()];
@@ -286,15 +287,25 @@ $statement->execute($parameters);
 		$row = $statement->fetch();
 		if($row !== false) {
 			$recipe = new Recipe($row[“recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
+	   }
 	} catch(\Exception $exception) {
 		//if the row couldn't be converted, rethrow it
 		throw(new \PDOException($exception->getMessage(), 0, $exception));
 	}
 	return($recipe);
 }
-}
 
-}
+	/**
+	* get the recipe by user id
+	*
+	* @param \PDO $pdo PDO connection object
+   * @param Uuid|string $recipeUserId user id to search for
+   * @return Recipe|null Recipoe found or null if not found
+   * @throws \PDOException when mySQL related errors occur
+   * @throws \TypeError when a variable are not the correct data type
+
+
+
 
 
 
