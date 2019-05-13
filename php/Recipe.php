@@ -62,14 +62,15 @@ class Recipe {
 			echo "Try Again";
 		}
 	}
+
 	/**
 	 *  accesor method for recipeId
 	 * @return Uuid value of recipeId (or null if new Recipe)
 	 */
 
-	public function getRecipeId() :Uuid {
+	public function getRecipeId(): Uuid {
 		return ($this->recipeId);
-}
+	}
 
 	/**
 	 * mutator method for recipe id
@@ -118,6 +119,7 @@ class Recipe {
 		// convert and store the recipe user id
 		$this->recipeUserId = $uuid;
 	}
+
 	/**
 	 *
 	 *Accesssor Method for recipe media
@@ -127,6 +129,7 @@ class Recipe {
 	public function getRecipeMedia(): string {
 		return $this->recipeMedia;
 	}
+
 	/**
 	 * mutator method for recipe media
 	 *
@@ -147,10 +150,10 @@ class Recipe {
 	}
 
 	/**
- 	* accessor method for recipe title
- 	*
- 	* @return string value of recipe title
- 	*/
+	 * accessor method for recipe title
+	 *
+	 * @return string value of recipe title
+	 */
 	public function getRecipeTitle(): string {
 		return $this->recipeTitle;
 	}
@@ -170,7 +173,7 @@ class Recipe {
 			throw(new \InvalidArgumentException("recipe title is too long or insecure"));
 		}
 		// verify the recipe title will fit in the database
-		if (strlen($newRecipeTitle) > 128) {
+		if(strlen($newRecipeTitle) > 128) {
 			throw(new \RangeException("recipe title is too large"));
 		}
 		// store the recipe title
@@ -263,14 +266,14 @@ class Recipe {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function insert(\PDO $pdo) : void {
+	public function insert(\PDO $pdo): void {
 
 		// create query template
 		$query = "INSERT INTO recipe(recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle) VALUES(:recipeId, :recipeUserId, :recipeMedia, :recipeIngredients, :recipeDescription, :recipeSteps, :recipeTitle)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia, "recipeIngredients"=> $this->recipeIngredients, "recipeDescription" => $this->recipeDescription, "recipeSteps" => $this->recipeSteps, "recipeTitle" => $this->recipeTitle];
+		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia, "recipeIngredients" => $this->recipeIngredients, "recipeDescription" => $this->recipeDescription, "recipeSteps" => $this->recipeSteps, "recipeTitle" => $this->recipeTitle];
 		$statement->execute($parameters);
 	}
 
@@ -281,7 +284,7 @@ class Recipe {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function delete(\PDO $pdo) : void {
+	public function delete(\PDO $pdo): void {
 
 		// create query template
 		$query = "DELETE FROM recipe WHERE recipeId = :recipeId";
@@ -299,15 +302,16 @@ class Recipe {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
-	public function update(\PDO $pdo) : void {
+	public function update(\PDO $pdo): void {
 
 		// create query template
 		$query = "UPDATE recipe SET recipeId = :recipeId, recipeUserId = :recipeUserId, recipeMedia = :recipeMedia, recipeIngredients = :recipeIngredients, recipeDescription = :recipedeDescription, recipeSteps = :recipeSteps, recipeTitle = :recipeTitle WHERE recipeId = :recipeId";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["recipeId" => $this->recipeId->getBytes(),"recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia];
+		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia];
 		$statement->execute($parameters);
 	}
+
 	/**
 	 * gets the recipe by recipeId
 	 *
@@ -325,115 +329,110 @@ class Recipe {
 			throw(new \PDOException(($exception->getMessage()), 0, $exception));
 		}
 		//  create query template
-		$query = “SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeId = :recipeId”;
+		$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeId = :recipeId";
 
-	$statement = $pdo->prepare($query);
+		$statement = $pdo->prepare($query);
 
 // bind the recipe id to the place holder in the template
-$parameters = ["recipeId" => $recipeId->getBytes()];
-$statement->execute($parameters);
+		$parameters = ["recipeId" => $recipeId->getBytes()];
+		$statement->execute($parameters);
 
 // get the recipe from mySQL
-	try {
-		$recipe = null;
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		$row = $statement->fetch();
-		if($row !== false) {
-			$recipe = new Recipe($row[“recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
-	   }
-	 } catch(\Exception $exception) {
-		//if the row couldn't be converted, rethrow it
-		throw(new \PDOException($exception->getMessage(), 0, $exception));
+		try {
+			$recipe = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
+			}
+		} catch(\Exception $exception) {
+			//if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return ($recipe);
 	}
-	return($recipe);
-}
 
 	/**
-	* get the recipe by recipeUserId
-	*
-	* @param \PDO $pdo PDO connection object
-   * @param Uuid|string $recipeUserId user id to search for
-   * @return Recipe|null Recipoe found or null if not found
-   * @throws \PDOException when mySQL related errors occur
-   * @throws \TypeError when a variable are not the correct data type
-   **/
-public static function getRecipeUserIdByRecipeUserId($recipeUserId) : ?Author {
-	// sanitize the recipeUserId before searching
-	try {
+	 * get the recipe by recipeUserId
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $recipeUserId user id to search for
+	 * @return Recipe|null Recipoe found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getRecipeUserIdByRecipeUserId($recipeUserId): ?Recipe {
+		// sanitize the recipeUserId before searching
+		try {
 			$recipeUserId = self::validateUuid($recipeUserId);
-	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception)
-
-	{
-		throw(new \PDOException($exception->getMessage(), 0, $exception));
-	}
-	// create query template
-	$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle, FROM recipe WHERE recipeUserId = : recipUserId";
-
-	$statement = $pdo->prepare($query);
-
-// bind the recip user id to the place holder in the template
-$parameters = ["recipeUserId" => $recipeUserId->getBytes()];
-$statement->execute($parameters);
-	
-	// grab the recipe user id from mySQL
-	try {
-		$recipeUserId = null;
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		$row = $statement->fetch();
-		if($row !== false) {
-		$recipeUserId = new recipeUserId($row[\"recipeId\"], $row[\"recipeUserId\"], $row[\"recipeMedia\"], $row[\"recipeIngredients\"], $row["recipeDescription\"], $row["recipeSteps\"], $row[recipeTitle\"]);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-	} catch(\Exception $exception) {
-		// if the row couldn't be converted, rethrow it
-		throw(new \PDOException($exception->getMessage(), 0, $exception));
-	}
-	return($recipeUserId);
-}
+		// create query template
+		$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeUserId = : recipUserId";
 
-/**
- * gets the recipe by recipeTitle
- *
- * @param \PDO $pdo PDO connection object
- * @param Uuid|string $recipeTitle recipe title to search for
- * @return Author|null Recipe Title found or null if not found
- * @throws \PDOException when mySQL related errors occur
- * @throws \TypeError when a variable are not the correct data type
- **/
-public static function getRecipesByRecipeTitle($recipe Title) : ?Recipe Title {
-	// sanitize the recipeTitle before searching
-	try {
+		$statement = $pdo->prepare($query);
+
+// bind the recipe user id to the place holder in the template
+		$parameters = ["recipeUserId" => $recipeUserId->getBytes()];
+		$statement->execute($parameters);
+
+		// grab the recipe user id from mySQL
+		try {
+			$recipeUserId = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$recipeUserId = new recipeUserId($row["recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return ($recipeUserId);
+	}
+
+	/**
+	 * gets the recipe by recipeTitle
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @param Uuid|string $recipeTitle recipe title to search for
+	 * @return Author|null Recipe Title found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getRecipesByRecipeTitle($pdo, $recipeTitle) {
+		// sanitize the recipeTitle before searching
+		try {
 			$recipeTitle = self::validateUuid($recipeTitle);
-	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception)
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		// create query template
+		$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeUserId = : recipUserId";
 
-	{
-		throw(new \PDOException($exception->getMessage(), 0, $exception));
-	}
-	// create query template
-	$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle, FROM recipe WHERE recipeUserId = : recipUserId";
-
-	$statement = $pdo->prepare($query);
+		$statement = $pdo->prepare($query);
 
 // bind the recipe title to the place holder in the template
-$parameters = ["recipeTitle" => $recipeTitle->getBytes()];
-$statement->execute($parameters);
+		$parameters = ["recipeTitle" => $recipeTitle->getBytes()];
+		$statement->execute($parameters);
 
-	// grab the recipeTitle from mySQL
-	try {
-		$recipeTitle = null;
-		$statement->setFetchMode(\PDO::FETCH_ASSOC);
-		$row = $statement->fetch();
-		if($row !== false) {
-		$recipeTitle = new Recipe($row[“recipeId\"], $row[\"recipeUserId\"], $row[\"recipeMedia\"], $row[\"recipeIngredients\"], $row[\"recipeDescription\"], $row[\"recipeSteps\"], $row[\"recipeTitle\"]);
+		// grab the recipeTitle from mySQL
+		try {
+			$recipeTitle = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$recipeTitle = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-	} catch(\Exception $exception) {
-		// if the row couldn't be converted, rethrow it
-		throw(new \PDOException($exception->getMessage(), 0, $exception));
+		return ($recipeTitle);
 	}
-	return($recipeTitle);
 }
 
 
 
 
-
-}
