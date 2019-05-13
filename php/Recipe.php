@@ -296,7 +296,7 @@ $statement->execute($parameters);
 }
 
 	/**
-	* get the recipe by user id
+	* get the recipe by recipeUserId
 	*
 	* @param \PDO $pdo PDO connection object
    * @param Uuid|string $recipeUserId user id to search for
@@ -322,6 +322,20 @@ public static function getRecipeUserIdByRecipeUserId($recipeUserId) : ?Author {
 $parameters = ["recipeUserId" => $recipeUserId->getBytes()];
 $statement->execute($parameters);
 	
+	// grab the recipe user id from mySQL
+	try {
+		$recipeUserId = null;
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		$row = $statement->fetch();
+		if($row !== false) {
+		$recipeUserId = new recipeUserId($row[\"recipeId\"], $row[\"recipeUserId\"], $row[\"recipeMedia\"], $row[\"recipeIngredients\"], $row["recipeDescription\"], $row["recipeSteps\"], $row[recipeTitle\"]);
+		}
+	} catch(\Exception $exception) {
+		// if the row couldn't be converted, rethrow it
+		throw(new \PDOException($exception->getMessage(), 0, $exception));
+	}
+	return($recipeUserId);
+}
 
 
 
