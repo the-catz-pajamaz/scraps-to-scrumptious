@@ -127,6 +127,16 @@ class Cookbook {
 	}
 }
 
+public static function getCookbooksByCookbookRecipeId(\PDO $pdo, $cookbookRecipeId) : \SplFixedArray {
+	//Sanitize the cookbookRecipeId before accessing
+	try {
+		$cookbookRecipeId = self::validateUuid($cookbookRecipeId);
+	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		throw(new \PDOException($exception->getMessage(),0, $exception));
+	}
+
+}
+
 /*
  * get cookbook by user id,
  * display all recipes within a given cookbook
