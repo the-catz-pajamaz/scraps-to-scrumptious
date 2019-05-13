@@ -303,6 +303,25 @@ $statement->execute($parameters);
    * @return Recipe|null Recipoe found or null if not found
    * @throws \PDOException when mySQL related errors occur
    * @throws \TypeError when a variable are not the correct data type
+   **/
+public static function getRecipeUserIdByRecipeUserId($recipeUserId) : ?Author {
+	// sanitize the recipeUserId before searching
+	try {
+			$recipeUserId = self::validateUuid($recipeUserId);
+	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception)
+
+	{
+		throw(new \PDOException($exception->getMessage(), 0, $exception));
+	}
+	// create query template
+	$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle, FROM recipe WHERE recipeUserId = : recipUserId";
+
+	$statement = $pdo->prepare($query);
+
+// bind the recip user id to the place holder in the template
+$parameters = ["recipeUserId" => $recipeUserId->getBytes()];
+$statement->execute($parameters);
+	
 
 
 
