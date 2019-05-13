@@ -135,6 +135,23 @@ public static function getCookbooksByCookbookRecipeId(\PDO $pdo, $cookbookRecipe
 		throw(new \PDOException($exception->getMessage(),0, $exception));
 	}
 
+	//Create query template
+	$query = "SELECT cookbookRecipeId FROM cookbook WHERE cookbookRecipeId = :cookbookRecipeId";
+	$statement = $pdo->prepare($query);
+
+	//Bind the recipeId to the template placeholder.
+	$parameters = ["cookbookRecipeId" => $cookbookRecipeId->getBytes()];
+	$statement->execute($parameters);
+
+	//Build array of cookbookRecipeIds
+	$cookbookRecipeId = new \SplFixedArray($statement->rowCount());
+	$statement->setFetchMode(\PDO::FETCH_ASSOC);
+	while(($row = $statement->fetch()) !== false) {
+		try {
+			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			$cookbookRecipeId = new recipeId
+		}
+	}
 }
 
 /*
