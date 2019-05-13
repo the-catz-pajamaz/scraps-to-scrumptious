@@ -149,9 +149,14 @@ public static function getCookbooksByCookbookRecipeId(\PDO $pdo, $cookbookRecipe
 	while(($row = $statement->fetch()) !== false) {
 		try {
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			$cookbookRecipeId = new recipeId
+			$cookbookRecipeId = new cookbookRecipeId($row["cookbookRecipeId"]);
+			$cookbookRecipeId->next();
+		} catch(\Exception $exception) {
+			//if the row can't be converted, rethrow
+			throw (new \PDOException($exception->getMessage(), 0, $exception));
 		}
 	}
+	return($cookbookRecipeId);
 }
 
 /*
