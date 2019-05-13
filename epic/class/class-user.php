@@ -149,7 +149,7 @@ user{
 	/**
 	 * accessor method for userHandle
 	 */
-	public function getUserHandle():?string {
+	public function getUserHandle():string {
 		return $this->userHandle;
 	}
 
@@ -161,6 +161,9 @@ user{
 	public function setUserHandle($newUserHandle): void {
 		$newUserHandle = trim($newUserHandle);
 		$newUserHandle = filter_var($newUserHandle(FILTER_SANITZE_STRING));
+		if(empty($newUserHandle)=== true) {
+			throw (new \InvalidArgumentException("Not a valid Handle"));
+		}
 		if(strlen($newUserHandle)>64){
 			throw(new \RangeException("User Handle Not Valid"));
 		}
@@ -217,6 +220,9 @@ user{
 	public function setUserLastName($newUserLastName): void {
 		$newUserLastName = filter_var($newUserLastName(FILTER_SANITZE_STRING));
 		$newUserLastName = trim($newUserLastName);
+		if(empty($newUserLastName)=== true){
+			throw(new\InvalidArgumentException ("not real last name"));
+		}
 		if(strlen($newUserLastName)>32){
 			throw(new \RangeException("First Name Not Valid"));
 		}
@@ -229,7 +235,7 @@ user{
 	public function insert (\PDO $pdo) : void {
 
 		//query template
-		$query = "insert into user(userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName) 
+		$query = "insert into `user`(userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName) 
 					values (:userId, :userActivationToken, :userEmail, :userFirstName, :userHandle, :userHash, :userLastName)";
 		$statement = $pdo->prepare($query);
 
@@ -252,18 +258,18 @@ user{
 	public function delete(\PDO $pdo) : void {
 
 		//query template
-		$query = "delete from user where userId = :userId";
+		$query = "delete from `user` where userId = :userId";
 		$statement = $pdo->prepare($query);
 
 		//bind variables to template
-		$parameters = ["userIed" => $this->userId->getBytes()];
+		$parameters = ["userId" => $this->userId->getBytes()];
 		$statement->execute($parameters);
 	}
 
 	public function update(\PDO $pdo) : void {
 
 		//query template
-		$query = "update user set 
+		$query = "update `user` set 
     		userActivationToken = :userActivationToken, 
     		userEmail = :userEmail, 
     		userFirstName = :userFirstName, 
@@ -277,11 +283,21 @@ user{
 			"userId" => $this->userId->getBytes(),
 			"userActivationToken" => $this->userActivationToken->getBytes(),
 			"userEmail" => $this->userEmail->userEmail(),
-			"userFirstName" => $this->userFirstName->userEmail(),
+			"userFirstName" => $this->userFirstName->userFirstName(),
 			"userHandle" => $this->userHandle->userHandle(),
 			"userHash" => $this->userHash->getBytes(),
 			"userLastName" => $this->userLastName->userLastName(),
 		];
 		$statement->execute($parameters);
 	}
+
+	public static function getUserByUserId
+
 }
+
+/*
+ * get user by user ID
+ * get user by userEmail
+ * get user by userHandle
+ *
+ */
