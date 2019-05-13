@@ -357,7 +357,7 @@ class Recipe {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $recipeUserId user id to search for
-	 * @return Recipe|null Recipoe found or null if not found
+	 * @return Recipe|null Recipe found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
