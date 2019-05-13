@@ -292,6 +292,25 @@ class Recipe {
 		$parameters = ["recipeId" => $this->recipeId->getBytes()];
 		$statement->execute($parameters);
 	}
+
+	/**
+	 * updates this Recipe in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) : void {
+
+		// create query template
+		$query = "UPDATE recipew SET recipeId = :recipeId, recipeMedia = :recipeMedia, recipeDate = :recipDate WHERE recipeId = :recipeId";
+		$statement = $pdo->prepare($query);
+
+
+		$formattedDate = $this->recipeDate->format("Y-m-d H:i:s.u");
+		$parameters = ["recipeId" => $this->recipeId->getBytes(),"recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeUserId, "recipeDate" => $formattedDate];
+		$statement->execute($parameters);
+	}
 	/**
 	 * gets the recipe by recipeId
 	 *
