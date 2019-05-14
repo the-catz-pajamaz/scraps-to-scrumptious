@@ -1,6 +1,6 @@
 <?php
 namespace theCatzPajamaz\ScrapsToScrumptious;
-require_once(dirname(__DIR__) . "/autoload.php");
+require_once ("autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
  * @author Sam Nelson <snelson54@cnm.edu>
@@ -11,16 +11,16 @@ class Cookbook {
 	 * id for this cookbook recipe;
 	 * @var Uuid $cookbookRecipeId
 	 */
+
 	private $cookbookRecipeId;
+
 	/**
-	 *
-	 * @var string for cookbookRecipeId
-	 */
-	private $cookbookUserId;
-	/**
-	 * @var string for cookbookUserId
+	 * @var Uuid for cookbookUserId
 	 * @var cookbookUserId
 	 */
+
+	private $cookbookUserId;
+
 	/**
 	 * constructor for cookbook
 	 */
