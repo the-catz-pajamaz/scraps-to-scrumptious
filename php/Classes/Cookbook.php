@@ -1,6 +1,6 @@
 <?php
-namespace ScrapsToScrumptious;
-require_once(dirname(__DIR__) . "class-cookbook/autoload.php");
+namespace theCatzPajamaz\ScrapsToScrumptious;
+require_once(dirname(__DIR__) . "/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
  * @author Sam Nelson <snelson54@cnm.edu>
