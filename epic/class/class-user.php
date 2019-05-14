@@ -136,7 +136,7 @@ User{
 	 */
 	public function setUserFirstName($newUserFirstName): void {
 		$newUserFirstName = trim($newUserFirstName);
-		$newUserFirstName = filter_var($newUserFirstName (FILTER_SANITZE_STRING));
+		$newUserFirstName = filter_var($newUserFirstName ,FILTER_SANITIZE_STRING);
 		if(empty($newUserFirstName)=== true){
 			throw(new \InvalidArgumentException("You didn't put a name in here."));
 		}
@@ -160,7 +160,7 @@ User{
 	 */
 	public function setUserHandle($newUserHandle): void {
 		$newUserHandle = trim($newUserHandle);
-		$newUserHandle = filter_var($newUserHandle(FILTER_SANITZE_STRING));
+		$newUserHandle = filter_var($newUserHandle, FILTER_SANITIZE_STRING);
 		if(empty($newUserHandle)=== true) {
 			throw (new \InvalidArgumentException("Not a valid Handle"));
 		}
@@ -189,7 +189,7 @@ User{
 	public function setUserHash(string $newUserHash): void {
 		//enforce hash formatting
 		$newUserHash = trim($newUserHash);
-		$newUserHash = filter_var($newUserHash(FILTER_SANITZE_STRING));
+		$newUserHash = filter_var($newUserHash, FILTER_SANITIZE_STRING);
 		if(empty($newUserHash) === true) {
 			throw(new \InvalidArgumentException("User hash is not a valid hash"));
 		}
@@ -218,7 +218,7 @@ User{
 	 * @throw range exception
 	 */
 	public function setUserLastName($newUserLastName): void {
-		$newUserLastName = filter_var($newUserLastName(FILTER_SANITZE_STRING));
+		$newUserLastName = filter_var($newUserLastName,FILTER_SANITIZE_STRING);
 		$newUserLastName = trim($newUserLastName);
 		if(empty($newUserLastName)=== true){
 			throw(new\InvalidArgumentException ("not real last name"));
@@ -399,5 +399,5 @@ User{
 
 
 
-	
+
 }
