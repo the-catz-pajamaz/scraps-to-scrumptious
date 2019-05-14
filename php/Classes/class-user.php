@@ -2,7 +2,9 @@
 /**
  * specify name-space, uuid validation method, composer/autoload stuff
  */
-
+namespace theCatzPajamaz\scrapsToScrumptious;
+require_once ("autoload.php");
+use Ramsey\Uuid\Uuid;
 //create class for table 'user'
 
 class
