@@ -5,22 +5,67 @@
 namespace theCatzPajamaz\scrapsToScrumptious;
 require_once ("autoload.php");
 use Ramsey\Uuid\Uuid;
-//create class for table 'user'
 
-class
-User{
+// create class for table 'user'
+class User{
 	// validate uuid for pk, create private variables for all table elements
 	use ValidateUuid;
+
+	/**
+	 * Id for user, this is primary key
+	 * @var Uuid $userId
+	 */
 	private $userId;
 
+	/**
+	 * token to validate the profile
+	 * @var $userActivationToken
+	 */
 	private $userActivationToken;
+
+	/**
+	 * email for this profile
+	 * @var $userEmail
+	 */
 	private $userEmail;
+
+	/**
+	 * This is the user's first name
+	 * @var $userFirstName
+	 */
 	private $userFirstName;
+
+	/**
+	 *this is the users chosen handle
+	 * @var $userHandle
+	 */
 	private $userHandle;
+
+	/**
+	 * hash for user password
+	 * @var $userHash
+	 */
 	private $userHash;
+
+	/**
+	 *this is the user's last name
+	 * @var $userLastName
+	 */
 	private $userLastName;
 
-	//constructor method for table user
+	/**
+	 * constructor method for table user
+	 * @param Uuid $newUserId id of this user
+	 * @param string $newUserActivationToken to protect against malicious accounts
+	 * @param string $newUserEmail string with user's email
+	 * @param string $newUserFirstName string with user's first name
+	 * @param string $newUserHandle string with user's handle
+	 * @param string $newUserHash string with user's hash
+	 * @param string $newUserLastName string with user's last name
+	 * @throws \RangeException if strings are the improper character count or negative values
+	 * @throws \TypeError if data violates something specific to that objects requirements
+	 * @throws \Exception in the event of some other nonsense
+	 */
 
 	public function __construct ($newUserId, string $newUserActivationToken, string $newUserEmail,
 										  string $newUserFirstName, string $newUserHandle, string $newUserHash,
@@ -44,6 +89,7 @@ User{
 
 	/**
 	 * accessor method for UserId
+	 * @return Uuid
 	 */
 	public function getUserId(): Uuid {
 		return $this->userId;
@@ -52,10 +98,9 @@ User{
 	/**
 	 * mutator method for userId
 	 *
-	 * @param Uuid|string $newUserId
+	 * @param Uuid $newUserId
 	 * @throws \RangeException if $newUserId value is too large
-	 * @throws \TypeError if the userId is not positive
-	 * @throws \TypeError if the userId is not
+	 * @throws \TypeError if the userId is not is not a Uuid
 	 */
 
 	public function setUserId($newUserId): void {
@@ -71,6 +116,7 @@ User{
 
 	/**
 	 * Accessor method for userActivationToken
+	 * @return string for activation token
 	 */
 	public function getUserActivationToken(): string {
 		return $this->userActivationToken;
@@ -79,8 +125,7 @@ User{
 	/**
 	 * mutator method for userActivationToken
 	 * @param string $userActivationToken
-	 * @throws if not hexidecimal
-	 * @throws if not exactly __ characters
+	 * @throws \RangeException if caught by ctype_xdigit method
 	 */
 
 		public function setUserActivationToken(string $newUserActivationToken): void {
@@ -96,6 +141,7 @@ User{
 
 	/**
 	 * accessor method for userEmail :)
+	 * @return string for userEmail
 	 */
 	public function getUserEmail():string {
 		return $this->userEmail;
@@ -105,10 +151,9 @@ User{
 	/**
 	 *mutator method for userEmail
 	 *
-	 *@param string $newUserEmail new email
+	 *@param string $newUserEmail
 	 *@throws \ InvalidArgumentException if $newEmail is not valid email or insecure
 	 *@throws \RangeException if $newEmail is >128 characters
-	 *@throws \TypeError if $newEmail is not a string
 	 */
 
 	public function setUserEmail( string $newUserEmail): void{
@@ -125,6 +170,7 @@ User{
 
 	/**
 	 * accessor method for userFirstName
+	 * @return string containing userFirstName
 	 *
 	 */
 	public function getUserFirstName():string {
@@ -134,7 +180,8 @@ User{
 	/**
 	 * Mutator Method for userFirstName
 	 * @param string
-	 * @throw range exception
+	 * @throws \InvalidArgumentException
+	 * @throws \RangeException
 	 */
 	public function setUserFirstName($newUserFirstName): void {
 		$newUserFirstName = trim($newUserFirstName);
@@ -150,6 +197,7 @@ User{
 
 	/**
 	 * accessor method for userHandle
+	 * @return string with userHandle
 	 */
 	public function getUserHandle():string {
 		return $this->userHandle;
@@ -158,6 +206,7 @@ User{
 	/**
 	 * mutator method for UserHandle
 	 * @param string
+	 * @throws \InvalidArgumentException if empty
 	 * @throw range exception
 	 */
 	public function setUserHandle($newUserHandle): void {
@@ -177,7 +226,6 @@ User{
 	 *
 	 * @return string value userHash
 	 */
-
 	public function getUserHash():string {
 		return $this->userHash;
 	}
@@ -185,8 +233,8 @@ User{
 	/**
 	 * Mutator method for user hash
 	 * @param string $newUserHash
-	 * @throws \InvalidArgumentException if the hash is not secure
-	 * @throws \RangeException if the hash is >97 characters
+	 * @throws \InvalidArgumentException if the hash is empty, or not a hash
+	 * @throws \RangeException if the hash is not exactly 97 characters
 	 */
 	public function setUserHash(string $newUserHash): void {
 		//enforce hash formatting
@@ -208,6 +256,7 @@ User{
 
 	/**
 	 * accessor method for userLastName
+	 * @return string for userLastName
 	 *
 	 */
 	public function getUserLastName():string {
@@ -217,7 +266,8 @@ User{
 	/**
 	 * Mutator Method for userFirstName
 	 * @param string
-	 * @throw range exception
+	 * @throws \InvalidArgumentException if empty
+	 * @throws \RangeException if last name is too long
 	 */
 	public function setUserLastName($newUserLastName): void {
 		$newUserLastName = filter_var($newUserLastName,FILTER_SANITIZE_STRING);
@@ -232,7 +282,11 @@ User{
 	}
 
 	/**
-	 * insert statement for table user
+	 * inserts user into mySQL
+	 *
+	 * @praam \PDO
+	 * @throws \PDOException when mySQL errors happen
+	 * @throws \TypeError when \PDO errors happen
 	 */
 	public function insert (\PDO $pdo) : void {
 
@@ -256,6 +310,9 @@ User{
 
 	/**
 	 * delete statement for table user
+	 * @praam \PDO
+	 * @throws \PDOException when mySQL errors happen
+	 * @throws \TypeError when \PDO errors happen
 	 */
 	public function delete(\PDO $pdo) : void {
 
@@ -284,12 +341,12 @@ User{
 		//bind variables to template
 		$parameters = [
 			"userId" => $this->userId->getBytes(),
-			"userActivationToken" => $this->userActivationToken->getBytes(),
-			"userEmail" => $this->userEmail->userEmail(),
-			"userFirstName" => $this->userFirstName->userFirstName(),
-			"userHandle" => $this->userHandle->userHandle(),
-			"userHash" => $this->userHash->getBytes(),
-			"userLastName" => $this->userLastName->userLastName(),
+			"userActivationToken" => $this->userActivationToken,
+			"userEmail" => $this->userEmail,
+			"userFirstName" => $this->userFirstName,
+			"userHandle" => $this->userHandle,
+			"userHash" => $this->userHash,
+			"userLastName" => $this->userLastName,
 		];
 		$statement->execute($parameters);
 	}
@@ -299,7 +356,7 @@ User{
 	 * @param PDO $pdo
 	 * @param $uuid
 	 * @return User|null
-	 * @throws exception
+	 * @throws \PDOException
 	 */
 	public static function getUserByUserId (\PDO $pdo, $userId) : ?user {
 		try{
@@ -329,12 +386,14 @@ User{
 	}
 
 
-	/**g
+	/**
 	 * get user by email
 	 * @param PDO $pdo
 	 * @param $userEmail
 	 * @return User
-	 * @throws RangeException
+	 * @throws \InvalidArgumentException if empty
+	 * @throws \RangeException if too long
+	 * @throws \Exception
 	 */
 	public static function getUserByUserEmail (\PDO $pdo, $userEmail) : ?user {
 		$userEmail = trim($userEmail);
@@ -372,7 +431,8 @@ User{
 	 * @param PDO $pdo
 	 * @param $userActivationToken
 	 * @return User|null
-	 * @throws RangeException
+	 * @throws RangeException if not a token
+	 * @throws \PDOException in event of mySQL Errors
 	 */
 	public static function getUserByUserActivationToken (\PDO $pdo, $userActivationToken) : ?user {
 		if(ctype_xdigit($userActivationToken) === false) {
