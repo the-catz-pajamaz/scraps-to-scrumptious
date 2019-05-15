@@ -124,7 +124,7 @@ class User{
 
 	/**
 	 * mutator method for userActivationToken
-	 * @param string $userActivationToken
+	 * @param string $newUserActivationToken
 	 * @throws \RangeException if caught by ctype_xdigit method
 	 */
 
@@ -298,12 +298,12 @@ class User{
 		//bind variables to template
 		$parameters = [
 			"userId" => $this->userId->getBytes(),
-			"userActivationToken" => $this->userActivationToken->getBytes(),
-			"userEmail" => $this->userEmail->userEmail(),
-			"userFirstName" => $this->userFirstName->userEmail(),
-			"userHandle" => $this->userHandle->userHandle(),
-			"userHash" => $this->userHash->getBytes(),
-			"userLastName" => $this->userLastName->userLastName(),
+			"userActivationToken" => $this->userActivationToken,
+			"userEmail" => $this->userEmail,
+			"userFirstName" => $this->userFirstName,
+			"userHandle" => $this->userHandle,
+			"userHash" => $this->userHash,
+			"userLastName" => $this->userLastName,
 		];
 		$statement->execute($parameters);
 	}
@@ -352,13 +352,13 @@ class User{
 	}
 
 	/**
-	 * gets user by user id
+	 * gets user by userId
 	 * @param PDO $pdo
-	 * @param $uuid
+	 * @param Uuid $userId
 	 * @return User|null
 	 * @throws \PDOException
 	 */
-	public static function getUserByUserId (\PDO $pdo, $userId) : ?user {
+	public static function getUserByUserId (\PDO $pdo, $userId) : ?User {
 		try{
 		$userId = self::validateUuid($userId);
 	}
@@ -395,7 +395,7 @@ class User{
 	 * @throws \RangeException if too long
 	 * @throws \Exception
 	 */
-	public static function getUserByUserEmail (\PDO $pdo, $userEmail) : ?user {
+	public static function getUserByUserEmail (\PDO $pdo, $userEmail) : ?User {
 		$userEmail = trim($userEmail);
 		$userEmail = filter_var($userEmail, FILTER_VALIDATE_EMAIL, FILTER_SANITIZE_EMAIL);
 		if(empty($userEmail) === true) {
@@ -413,7 +413,7 @@ class User{
 
 		try{
 			$user = null;
-			$statement->setFetchMode(\PDO::fetch_assoc);
+			$statement->setFetchMode(\PDO:: FETCH_ASSOC);
 			$row = $statement-fetch();
 			if($row !== false) {
 				$user = new user($row["userId"], $row["userActivationToken"], $row["userEmail"], $row["userFirstName"], $row["userHandle"], $row["userHash"], $row["userLastName"]);
@@ -434,7 +434,7 @@ class User{
 	 * @throws RangeException if not a token
 	 * @throws \PDOException in event of mySQL Errors
 	 */
-	public static function getUserByUserActivationToken (\PDO $pdo, $userActivationToken) : ?user {
+	public static function getUserByUserActivationToken (\PDO $pdo, $userActivationToken) : ?User {
 		if(ctype_xdigit($userActivationToken) === false) {
 			throw(new\RangeException("user activation is not valid"));
 		}
