@@ -1,6 +1,7 @@
 <?php
-
-
+namespace theCatzPajamaz\scrapsToScrumptious;
+require_once ("autoload.php");
+use Ramsey\Uuid\Uuid;
 
 
 class Recipe {
@@ -361,7 +362,7 @@ class Recipe {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getRecipeUserIdByRecipeUserId($recipeUserId): ?Recipe {
+	public static function getRecipeUserIdByRecipeUserId(\PDO $pdo, string $recipeUserId): ?Recipe {
 		// sanitize the recipeUserId before searching
 		try {
 			$recipeUserId = self::validateUuid($recipeUserId);
@@ -369,7 +370,7 @@ class Recipe {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeUserId = : recipUserId";
+		$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeUserId = : recipeUserId";
 
 		$statement = $pdo->prepare($query);
 
@@ -397,19 +398,19 @@ class Recipe {
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @param Uuid|string $recipeTitle recipe title to search for
-	 * @return Author|null Recipe Title found or null if not found
+	 * @return Recipe|null Recipe Title found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getRecipesByRecipeTitle($pdo, $recipeTitle) {
-		// sanitize the recipeTitle before searching
-		try {
-			$recipeTitle = self::validateUuid($recipeTitle);
-		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
+	public static function getRecipeByRecipeTitle(\PDO $pdo, string $recipeTitle) : \SPLFixedArray {
+		// sanitize the recipe title before searching
+		$recipeTitle = trim($recipeTitle);
+		$recipeTitle = filter_var($recipeTitle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($recipeTitle) === true) {
+			throw(new \PDOException("not a valid recipe title"));
 		}
 		// create query template
-		$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeUserId = : recipUserId";
+		$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeTitle = : recipeTitle";
 
 		$statement = $pdo->prepare($query);
 
@@ -419,17 +420,17 @@ class Recipe {
 
 		// grab the recipeTitle from mySQL
 		try {
-			$recipeTitle = null;
+			$recipe = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$recipeTitle = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
+				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return ($recipeTitle);
+		return ($recipe);
 	}
 }
 
