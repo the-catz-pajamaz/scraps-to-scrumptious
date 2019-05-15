@@ -14,15 +14,15 @@ class Cookbook {
 	use ValidateUuid;
 
 	/**
-	 * id for this cookbook recipe;
+	 * Uuid for this cookbook recipe;
 	 * @var Uuid $cookbookRecipeId
 	 */
 
 	private $cookbookRecipeId;
 
 	/**
-	 * @var Uuid for cookbookUserId
-	 * @var $cookbookUserId
+	 * Uuid for cookbookUserId
+	 * @var Uuid $cookbookUserId
 	 */
 
 	private $cookbookUserId;
@@ -31,7 +31,7 @@ class Cookbook {
 	 * constructor for cookbook
 	 */
 
-	public function __construct(string $newCookbookRecipeId, string $newCookbookUserId) {
+	public function __construct(Uuid $newCookbookRecipeId, Uuid $newCookbookUserId) {
 		try {
 			$this->setCookbookRecipeId($newCookbookRecipeId);
 			$this->setCookbookUserId($newCookbookUserId);
@@ -53,9 +53,9 @@ class Cookbook {
 	/**
 	 * mutator method for cookbookRecipeId
 	 *
-	 * @param Uuid | string $newCookbookRecipeId value of cookbookRecipeId
+	 * @param Uuid $newCookbookRecipeId value of cookbookRecipeId
 	 * @throws \RangeException if $newCookbookRecipeId is not positive
-	 * @throws \TypeError if the cookbookRecipeId is not a string
+	 * @throws \TypeError if the cookbookRecipeId is not a Uuid
 	 */
 
 	public function setCookbookRecipeId($newCookbookRecipeId): void {
@@ -65,7 +65,8 @@ class Cookbook {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		//convert and store the cookbookRecipeId
+
+		// convert and store the cookbookRecipeId
 		$this->cookbookRecipeId = $uuid;
 	}
 
@@ -81,7 +82,7 @@ class Cookbook {
 	/**
 	 * mutator method for cookbookUserId
 	 *
-	 * @param Uuid | string $newCookbookUserId value of cookbookUserId
+	 * @param Uuid $newCookbookUserId value of cookbookUserId
 	 * @throws \RangeException if $newCookbookUserId is not positive
 	 * @throws \TypeError if the cookbookUserId is not a string
 	 */
@@ -94,8 +95,7 @@ class Cookbook {
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 
-		//convert and store the cookbookUserId
-
+		// convert and store the cookbookUserId
 		$this->cookbookUserId = $uuid;
 	}
 
@@ -109,7 +109,7 @@ class Cookbook {
 	public function insert(\PDO $pdo): void {
 		$query = "insert into cookbook(cookbookRecipeId, cookbookUserId) values (:cookbookRecipeId, :cookbookUserId)";
 		$statement = $pdo->prepare($query);
-		$parameters = ["cookbookRecipeId" => $this->cookbookRecipeId->getBytes(), $this->cookbookUserId];
+		$parameters = ["cookbookRecipeId" => $this->cookbookRecipeId->getBytes(), "cookbookUserId" => $this->cookbookUserId->getBytes()];
 		$statement->execute($parameters);
 	}
 
@@ -121,14 +121,14 @@ class Cookbook {
 	 */
 
 	public function delete(\PDO $pdo): void {
-		$query = "DELETE FROM cookbook WHERE cookbookUserId = :cookbookUserId";
+		$query = "DELETE FROM cookbook WHERE cookbookRecipeId = :cookbookRecipeId AND cookbookUserId = :cookbookUserId";
 		$statement = $pdo->prepare($query);
 		//bind the member variables to the place holder in the template
-		$parameters = ["cookbookUserId" => $this->cookbookUserId->getBytes()];
+		$parameters = ["cookbookRecipeId" => $this->cookbookRecipeId->getBytes(), "cookbookUserId" => $this->cookbookUserId->getBytes()];
 		$statement->execute($parameters);
 	}
 
-
+// Commented out because no need for counting recipe saves.
 //	/**
 //	 * @param \PDO $pdo
 //	 * @param $cookbookRecipeId
@@ -174,11 +174,11 @@ class Cookbook {
 
 	/**
 	 * @param \PDO $pdo
-	 * @param $cookbookRecipeId
+	 * @param Uuid $cookbookUserId
 	 * @return \SplFixedArray
-	 * @throws \PDOException if can't be converted.
+	 * @throws \PDOException if we get a PDO error.
 	 */
-	public static function getCookbooksByCookbookUserId(\PDO $pdo, $cookbookUserId): \SplFixedArray {
+	public static function getCookbooksByCookbookUserId(\PDO $pdo, Uuid $cookbookUserId): \SplFixedArray {
 		//Sanitize the cookbookUserId before accessing
 		try {
 			$cookbookUserId = self::validateUuid($cookbookUserId);
@@ -195,21 +195,28 @@ class Cookbook {
 		$statement->execute($parameters);
 
 		//Build array of cookbookUserIds
-		$cookbook = new \SplFixedArray($statement->rowCount());
+		$cookbooks = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$cookbook = new Cookbook($row["cookbookRecipeId"], $row["cookbookUserId"]);
-				$cookbook[$cookbook->key()] = $cookbook;
-				$cookbook->next();
+				$cookbooks[$cookbooks->key()] = $cookbook;
+				$cookbooks->next();
 			} catch(\Exception $exception) {
 				//if the row can't be converted, rethrow
 				throw (new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
-		return ($cookbook);
+		return ($cookbooks);
 	}
 
+	/**
+	 * @param \PDO $pdo
+	 * @param Uuid $cookbookRecipeId
+	 * @param Uuid $cookbookUserId
+	 * @return Cookbook the cookbook with both cookbookRecipeId and cookbookUserId
+	 * @throws \PDOException if we get a PDO error.
+	 */
 	public static function getCookbookByCookbookRecipeIdAndCookbookUserId(\PDO $pdo, $cookbookRecipeId, $cookbookUserId): Cookbook {
 		//Sanitize the cookbookRecipeId and cookbookUserId before accessing
 		try {
