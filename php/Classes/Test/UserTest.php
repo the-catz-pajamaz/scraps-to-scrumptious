@@ -69,9 +69,10 @@ class UserTest extends ScrapsToScrumptiousTest {
 	}
 
 	/**
-	 * test inserting a valid User and verify that the actual mySQL data matches
+	 * test inserting User
+	 * verify that the mySQL data matches
 	 **/
-	public function testInsertValidUser() : void {
+	public function testInsertUser() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("user");
 		
@@ -79,8 +80,11 @@ class UserTest extends ScrapsToScrumptiousTest {
 
 		$user = new User($userId, $this->VALID_ACTIVATION_TOKEN, $this->VALID_EMAIL, $this->VALID_FIRST_NAME, $this->VALID_HANDLE, $this->VALID_HASH, $this->VALID_LAST_NAME);
 		$user->insert($this->getPDO());
+
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoUser = User::getUserByUserId($this->getPDO(), $user->getUserId());
+
+
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 		$this->assertEquals($pdoUser->getUserId(), $userId);
 		$this->assertEquals($pdoUser->getUserActivationToken(), $this->VALID_ACTIVATION_TOKEN);
@@ -91,7 +95,59 @@ class UserTest extends ScrapsToScrumptiousTest {
 		$this->assertEquals($pdoUser->getUserLastName(), $this->VALID_LAST_NAME);
 	}
 
+	/**
+	 * test inserting a User, editing it, and then updating it
+	 **/
+	public function testUpdateUser() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("user");
 
 
+		// create a new User and insert to into mySQL
+		$userId = generateUuidV4();
+		$user = new User($userId, $this->VALID_ACTIVATION_TOKEN, $this->VALID_EMAIL, $this->VALID_FIRST_NAME, $this->VALID_HANDLE, $this->VALID_HASH, $this->VALID_LAST_NAME);
+		$user->insert($this->getPDO());
 
+
+		// edit the User and update it in mySQL
+		$user->setUserHandle($this->VALID_HANDLE);
+		$user->update($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoUser = User::getUserByUserId($this->getPDO(), $user->getUserId());
+
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
+		$this->assertEquals($pdoUser->getUserId(), $userId);
+		$this->assertEquals($pdoUser->getUserActivationToken(), $this->VALID_ACTIVATION_TOKEN);
+		$this->assertEquals($pdoUser->getUserEmail(), $this->VALID_EMAIL);
+		$this->assertEquals($pdoUser->getUserFirstName(), $this->VALID_FIRST_NAME);
+		$this->assertEquals($pdoUser->getUserHandle(), $this->VALID_HANDLE);
+		$this->assertEquals($pdoUser->getUserHash(), $this->VALID_HASH);
+		$this->assertEquals($pdoUser->getUserLastName(), $this->VALID_LAST_NAME);
+	}
+
+	/**
+	 * test creating a User and then deleting it
+	 **/
+	public function testDeleteUser() : void {
+
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("user");
+
+		$userId = generateUuidV4();
+		$user = new User($userId, $this->VALID_ACTIVATION_TOKEN, $this->VALID_EMAIL, $this->VALID_FIRST_NAME, $this->VALID_HANDLE, $this->VALID_HASH, $this->VALID_LAST_NAME);
+		$user->insert($this->getPDO());
+
+		// delete the User from mySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
+		$user->delete($this->getPDO());
+
+		// grab the data from mySQL and enforce the User does not exist
+		$pdoUser = User::getUserByUserId($this->getPDO(), $user->getUserId());
+		$this->assertNull($pdoUser);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("user"));
+	}
+		
+		
+		
 }
