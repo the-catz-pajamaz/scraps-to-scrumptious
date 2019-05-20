@@ -111,4 +111,26 @@ class RecipeTest extends scrapsToScrumptiousTest {
 
 	}
 
+	/**
+	 * test creating a Recipe and then deleting it
+	 **/
+	public function testDeleteValidRecipe() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("recipe");
+
+		// create a new Recipe and insert to into mySQL
+		$recipeId = generateUuidV4();
+		$recipe = new Recipe($recipeId, $this->recipe->getRecipeId(), $this->VALID_RECIPEDESCRIPTION);
+		$recipe->insert($this->getPDO());
+
+		// delete the Recipe from mySQL
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
+		$recipe->delete($this->getPDO());
+
+		// grab the data from mySQL and enforce the Recipe does not exist
+		$pdoRecipe = Recipe::getRecipeByRecipeId($this->getPDO(), $recipe->getRecipeId());
+		$this->assertNull($pdoRecipe);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("recipe"));
+	}
+
 
