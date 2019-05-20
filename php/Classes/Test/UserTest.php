@@ -2,13 +2,14 @@
 
 namespace theCatzPajamaz\scrapsToScrumptious;
 
+use mysql_xdevapi\Exception;
 use theCatzPajamaz\scrapsToScrumptious\User;
 
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
 
 // grab the uuid generator
-require_once(dirname(__DIR__, 2) . "/ramsey/uuid.php");
+require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 /**
  * Full PHPUnit test for the User class
@@ -59,10 +60,10 @@ class UserTest extends ScrapsToScrumptiousTest {
 
 	/**
 	 * run the default setup operation to create activation token and hash.
-	 */
+	 * @throws \Exception, 	 */
 	public final function setUp() : void {
 		parent::setUp();
-		//
+
 		$password = "abc123";
 		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 		$this->VALID_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
