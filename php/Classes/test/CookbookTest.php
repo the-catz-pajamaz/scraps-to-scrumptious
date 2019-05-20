@@ -119,7 +119,19 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 			$this->assertNull($cookbook);
 		}
 
+		/**
+		 * Test grabbing a Cookbook by User id
+		 **/
+		public function testGetValidCookbookByUserId() : void {
+			// Create a new Cookbook and insert it into mySQL
+			$cookbook = new Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
+			$cookbook->insert($this->getPDO());
 
+			// grab the data from mySQL and enforce the fields match expected output
+			$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->user->getUserId(), $this->recipe->getRecipeId());
+			$this->assertEquals($pdoCookbook->getCookbookRecipeId(), $this->recipe->getRecipeId());
+			$this->assertEquals($pdoCookbook->getCookbookUserId(), $this->user->getUserId());
+		}
 
 
 	}
