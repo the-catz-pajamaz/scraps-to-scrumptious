@@ -94,7 +94,7 @@ class RecipeTest extends scrapsToScrumptiousTest {
 		$numRows = $this->getConnection()->getRowCount("recipe");
 
 		// create a new Recipe and insert to into mySQL
-		$RecipeId = generateUuidV4();
+		$recipeId = generateUuidV4();
 		$recipe = new Recipe($recipeId, $this->recipe->getRecipeId(), $this->VALID_RECIPEDESCRIPTION);
 		$recipe->insert($this->getPDO());
 
@@ -103,10 +103,10 @@ class RecipeTest extends scrapsToScrumptiousTest {
 		$recipe->update($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoRecipet = Recipe::getRecipeByRecipeId($this->getPDO(), $recipe->getRecipeId());
+		$pdoRecipe = Recipe::getRecipeByRecipeId($this->getPDO(), $recipe->getRecipeId());
 		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
-		$this->assertEquals($pdoRecipe->getRecipeId(), $this->recip->getRecipeId());
+		$this->assertEquals($pdoRecipe->getRecipeId(), $this->recipe->getRecipeId());
 		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPEDESCRIPTION2);
 
 	}
@@ -178,12 +178,12 @@ class RecipeTest extends scrapsToScrumptiousTest {
 		$this->assertCount(1, $results);
 
 		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptios\\Recipe", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
 
 		// grab the result from the array and validate it
 		$pdoRecipe = $results[0];
 		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
-		$this->assertEquals($pdorecipe->getRecipeUserId(), $this->recipe->getRecipeId());
+		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->recipe->getRecipeId());
 		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPEDESCRIPTION);
 
 	}
@@ -197,7 +197,7 @@ class RecipeTest extends scrapsToScrumptiousTest {
 
 		// create a new Recipe and insert to into mySQL
 		$recipeId = generateUuidV4();
-		$recipe = new Tweet($recipeId, $this->recipe->getRecipeId(), $this->VALID_RECIPEDESCRIPTION);
+		$recipe = new Recipe($recipeId, $this->recipe->getRecipeId(), $this->VALID_RECIPEDESCRIPTION);
 		$recipe->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
