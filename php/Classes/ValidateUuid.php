@@ -1,5 +1,5 @@
 <?php
-namespace theCatzPajamaz\scrapsToScrumptious;
+namespace theCatzPajamaz\ScrapsToScrumptious;
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**

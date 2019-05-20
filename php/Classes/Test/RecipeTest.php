@@ -1,7 +1,7 @@
 <?php
-namespace theCatzPajamaz\scrapsToScrumptious;
+namespace theCatzPajamaz\ScrapsToScrumptious;
 
-use theCatzPajamas\scrapsToScrumptious\{User, Recipe};
+use theCatzPajamas\ScrapsToScrumptious\{User, Recipe};
 
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
@@ -18,7 +18,7 @@ require_once(dirname(__DIR__, 2) . "/vendor/uuid.php");
 	 * @see Recipe
 	 * @author Eric Martinez <emartinez451@cnm.edu>
 	 **/
-	class RecipeTest extends scrapsToScrumptiousTest {
+	class RecipeTest extends ScrapsToScrumptiousTest {
 	/**
 	 * User that created the Recipe; this is for foreign key relations
 	 * @var Recipe user
@@ -137,7 +137,7 @@ require_once(dirname(__DIR__, 2) . "/vendor/uuid.php");
 		$results = Recipe::getRecipeByRecipeId($this->getPDO(), $recipe->getReciepId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\scrapsToScrumptious\\Recipe", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
 
 		// grab the result from the array and validate it
 		$pdoRecipe = $results[0];
@@ -166,7 +166,7 @@ require_once(dirname(__DIR__, 2) . "/vendor/uuid.php");
 		$this->assertCount(1, $results);
 
 		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\scrapsToScrumptious\\Recipe", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
 
 		// grab the result from the array and validate it
 		$pdoRecipe = $results[0];
@@ -192,7 +192,7 @@ require_once(dirname(__DIR__, 2) . "/vendor/uuid.php");
 		$results = Recipe::getAllRecipes($this->getPDO());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\scrapsToScrumptious\\Recipe", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
 
 		// grab the result from the array and validate it
 		$pdoRecipe = $results[0];
