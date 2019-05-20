@@ -9,16 +9,16 @@ require_once(dirname(__DIR__) . "/autoload.php");
 // grab the uuid generator
 require_once(dirname(__DIR__, 2) . "/vendor/uuid.php");
 
-/**
- *  Full PHPUnit test for the Recipe class
- *
- * This is a complete PHPUnit test of the Recipe class. It is complete because *ALL* mySQL/PDO enabled methods
- * are tested for both invalid and valid inputs.
- *
- * @see Recipe
- * @author Eric Martinez <emartinez451@cnm.edu>
- **/
-class RecipeTest extends scrapsToScrumptiousTest {
+	/**
+	 *  Full PHPUnit test for the Recipe class
+	 *
+	 * This is a complete PHPUnit test of the Recipe class. It is complete because *ALL* mySQL/PDO enabled methods
+	 * are tested for both invalid and valid inputs.
+	 *
+	 * @see Recipe
+	 * @author Eric Martinez <emartinez451@cnm.edu>
+	 **/
+	class RecipeTest extends scrapsToScrumptiousTest {
 	/**
 	 * User that created the Recipe; this is for foreign key relations
 	 * @var Recipe user
@@ -137,7 +137,7 @@ class RecipeTest extends scrapsToScrumptiousTest {
 		$results = Recipe::getRecipeByRecipeId($this->getPDO(), $recipe->getReciepId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\scrapsToScrumptious\\Recipe", $results);
 
 		// grab the result from the array and validate it
 		$pdoRecipe = $results[0];
@@ -166,7 +166,7 @@ class RecipeTest extends scrapsToScrumptiousTest {
 		$this->assertCount(1, $results);
 
 		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\scrapsToScrumptious\\Recipe", $results);
 
 		// grab the result from the array and validate it
 		$pdoRecipe = $results[0];
@@ -192,7 +192,7 @@ class RecipeTest extends scrapsToScrumptiousTest {
 		$results = Recipe::getAllRecipes($this->getPDO());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\scrapsToScrumptious\\Recipe", $results);
 
 		// grab the result from the array and validate it
 		$pdoRecipe = $results[0];
