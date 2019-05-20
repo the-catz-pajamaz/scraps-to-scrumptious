@@ -1,0 +1,14 @@
+<phpunit>
+	<testsuites>
+		<testsuite name="Scraps to Scrumptious">
+			<file>CookbookTest.php</file>
+			<file>RecipeTest.php</file>
+			<file>UserTest.php</file>
+		</testsuite>
+	</testsuites>
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">..</directory>
+		</whitelist>
+	</filter>
+</phpunit>
