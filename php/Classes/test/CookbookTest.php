@@ -71,16 +71,37 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 			$cookbook = new Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
 			$cookbook->insert($this->getPDO());
 
-			// Delete Cookbook from mySQL
-			$this->assertEquals Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
+			// Make sure cookbook doesn't already exist in mySQL
+			$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->user->getUserId(), $this->recipe->getRecipeId());
+			$this->assertNull($pdoCookbook);
+		}
+	}
+
+	/**
+	 * Test creating a Cookbook and then deleting it
+	 **/
+	public function testInsertValidCookbook() : void {
+		// Create a new Cookbook and insert it into mySQL
+		$cookbook = new Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
+		$cookbook->insert($this->getPDO());
+
+		// Delete Cookbook from mySQL
+		$this->assertEquals Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
 			$cookbook->delete($this->getPDO());
 
 			// Make sure cookbook doesn't already exist in mySQL
 			$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->user->getUserId(), $this->recipe->getRecipeId());
 			$this->assertNull($pdoCookbook);
+
+			}
+
+
+		/**
+	 * Test inserting a Cookbook and regrabbing it from mySQL
+	 */
+	public function testGetCookbookByCookbookRecipeIdAndCookbookUserId() : void {
+		//
 		}
-
-
 
 	}
 }
