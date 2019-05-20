@@ -86,4 +86,29 @@ class RecipeTest extends scrapsToScrumptiousTest {
 
 	}
 
+	/**
+	 * test inserting a Recipe, editing it, and then updating it
+	 **/
+	public function testUpdateValidRecipe() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("recipe");
+
+		// create a new Recipe and insert to into mySQL
+		$RecipeId = generateUuidV4();
+		$recipe = new Recipe($recipeId, $this->recipe->getRecipeId(), $this->VALID_RECIPEDESCRIPTION);
+		$recipe->insert($this->getPDO());
+
+		// edit the Recipe and update it in mySQL
+		$recipe->setRecipeDescription($this->VALID_RECIPEDESCRIPTION2);
+		$recipe->update($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$pdoRecipet = Recipe::getRecipeByRecipeId($this->getPDO(), $recipe->getRecipeId());
+		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
+		$this->assertEquals($pdoRecipe->getRecipeId(), $this->recip->getRecipeId());
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPEDESCRIPTION2);
+
+	}
+
 
