@@ -1,5 +1,5 @@
 <?php
-namespace theCatzPajamaz\scrapsToScrumptious;
+namespace TheCatzPajamaz\ScrapsToScrumptious\Test;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\DbUnit\DataSet\QueryDataSet;
@@ -24,7 +24,7 @@ require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
  *
  * @author Samuel Nelson <snelson54@cnm.edu>
  **/
-abstract class DataDesignTest extends TestCase {
+abstract class ScrapsToScrumptiousTest extends TestCase {
 	use TestCaseTrait;
 	/**
 	 * PHPUnit database connection interface
@@ -40,11 +40,10 @@ abstract class DataDesignTest extends TestCase {
 		$dataset = new QueryDataSet($this->getConnection());
 		// add all the tables for the project here
 		// THESE TABLES *MUST* BE LISTED IN THE SAME ORDER THEY WERE CREATED!!!!
-		$dataset->addTable("user");
+		$dataset->addTable("user", "SELECT userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName FROM `user`");
 		$dataset->addTable("recipe");
 		$dataset->addTable("cookbook");
 		// the second parameter is required because like is also a SQL keyword and is the only way PHPUnit can query the like table
-		$dataset->addTable("user", "SELECT userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName FROM `user`");
 		return($dataset);
 	}
 	/**
@@ -78,7 +77,7 @@ abstract class DataDesignTest extends TestCase {
 		// if the connection hasn't been established, create it
 		if($this->connection === null) {
 			// connect to mySQL and provide the interface to PHPUnit
-			$secrets =  new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+			$secrets =  new \Secrets("/etc/apache2/capstone-mysql/scraps.ini");
 			$pdo = $secrets->getPdoObject();
 			$this->connection = $this->createDefaultDBConnection($pdo, $secrets->getDatabase());
 		}

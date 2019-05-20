@@ -2,7 +2,7 @@
 /**
  * specify name-space, uuid validation method, composer/autoload stuff
  */
-namespace theCatzPajamaz\scrapsToScrumptious;
+namespace TheCatzPajamaz\ScrapsToScrumptious;
 require_once ("autoload.php");
 use Ramsey\Uuid\Uuid;
 

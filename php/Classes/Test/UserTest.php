@@ -1,9 +1,9 @@
 <?php
 
-namespace theCatzPajamaz\scrapsToScrumptious;
+namespace TheCatzPajamaz\ScrapsToScrumptious\Test;
 
 use mysql_xdevapi\Exception;
-use theCatzPajamaz\scrapsToScrumptious\User;
+use TheCatzPajamaz\ScrapsToScrumptious\User;
 
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
