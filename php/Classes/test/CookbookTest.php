@@ -59,5 +59,25 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 		$this->user = new User(generateUuidV4(), null,"@phpunit", "https://www.fillmurray.com/460/300", "test@phpunit.de", $this->VALID_HASH, "+12345678911");)
 		$this->user->insert($this->getPDO());
 
+		// Create and insert the mocked Cookbook
+		$this->cookbook = new Cookbook(generateUuidV4(), $this->cookbook->getCookbookId());
+		$this->cookbook->insert($this->getPDO());
+
+		/**
+		 * test inserting a valid Cookbook and verify that the mySQL data matches
+		 */
+		public function testInsertValidCookbook() : void {
+			// Create a new Cookbook and insert it into mySQL
+			$cookbook = new Cookbook($this->user->getUserId, $this->recipe->getRecipeId());
+			$cookbook->insert($this->getPDO());
+
+			// Delete Cookbook from mySQL
+			$this->assertEquals Cookbook($this->user->getUserId, $this->recipe->getRecipeId());
+			$cookbook->delete($this->getPDO());
+
+			// Make sure cookbook doesn't aready exist in mySQL
+		}
+
+
 	}
 }
