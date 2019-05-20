@@ -32,13 +32,32 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 	protected $recipe;
 
 	/**
+	 * valid hash to use
+	 * @var $VALID_HASH
+	 */
+	protected $VALID_HASH;
+
+	/**
+	 * valid activation token
+	 * @var string $VALID_ACTIVATION
+	 */
+	protected $ACTIVE_VALIDATION;
+
+	/**
 	 * creates dependent objects before running test
 	 */
 	public final function setUp() : void {
 		// Run the default setUp() method first
 		parent::setUp();
 
+		// Create a salt and hash for the mocked User
+		$password = "fakePass123";
+		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+
 		// Create and insert the mocked User
+		// Not sure any of this is right, forgive me George.
+		$this->user = new User(generateUuidV4(), null,"@phpunit", "https://www.fillmurray.com/460/300", "test@phpunit.de", $this->VALID_HASH, "+12345678911");)
+		$this->user->insert($this->getPDO());
 
 	}
 }
