@@ -1,7 +1,7 @@
 <?php
 namespace theCatzPajamaz\scrapsToScrumptious;
 
-use theCatzPajamas\scrapsToScrumptious\{Profile, Recipe};
+use theCatzPajamas\scrapsToScrumptious\{User, Recipe};
 
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
@@ -20,8 +20,8 @@ require_once(dirname(__DIR__, 2) . "/vendor/uuid.php");
  **/
 class RecipeTest extends scrapsToScrumptiousTest {
 	/**
-	 * Profile that created the Recipe; this is for foreign key relations
-	 * @var Recipe profile
+	 * User that created the Recipe; this is for foreign key relations
+	 * @var Recipe user
 	 **/
 	protected $recipe = null;
 
@@ -47,22 +47,10 @@ class RecipeTest extends scrapsToScrumptiousTest {
 		$password = "abc123";
 		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 
-		// create and insert a Profile to own the test Recipe
-		$this->profile = new Profile(generateUuidV4(), null, "@handle", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "test@phpunit.de", $this->VALID_PROFILE_HASH, "+12125551212");
-		$this->profile->insert($this->getPDO());
-
-		// calculate the date (just use the time the unit test was setup...)
-		$this->VALID_TWEETDATE = new \DateTime();
-
-		//format the sunrise date to use for testing
-		$this->VALID_SUNRISEDATE = new \DateTime();
-		$this->VALID_SUNRISEDATE->sub(new \DateInterval("P10D"));
-
-		//format the sunset date to use for testing
-		$this->VALID_SUNSETDATE = new\DateTime();
-		$this->VALID_SUNSETDATE->add(new \DateInterval("P10D"));
-
-
+		// create and insert a User to own the test Recipe
+		$this->user = new User(generateUuidV4(), null, "@handle", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "test@phpunit.de", $this->VALID_PROFILE_HASH, "+12125551212");
+		$this->user->insert($this->getPDO());
+		
 	}
 
 	/**
@@ -74,7 +62,7 @@ class RecipeTest extends scrapsToScrumptiousTest {
 
 		// create a new Recipe and insert to into mySQL
 		$recipeId = generateUuidV4();
-		$recipe = new Recipe($recipeId, $this->recipe->getRecipeId(), $this->VALID_RECIPEDESCRIPTION, $this->VALID_RECIPEDATE);
+		$recipe = new Recipe($recipeId, $this->recipe->getRecipeId(), $this->VALID_RECIPEDESCRIPTION);
 		$recipe->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
