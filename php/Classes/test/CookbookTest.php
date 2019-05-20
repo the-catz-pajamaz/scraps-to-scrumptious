@@ -100,8 +100,27 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 	 * Test inserting a Cookbook and regrabbing it from mySQL
 	 */
 	public function testGetCookbookByCookbookRecipeIdAndCookbookUserId() : void {
-		//
+		// Create a new Cookbook and insert it into mySQL
+		$cookbook = new Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
+		$cookbook->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match expected output
+		$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->user->getUserId(), $this->recipe->getRecipeId());
+		$this->assertEquals($pdoCookbook->getCookbookRecipeId(), $this->recipe->getRecipeId());
+		$this->assertEquals($pdoCookbook->getCookbookUserId(), $this->user->getUserId());
 		}
+
+		/**
+		 * test grabbing a Cookbook that doesn't exist
+		 */
+		public function testGetInvalidCookbookByCookbookRecipeIdAndCookbookUserId() :void {
+			// grab a recipe id and user id that exceeds the max character limit
+			$cookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPDO(), generateUuidV4(), generateUuidV4());
+			$this->assertNull($cookbook);
+		}
+
+
+
 
 	}
 }
