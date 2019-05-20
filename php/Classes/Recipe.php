@@ -6,38 +6,45 @@ require_once("autoload.php");
 use Ramsey\Uuid\Uuid;
 
 
-class Recipe {
+class Recipe implements \JsonSerializable {
 	use ValidateUuid;
+
 	/**
 	 * id for this Recipe: this is the primary key
 	 * @var Uuid $recipeId
 	 **/
 	private $recipeId;
+
 	/**
 	 * at handle for this Recipe; this is a unique index
 	 * @var string $recipeDescription
 	 **/
 	private $recipeDescription;
+
 	/**
 	 * description for this recipe; this is a unique index
 	 * @var $recipeSteps
 	 */
 	private $recipeSteps;
+
 	/**
 	 * title for this recipe, this is a unique index
 	 * @var $recipeTitle
 	 */
 	private $recipeTitle;
+
 	/**
 	 * ingredients for this recipe, this is a unique index
 	 * @var $recipeIngredients
 	 */
 	private $recipeIngredients;
+
 	/**
 	 *recipe media
 	 * @var $recipeMedia
 	 */
 	private $recipeMedia;
+
 	/**
 	 * recipe user id for this recipe, this is a unique index
 	 * @var $recipeUserId
@@ -46,19 +53,30 @@ class Recipe {
 
 	/**
 	 * constructor for recipe
-	 *
-	 *
+	 * @param string|Uuid $newRecipeId id of this Recipe or null if a new Recipe
+	 * @param string\Uuid $newRecipeUserId id of this Recipe that sent this Recipe
+	 * @param string $newRecipeDescription string containing actual recipe data
+	 * @param string $newRecipeIngredients contains ingredients of recipe
+	 * @param string $newRecipeMedia contains media of recipe
+	 * @param string $newRecipeSteps contains steps for recipe
+	 * @param string $newRecipeTitle contains title of recipe
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception occurs
 	 */
 
-	public function __construct(string $newRecipeId, ?string $newRecipeDescription, string $newRecipeSteps, string $newRecipeTitle, string $newRecipeIngredients, ?string $newRecipeMedia, string $newRecipeUserId) {
+	public function __construct(string $newRecipeId, string $newRecipeUserId, ?string $newRecipeDescription, string $newRecipeIngredients, ?string $newRecipeMedia, string $newRecipeSteps, string $newRecipeTitle) {
 		try {
 			$this->setRecipeId($newRecipeId);
+			$this->setRecipeUserId($newRecipeUserId);
 			$this->setRecipeDescription($newRecipeDescription);
-			$this->setRecipeSteps($newRecipeSteps);
-			$this->setRecipeTitle($newRecipeTitle);
 			$this->setRecipeIngredients($newRecipeIngredients);
 			$this->setRecipeMedia($newRecipeMedia);
-			$this->setRecipeUserId($newRecipeUserId);
+			$this->setRecipeSteps($newRecipeSteps);
+			$this->setRecipeTitle($newRecipeTitle);
+
+
 		} catch(\InvalidArgumentException | \RangeException | \Exception |\TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
@@ -70,7 +88,6 @@ class Recipe {
 	 *  accesor method for recipeId
 	 * @return Uuid value of recipeId (or null if new Recipe)
 	 */
-
 	public function getRecipeId(): Uuid {
 		return ($this->recipeId);
 	}
@@ -82,7 +99,6 @@ class Recipe {
 	 * @throws \RangeException if $newAuthorId value is not positive
 	 * @throws \TypeError if the id is not
 	 **/
-
 	public function setRecipeId($newRecipeId): void {
 		try {
 			$uuid = self::validateUuid($newRecipeId);
@@ -91,6 +107,7 @@ class Recipe {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
+
 		// convert and store the recipe id
 		$this->recipeId = $uuid;
 	}
@@ -110,7 +127,6 @@ class Recipe {
 	 * @param Uuid|string $newRecipeUserId value of new recipe user id
 	 * @throws |RangeException if $newRecipeUserId value is not
 	 */
-
 	public function setRecipeUserId($newRecipeUserId): void {
 		try {
 			$uuid = self::validateUuid($newRecipeUserId);
@@ -119,6 +135,7 @@ class Recipe {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
+
 		// convert and store the recipe user id
 		$this->recipeUserId = $uuid;
 	}
@@ -126,7 +143,6 @@ class Recipe {
 	/**
 	 * accessor Method for recipe media
 	 */
-
 	public function getRecipeMedia(): string {
 		return $this->recipeMedia;
 	}
@@ -147,6 +163,7 @@ class Recipe {
 		if(strlen($newRecipeMedia) > 255) {
 			throw(new \rangeException("media is too large"));
 		}
+
 		// store the media
 		$this->recipeMedia = $newRecipeMedia;
 	}
@@ -174,10 +191,12 @@ class Recipe {
 		if(empty($newRecipeTitle) === true) {
 			throw(new \InvalidArgumentException("recipe title is too long or insecure"));
 		}
+
 		// verify the recipe title will fit in the database
 		if(strlen($newRecipeTitle) > 128) {
 			throw(new \RangeException("recipe title is too large"));
 		}
+
 		// store the recipe title
 		$this->recipeTitle = $newRecipeTitle;
 	}
@@ -269,11 +288,11 @@ class Recipe {
 	public function insert(\PDO $pdo): void {
 
 		// create query template
-		$query = "INSERT INTO recipe(recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle) VALUES(:recipeId, :recipeUserId, :recipeMedia, :recipeIngredients, :recipeDescription, :recipeSteps, :recipeTitle)";
+		$query = "INSERT INTO recipe(recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle) VALUES(:recipeId, :recipeUserId, :recipeDescription, :recipeIngredients, :recipeMedia, :recipeSteps, :recipeTitle)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
-		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia, "recipeIngredients" => $this->recipeIngredients, "recipeDescription" => $this->recipeDescription, "recipeSteps" => $this->recipeSteps, "recipeTitle" => $this->recipeTitle];
+		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeDescription" => $this->recipeDescription, "recipeIngredients" => $this->recipeIngredients, "recipeMedia" => $this->recipeMedia, "recipeSteps" => $this->recipeSteps, "recipeTitle" => $this->recipeTitle];
 		$statement->execute($parameters);
 	}
 
@@ -305,7 +324,7 @@ class Recipe {
 	public function update(\PDO $pdo): void {
 
 		// create query template
-		$query = "UPDATE recipe SET recipeId = :recipeId, recipeUserId = :recipeUserId, recipeMedia = :recipeMedia, recipeIngredients = :recipeIngredients, recipeDescription = :recipedeDescription, recipeSteps = :recipeSteps, recipeTitle = :recipeTitle WHERE recipeId = :recipeId";
+		$query = "UPDATE recipe SET recipeId = :recipeId, recipeUserId = :recipeUserId, recipeDescription = :recipedeDescription, recipeIngredients = :recipeIngredients, recipeMedia = :recipeMedia, recipeSteps = :recipeSteps, recipeTitle = :recipeTitle WHERE recipeId = :recipeId";
 		$statement = $pdo->prepare($query);
 
 		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia];
@@ -329,7 +348,7 @@ class Recipe {
 			throw(new \PDOException(($exception->getMessage()), 0, $exception));
 		}
 		//  create query template
-		$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeId = :recipeId";
+		$query = "SELECT recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle FROM recipe WHERE recipeTitle = : recipeTitle";
 
 		$statement = $pdo->prepare($query);
 
@@ -343,7 +362,7 @@ class Recipe {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
+				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeDescription"], $row["recipeIngredients"], $row["recipeMedia"], $row["recipeSteps"], $row["recipeTitle"]);
 			}
 		} catch(\Exception $exception) {
 			//if the row couldn't be converted, rethrow it
@@ -361,7 +380,7 @@ class Recipe {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getRecipeByRecipeUserId(\PDO $pdo, string $recipeUserId): ?Recipe {
+	public static function getRecipeByRecipeUserId(\PDO $pdo, string $recipeUserId): \SplFixedArray {
 		// sanitize the recipeUserId before searching
 		try {
 			$recipeUserId = self::validateUuid($recipeUserId);
@@ -369,7 +388,7 @@ class Recipe {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeUserId = : recipeUserId";
+		$query = "SELECT recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle FROM recipe WHERE recipeTitle = : recipeTitle";
 
 		$statement = $pdo->prepare($query);
 
@@ -377,19 +396,21 @@ class Recipe {
 		$parameters = ["recipeUserId" => $recipeUserId->getBytes()];
 		$statement->execute($parameters);
 
-		// grab the recipe user id from mySQL
-		try {
-			$recipe = null;
-			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			$row = $statement->fetch();
-			if($row !== false) {
-				$recipe = new recipe($row["recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
+		// build an array of recipes
+		$recipes = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeDescription"], $row["recipeIngredients"], $row["recipeMedia"], $row["recipeSteps"], $row["recipeTitle"]);
+				$recipes [$recipes->key()] = $recipe;
+				$recipes->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
-		} catch(\Exception $exception) {
-			// if the row couldn't be converted, rethrow it
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		return ($recipes);
+
 	}
 
 	/**
@@ -409,7 +430,7 @@ class Recipe {
 			throw(new \PDOException("not a valid recipe title"));
 		}
 		// create query template
-		$query = "SELECT recipeId, recipeUserId, recipeMedia, recipeIngredients, recipeDescription, recipeSteps, recipeTitle FROM recipe WHERE recipeTitle = : recipeTitle";
+		$query = "SELECT recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle FROM recipe WHERE recipeTitle = : recipeTitle";
 
 		$statement = $pdo->prepare($query);
 
@@ -423,13 +444,27 @@ class Recipe {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
+				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeDescription"], $row["recipeIngredients"], $row["recipeMedia"], $row["recipeSteps"], $row["recipeTitle"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		return ($recipe);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize(): array {
+		$fields = get_object_vars($this);
+
+		$fields["recipeId"] = $this->recipeId->toString();
+		$fields["recipeUserId"] = $this->recipeUserId->toString();
+
+		return ($fields);
 	}
 }
 
