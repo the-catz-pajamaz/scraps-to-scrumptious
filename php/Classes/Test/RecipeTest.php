@@ -133,4 +133,31 @@ class RecipeTest extends scrapsToScrumptiousTest {
 		$this->assertEquals($numRows, $this->getConnection()->getRowCount("recipe"));
 	}
 
+	/**
+	 * test inserting a Recipe and regrabbing it from mySQL
+	 **/
+	public function testGetValidRecipeByRecipeId() {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("recipe");
+
+		// create a new Recipe and insert to into mySQL
+		$recipeId = generateUuidV4();
+		$recipe = new Recipe($recipeId, $this->recipe->getRecipeId(), $this->VALID_RECIPEDESCRIPTION);
+		$recipe->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Recipe::getRecipeByRecipeId($this->getPDO(), $recipe->getReciepId());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
+
+		// grab the result from the array and validate it
+		$pdoRecipe = $results[0];
+
+		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
+		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->recipe->getRecipeUserId());
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPEDESCRIPTION);
+
+	}
+
 
