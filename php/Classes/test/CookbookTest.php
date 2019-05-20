@@ -131,8 +131,46 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 			$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->user->getUserId(), $this->recipe->getRecipeId());
 			$this->assertEquals($pdoCookbook->getCookbookRecipeId(), $this->recipe->getRecipeId());
 			$this->assertEquals($pdoCookbook->getCookbookUserId(), $this->user->getUserId());
+
+			// grab result from the array and validate it
+			$pdoCookbook = $results[0];
+			$this->assertEquals($pdoCookbook->getCookbookRecipeId(), $this->recipe->getCookbookRecipeId());
+			$this->assertEquals($pdoCookbook->getCookbookUserId(), $this->user->getUserId());
 		}
 
+		/**
+		 * Test grabbing a Cookbook by a User Id that does not exit should be a duplicate of line 114
+		 */
 
+	/**
+	 * !!! Unsure if needed !!!
+	 *
+	 * Test grabbing a Cookbook by Recipe Id
+	 **/
+	public function testGetValidCookbookByRecipeId() : void {
+		// Create a new Cookbook and insert it into mySQL
+		$cookbook = new Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
+		$cookbook->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match expected output
+		$pdoCookbook = Cookbook::getCookbookByCookbookRecipeId($this->recipe->getRecipeId());
+		$this->assertEquals($this->recipe->getRecipeId());
+		$this->assertEquals($this->user->getUserId());
+
+		// grab result from the array and validate it
+		$pdoCookbook = $results[0];
+		$this->assertEquals($pdoCookbook->getCookbookRecipeId(), $this->recipe->getCookbookRecipeId());
+		$this->assertEquals($pdoCookbook->getCookbookUserId(), $this->user->getUserId());
 	}
+
+	/**
+	 * Test grabbing a Cookbook by a recipe id that doesn't exist
+	 **/
+
+	public function testGetInvalidCookbookByCookbookRecipeId() :void {
+		// grab a recipe id and user id that exceeds the max limit
+		$cookbook = Cookbook::getCookbookByCookbookRecipeId($this->getPDO(), generateUuidV4(), generateUuidV4());
+		$this->assertCount(0, $cookbook);
+	}
+
 }
