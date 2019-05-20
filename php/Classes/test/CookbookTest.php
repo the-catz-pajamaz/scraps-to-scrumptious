@@ -26,6 +26,19 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 	protected $user;
 
 	/**
-	 *
+	 * Recipe id that is in a Cookbook; this is a foreign key relations
+	 * @var Recipe $recipe
 	 */
+	protected $recipe;
+
+	/**
+	 * creates dependent objects before running test
+	 */
+	public final function setUp() : void {
+		// Run the default setUp() method first
+		parent::setUp();
+
+		// Create and insert the mocked User
+
+	}
 }
