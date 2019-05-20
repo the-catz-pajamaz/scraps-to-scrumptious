@@ -1,6 +1,8 @@
 <?php
+
 namespace theCatzPajamaz\scrapsToScrumptious;
-require_once ("autoload.php");
+require_once("autoload.php");
+
 use Ramsey\Uuid\Uuid;
 
 
@@ -32,8 +34,8 @@ class Recipe {
 	 */
 	private $recipeIngredients;
 	/**
-	 *
-	 *
+	 *recipe media
+	 * @var $recipeMedia
 	 */
 	private $recipeMedia;
 	/**
@@ -95,7 +97,7 @@ class Recipe {
 
 
 	/**
-	 * accesor method for recipeUserID
+	 * accessor method for recipeUserID
 	 * @return Uuid value of recipeId (or null if new Recipe Id)
 	 */
 	public function getRecipeUserID(): Uuid {
@@ -122,9 +124,7 @@ class Recipe {
 	}
 
 	/**
-	 *
-	 *Accesssor Method for recipe media
-	 *
+	 * accessor Method for recipe media
 	 */
 
 	public function getRecipeMedia(): string {
@@ -140,6 +140,7 @@ class Recipe {
 	 * @throws \TypeError if $newRecipeMedia is not a string
 	 */
 	public function setRecipeMedia(?string $newRecipeMedia): void {
+
 		// verify the media will fit in the database
 		$newRecipeMedia = trim($newRecipeMedia);
 		$newRecipeMedia = filter_var($newRecipeMedia, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -226,7 +227,6 @@ class Recipe {
 			throw(new \InvalidArgumentException("recipe ingredients is empty or insecure"));
 		}
 
-
 		// verify the recipe ingredients will fit in the database
 		if(strlen($newRecipeIngredients) > 65535) {
 			throw(new \RangeException("recipe ingredients too large"));
@@ -253,7 +253,6 @@ class Recipe {
 		if(empty($newRecipeSteps) === true) {
 			throw(new \InvalidArgumentException("recipe steps is empty or insecure"));
 		}
-
 
 		// verify the recipe steps will fit in the database
 		if(strlen($newRecipeSteps) > 65535) {
@@ -362,7 +361,7 @@ class Recipe {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getRecipeUserIdByRecipeUserId(\PDO $pdo, string $recipeUserId): ?Recipe {
+	public static function getRecipeByRecipeUserId(\PDO $pdo, string $recipeUserId): ?Recipe {
 		// sanitize the recipeUserId before searching
 		try {
 			$recipeUserId = self::validateUuid($recipeUserId);
@@ -374,23 +373,23 @@ class Recipe {
 
 		$statement = $pdo->prepare($query);
 
-// bind the recipe user id to the place holder in the template
+		// bind the recipe user id to the place holder in the template
 		$parameters = ["recipeUserId" => $recipeUserId->getBytes()];
 		$statement->execute($parameters);
 
 		// grab the recipe user id from mySQL
 		try {
-			$recipeUserId = null;
+			$recipe = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$recipeUserId = new recipeUserId($row["recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
+				$recipe = new recipe($row["recipeId"], $row["recipeUserId"], $row["recipeMedia"], $row["recipeIngredients"], $row["recipeDescription"], $row["recipeSteps"], $row["recipeTitle"]);
 			}
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return ($recipeUserId);
+		return ($recipes);
 	}
 
 	/**
@@ -402,7 +401,7 @@ class Recipe {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getRecipeByRecipeTitle(\PDO $pdo, string $recipeTitle) : \SPLFixedArray {
+	public static function getRecipeByRecipeTitle(\PDO $pdo, string $recipeTitle): \SPLFixedArray {
 		// sanitize the recipe title before searching
 		$recipeTitle = trim($recipeTitle);
 		$recipeTitle = filter_var($recipeTitle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
