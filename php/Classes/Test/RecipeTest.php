@@ -1,7 +1,7 @@
 <?php
-namespace theCatzPajamaz\ScrapsToScrumptious;
+namespace TheCatzPajamaz\ScrapsToScrumptious\Test;
 
-use theCatzPajamas\ScrapsToScrumptious\{User, Recipe};
+use TheCatzPajamaz\ScrapsToScrumptious\{User, Recipe};
 
 // grab the class under scrutiny
 require_once(dirname(__DIR__) . "/autoload.php");
