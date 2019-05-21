@@ -264,7 +264,7 @@ class User{
 	}
 
 	/**
-	 * Mutator Method for userFirstName
+	 * Mutator Method for userLastName
 	 * @param string
 	 * @throws \InvalidArgumentException if empty
 	 * @throws \RangeException if last name is too long
@@ -276,7 +276,7 @@ class User{
 			throw(new\InvalidArgumentException ("not real last name"));
 		}
 		if(strlen($newUserLastName)>32){
-			throw(new \RangeException("First Name Not Valid"));
+			throw(new \RangeException("Last Name Not Valid"));
 		}
 		$this->userLastName = $newUserLastName;
 	}
@@ -284,7 +284,7 @@ class User{
 	/**
 	 * inserts user into mySQL
 	 *
-	 * @praam \PDO
+	 * @param \PDO
 	 * @throws \PDOException when mySQL errors happen
 	 * @throws \TypeError when \PDO errors happen
 	 */
@@ -310,7 +310,7 @@ class User{
 
 	/**
 	 * delete statement for table user
-	 * @praam \PDO
+	 * @param \PDO
 	 * @throws \PDOException when mySQL errors happen
 	 * @throws \TypeError when \PDO errors happen
 	 */
@@ -333,8 +333,8 @@ class User{
     		userEmail = :userEmail, 
     		userFirstName = :userFirstName, 
     		userHandle = :userHandle, 
-    		userHash = userHash, 
-    		userLastName = : UserFirstName 
+    		userHash = :userHash, 
+    		userLastName = :userLastName 
 		where userId = :userId";
 		$statement = $pdo->prepare($query);
 
@@ -368,13 +368,13 @@ class User{
 	$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user` where userId = :userId";
 		$statement = $pdo->prepare($query);
 		
-		$parameters = [userId => $userId->getBytes()];
+		$parameters = ["userId" => $userId->getBytes()];
 		$statement->execute($parameters);
 
 		try{
 			$user = null;
-			$statement->setFetchMode(\PDO::fetch_assoc);
-			$row = $statement-fetch();
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
 			if($row !== false) {
 				$user = new user($row["userId"], $row["userActivationToken"], $row["userEmail"], $row["userFirstName"], $row["userHandle"], $row["userHash"], $row["userLastName"]);
 			}
@@ -408,13 +408,13 @@ class User{
 		$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user` where userEmail = :userEmail";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["userEmail" => $userEmail->userEmail];
+		$parameters = ["userEmail" => $userEmail];
 		$statement->execute($parameters);
 
 		try{
 			$user = null;
 			$statement->setFetchMode(\PDO:: FETCH_ASSOC);
-			$row = $statement-fetch();
+			$row = $statement->fetch();
 			if($row !== false) {
 				$user = new user($row["userId"], $row["userActivationToken"], $row["userEmail"], $row["userFirstName"], $row["userHandle"], $row["userHash"], $row["userLastName"]);
 			}
@@ -428,7 +428,7 @@ class User{
 
 	/**
 	 * gets user by activation token
-	 * @param PDO $pdo
+	 * @param \PDO $pdo
 	 * @param $userActivationToken
 	 * @return User|null
 	 * @throws RangeException if not a token
@@ -441,13 +441,13 @@ class User{
 		$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user` where userActivationToken = :userActivationToken";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["userActivationToken" => $userActivationToken->getBytes];
+		$parameters = ["userActivationToken" => $userActivationToken];
 		$statement->execute($parameters);
 
 		try{
 			$user = null;
-			$statement->setFetchMode(\PDO::fetch_assoc);
-			$row = $statement-fetch();
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
 			if($row !== false) {
 				$user = new user($row["userId"], $row["userActivationToken"], $row["userEmail"], $row["userFirstName"], $row["userHandle"], $row["userHash"], $row["userLastName"]);
 			}
