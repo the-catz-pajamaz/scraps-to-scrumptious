@@ -1,8 +1,7 @@
 <?php
 
-namespace theCatzPajamaz\scrapsToScrumptious;
-require_once("autoload.php");
-
+namespace TheCatzPajamaz\ScrapsToScrumptious;
+require_once ("autoload.php");
 use Ramsey\Uuid\Uuid;
 
 
