@@ -1,6 +1,5 @@
 <?php
-
-namespace theCatzPajamaz\ScrapsToScrumptious;
+namespace TheCatzPajamaz\ScrapsToScrumptious;
 require_once ("autoload.php");
 
 require_once(dirname(__DIR__) . "/vendor/autoload.php");
@@ -10,7 +9,7 @@ use Ramsey\Uuid\Uuid;
  * @author Sam Nelson <snelson54@cnm.edu>
  **/
 
-class Cookbook {
+class Cookbook implements \JsonSerializable {
 	use ValidateUuid;
 
 	/**
@@ -250,5 +249,19 @@ class Cookbook {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		return ($cookbook);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["tweetId"] = $this->cookbookRecipeId->toString();
+		$fields["tweetProfileId"] = $this->cookbookUserId->toString();
+
+		return($fields);
 	}
 }
