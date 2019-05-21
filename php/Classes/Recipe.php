@@ -15,25 +15,25 @@ class Recipe implements \JsonSerializable {
 	private $recipeId;
 
 	/**
-	 * at handle for this Recipe; this is a unique index
+	 * description of recipe
 	 * @var string $recipeDescription
 	 **/
 	private $recipeDescription;
 
 	/**
-	 * description for this recipe; this is a unique index
+	 * steps for this recipe
 	 * @var $recipeSteps
 	 */
 	private $recipeSteps;
 
 	/**
-	 * title for this recipe, this is a unique index
+	 * title for this recipe
 	 * @var $recipeTitle
 	 */
 	private $recipeTitle;
 
 	/**
-	 * ingredients for this recipe, this is a unique index
+	 * ingredients for this recipe
 	 * @var $recipeIngredients
 	 */
 	private $recipeIngredients;
@@ -45,7 +45,7 @@ class Recipe implements \JsonSerializable {
 	private $recipeMedia;
 
 	/**
-	 * recipe user id for this recipe, this is a unique index
+	 * recipe user id for this recipe
 	 * @var $recipeUserId
 	 */
 	private $recipeUserId;
@@ -53,7 +53,7 @@ class Recipe implements \JsonSerializable {
 	/**
 	 * constructor for recipe
 	 * @param string|Uuid $newRecipeId id of this Recipe or null if a new Recipe
-	 * @param string\Uuid $newRecipeUserId id of this Recipe that sent this Recipe
+	 * @param string|Uuid $newRecipeUserId id of this Recipe that sent this Recipe
 	 * @param string $newRecipeDescription string containing actual recipe data
 	 * @param string $newRecipeIngredients contains ingredients of recipe
 	 * @param string $newRecipeMedia contains media of recipe
@@ -84,7 +84,7 @@ class Recipe implements \JsonSerializable {
 	}
 
 	/**
-	 *  accesor method for recipeId
+	 *  accessor method for recipeId
 	 * @return Uuid value of recipeId (or null if new Recipe)
 	 */
 	public function getRecipeId(): Uuid {
@@ -222,6 +222,8 @@ class Recipe implements \JsonSerializable {
 		if(strlen($newRecipeDescription) > 65535) {
 			throw(new \RangeException("recipe description too large"));
 		}
+
+		$this->recipeDescription=$newRecipeDescription;
 	}
 
 	/**
@@ -249,6 +251,7 @@ class Recipe implements \JsonSerializable {
 		if(strlen($newRecipeIngredients) > 65535) {
 			throw(new \RangeException("recipe ingredients too large"));
 		}
+		$this->recipeIngredients=$newRecipeIngredients;
 	}
 
 	/**
@@ -276,6 +279,7 @@ class Recipe implements \JsonSerializable {
 		if(strlen($newRecipeSteps) > 65535) {
 			throw(new \RangeException("recipe steps too large"));
 		}
+		$this->recipeSteps=$newRecipeSteps;
 	}
 
 	/**
@@ -342,7 +346,7 @@ class Recipe implements \JsonSerializable {
 	public static function getRecipeByRecipeId(\PDO $pdo, $recipeId): Recipe {
 		// sanitize the recipeId before searching
 		try {
-			$recipeId = self::validatedUuid($recipeId);
+			$recipeId = self::validateUuid($recipeId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			throw(new \PDOException(($exception->getMessage()), 0, $exception));
 		}
@@ -351,11 +355,11 @@ class Recipe implements \JsonSerializable {
 
 		$statement = $pdo->prepare($query);
 
-// bind the recipe id to the place holder in the template
+		// bind the recipe id to the place holder in the template
 		$parameters = ["recipeId" => $recipeId->getBytes()];
 		$statement->execute($parameters);
 
-// get the recipe from mySQL
+		// get the recipe from mySQL
 		try {
 			$recipe = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
@@ -379,7 +383,7 @@ class Recipe implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getRecipeByRecipeUserId(\PDO $pdo, string $recipeUserId): \SplFixedArray {
+	public static function getRecipesByRecipeUserId(\PDO $pdo, string $recipeUserId): \SplFixedArray {
 		// sanitize the recipeUserId before searching
 		try {
 			$recipeUserId = self::validateUuid($recipeUserId);
@@ -421,7 +425,7 @@ class Recipe implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getRecipeByRecipeTitle(\PDO $pdo, string $recipeTitle): \SPLFixedArray {
+	public static function getRecipesByRecipeTitle(\PDO $pdo, string $recipeTitle): \SPLFixedArray {
 		// sanitize the recipe title before searching
 		$recipeTitle = trim($recipeTitle);
 		$recipeTitle = filter_var($recipeTitle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -433,25 +437,25 @@ class Recipe implements \JsonSerializable {
 
 		$statement = $pdo->prepare($query);
 
-// bind the recipe title to the place holder in the template
+		// bind the recipe title to the place holder in the template
 		$parameters = ["recipeTitle" => $recipeTitle->getBytes()];
 		$statement->execute($parameters);
 
-		// grab the recipeTitle from mySQL
-		try {
-			$recipe = null;
-			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			$row = $statement->fetch();
-			if($row !== false) {
+		// build an array of recipes
+		$recipes = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
 				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeDescription"], $row["recipeIngredients"], $row["recipeMedia"], $row["recipeSteps"], $row["recipeTitle"]);
+				$recipes [$recipes->key()] = $recipe;
+				$recipes->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
-		} catch(\Exception $exception) {
-			// if the row couldn't be converted, rethrow it
-			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
-		return ($recipe);
+		return ($recipes);
 	}
-
 	/**
 	 * formats the state variables for JSON serialization
 	 *
