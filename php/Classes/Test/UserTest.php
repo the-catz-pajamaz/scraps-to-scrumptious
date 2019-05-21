@@ -244,8 +244,8 @@ class UserTest extends ScrapsToScrumptiousTest {
 
 	/**
 	 **/
-	public function testGetInvalidUserByActivationToken() : void {
-		$user = User::getUserByUserActivationToken($this->getPDO(), "1234567891011");
+	public function testGetInvalidUserActivationToken() : void {
+		$user = User::getUserByUserActivationToken($this->getPDO(), "6675636b646f6e616c646472756d7066");
 		$this->assertNull($user);
 	}
 
