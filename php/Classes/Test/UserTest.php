@@ -197,7 +197,7 @@ class UserTest extends ScrapsToScrumptiousTest {
 		$user->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoUser = User::getUserByUserEmail($this->getPDO(), $user->getUserId());
+		$pdoUser = User::getUserByUserEmail($this->getPDO(), $user->getUserEmail());
 
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 		$this->assertEquals($pdoUser->getUserId(), $userId);
@@ -218,6 +218,9 @@ class UserTest extends ScrapsToScrumptiousTest {
 		$this->assertNull($user);
 	}
 
+	/**
+	 * tests a valid user by their activation token
+	 */
 	public function testGetValidUserByUserActivationToken() : void {
 		// count the number of rows and save it for later
 		$numRows = $this->getConnection()->getRowCount("user");
@@ -227,7 +230,7 @@ class UserTest extends ScrapsToScrumptiousTest {
 		$user->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
-		$pdoUser = User::getUserByUserActivationToken($this->getPDO(), $user->getUserId());
+		$pdoUser = User::getUserByUserActivationToken($this->getPDO(), $user->getUserActivationToken());
 
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 		$this->assertEquals($pdoUser->getUserId(), $userId);
@@ -240,11 +243,9 @@ class UserTest extends ScrapsToScrumptiousTest {
 	}
 
 	/**
-	 * test grabbing a User by an email that does not exists
 	 **/
-	public function testGetInvalidUserByActivationToken() : void {
-		// grab an email that does not exist
-		$user = User::getUserByUserActivationToken($this->getPDO(), "does@not.exist");
+	public function testGetInvalidUserActivationToken() : void {
+		$user = User::getUserByUserActivationToken($this->getPDO(), "6675636b646f6e616c646472756d7066");
 		$this->assertNull($user);
 	}
 
