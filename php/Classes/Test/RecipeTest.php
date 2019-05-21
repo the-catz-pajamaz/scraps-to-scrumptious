@@ -7,7 +7,7 @@ use TheCatzPajamaz\ScrapsToScrumptious\{User, Recipe};
 require_once(dirname(__DIR__) . "/autoload.php");
 
 // grab the uuid generator
-require_once(dirname(__DIR__, 2) . "/vendor/uuid.php");
+require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 	/**
 	 *  Full PHPUnit test for the Recipe class
@@ -46,9 +46,10 @@ require_once(dirname(__DIR__, 2) . "/vendor/uuid.php");
 		parent::setUp();
 		$password = "abc123";
 		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$activationToken = bin2hex(random_bytes(16));
 
 		// create and insert a User to own the test Recipe
-		$this->user = new User(generateUuidV4(), null, "@handle", "https://media.giphy.com/media/3og0INyCmHlNylks9O/giphy.gif", "test@phpunit.de", $this->VALID_PROFILE_HASH, "+12125551212");
+		$this->user = new User(generateUuidV4(), $activationToken, "a@bc.com", "jack", "jackLinks", $this->VALID_PROFILE_HASH, "sasquatch");
 		$this->user->insert($this->getPDO());
 		
 	}
