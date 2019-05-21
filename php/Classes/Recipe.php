@@ -15,22 +15,16 @@ class Recipe implements \JsonSerializable {
 	private $recipeId;
 
 	/**
+	 * recipe user id for this recipe
+	 * @var $recipeUserId
+	 */
+	private $recipeUserId;
+
+	/**
 	 * description of recipe
 	 * @var string $recipeDescription
 	 **/
 	private $recipeDescription;
-
-	/**
-	 * steps for this recipe
-	 * @var $recipeSteps
-	 */
-	private $recipeSteps;
-
-	/**
-	 * title for this recipe
-	 * @var $recipeTitle
-	 */
-	private $recipeTitle;
 
 	/**
 	 * ingredients for this recipe
@@ -45,10 +39,20 @@ class Recipe implements \JsonSerializable {
 	private $recipeMedia;
 
 	/**
-	 * recipe user id for this recipe
-	 * @var $recipeUserId
+	 * steps for this recipe
+	 * @var $recipeSteps
 	 */
-	private $recipeUserId;
+	private $recipeSteps;
+
+	/**
+	 * title for this recipe
+	 * @var $recipeTitle
+	 */
+	private $recipeTitle;
+
+
+
+
 
 	/**
 	 * constructor for recipe
