@@ -96,7 +96,7 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
 		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
 		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->recipe->getRecipeId());
-		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPEDESCRIPTION);
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
 		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
 		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
 		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
@@ -117,7 +117,7 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 		$recipe->insert($this->getPDO());
 
 		// edit the Recipe and update it in mySQL
-		$recipe->setRecipeDescription($this->VALID_RECIPEDESCRIPTION2);
+		$recipe->setRecipeDescription($this->VALID_RECIPE_DESCRIPTION2);
 		$recipe->update($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
@@ -125,7 +125,7 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
 		$this->assertEquals($pdoRecipe->getRecipeId(), $this->recipe->getRecipeId());
-		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPEDESCRIPTION2);
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION2);
 		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
 		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
 		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
@@ -178,7 +178,7 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 
 		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
 		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->recipe->getRecipeUserId());
-		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPEDESCRIPTION);
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
 		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
 		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
 		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
@@ -210,7 +210,7 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 		$pdoRecipe = $results[0];
 		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
 		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->recipe->getRecipeId());
-		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPEDESCRIPTION);
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
 		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
 		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
 		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
@@ -240,7 +240,7 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 		$pdoRecipe = $results[0];
 		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
 		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->recipe->getRecipeUserId());
-		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPEDESCRIPTION);
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
 		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
 		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
 		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
