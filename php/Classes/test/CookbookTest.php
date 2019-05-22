@@ -70,10 +70,9 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 
 			// Make sure cookbook doesn't already exist in mySQL
 			$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->user->getUserId(), $this->recipe->getRecipeId());
-			$pdoCookbook = Recipe::getCookbookByRecipeIdAndCookbookUserId($this->getPDO(), $cookbook->getRecipeId());
 			$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("cookbook"));
 			$this->assertEquals($pdoCookbook->getCookbookRecipeId(), $cookbook->getCookbookRecipeId()->toString());
-			$this->assertEquals($pdoCookbook->getCookbookRecipeUserId(), $cookbook->getCookbookUserId()->toString());
+			$this->assertEquals($pdoCookbook->getCookbookUserId(), $cookbook->getCookbookUserId()->toString());
 			// !!! May need assert null
 		}
 
@@ -82,17 +81,21 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 	 * Test creating a Cookbook and then deleting it
 	 **/
 	public function testDeleteValidCookbook() : void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("cookbook");
+
 		// Create a new Cookbook and insert it into mySQL
-		$cookbook = new Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
+		$cookbook = new Cookbook($this->recipe->getRecipeId(), $this->user->getUserId());
 		$cookbook->insert($this->getPDO());
 
 		// Delete Cookbook from mySQL
-		$this->assertEquals($pdoCookbook->getCookbookUserId(), $cookbook->getCookbookUserId()->toString());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("cookbook"));
 			$cookbook->delete($this->getPDO());
 
 			// Make sure cookbook doesn't already exist in mySQL
-			$pdoCookbook = Cookbook::getCookbookByCookbookUserId($this->getPdo(), $this->user->getUserId());
+			$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->recipe->getRecipeId(), $this->user->getUserId());
 			$this->assertNull($pdoCookbook);
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("cookbook"));
 		}
 
 		/**
