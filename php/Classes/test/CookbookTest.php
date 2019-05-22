@@ -1,11 +1,15 @@
 <?php
 
-namespace theCatzPajamaz\scrapsToScrumptious;
-require_once ("autoload.php");
+namespace TheCatzPajamaz\ScrapsToScrumptious\Test;
 
-require_once(dirname(__DIR__) . "/validateuuid.php");
+use Ramsey\Uuid\Uuid;
+use TheCatzPajamaz\ScrapsToScrumptious\{User, Recipe, Cookbook};
 
-use theCatzPajamaz\scrapsToScrumptious\{User, Recipe, Cookbook};
+// grab the class under scrutiny
+require_once(dirname(__DIR__) . "/autoload.php");
+
+// grab the uuid generator
+require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 /**
  * Full PHP Unit test for the Cookbook class
@@ -21,9 +25,9 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 
 	/**
 	 * User that owns the Cookbook; this is a foreign key relations
-	 * @var User $user
+	 * @var Cookbook $cookbook
 	 */
-	protected $user;
+	protected $cookbook;
 
 	/**
 	 * Recipe id that is in a Cookbook; this is a foreign key relations
@@ -32,69 +36,64 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 	protected $recipe;
 
 	/**
-	 * valid hash to use
-	 * @var $VALID_HASH
+	 * User that owns the Cookbook; this is a foreign key relations
+	 * @var User $user
 	 */
-	protected $VALID_HASH;
+	protected $user = null;
+
 
 	/**
-	 * valid activation token
-	 * @var string $VALID_ACTIVATION
-	 */
-	protected $ACTIVE_VALIDATION;
-
-	/**
-	 * creates dependent objects before running test
-	 */
-	public final function setUp() : void {
-		// Run the default setUp() method first
+	 * create dependent objects before running each test
+	 **/
+	public final function setUp(): void {
+		// run the default setUp() method first
 		parent::setUp();
+		$password = "abc123";
+		$hash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$activationToken = bin2hex(random_bytes(16));
 
-		// Create a salt and hash for the mocked User
-		$password = "fakePass123";
-		$this->VALID_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
-
-		// Create and insert the mocked User
-		// Not sure any of this is right, forgive me George.
-		$this->user = new User(generateUuidV4(), null,"@phpunit", "https://www.fillmurray.com/460/300", "test@phpunit.de", $this->VALID_HASH, "+12345678911");)
+		// create and insert a User to own the test Recipe
+		$this->user = new User(generateUuidV4(), $activationToken, "a@bc.com", "jack", "jackLinks", $hash, "sasquatch");
 		$this->user->insert($this->getPDO());
 
-		// Create and insert the mocked Cookbook
-		$this->cookbook = new Cookbook(generateUuidV4(), $this->cookbook->getCookbookId());
-		$this->cookbook->insert($this->getPDO());
-
+	}
 		/**
 		 * test inserting a valid Cookbook and verify that the mySQL data matches
 		 */
 		public function testInsertValidCookbook() : void {
+			// count the number of rows and save it for later
+			$numRows = $this->getConnection()->getRowCount("cookbook");
+
 			// Create a new Cookbook and insert it into mySQL
 			$cookbook = new Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
 			$cookbook->insert($this->getPDO());
 
 			// Make sure cookbook doesn't already exist in mySQL
 			$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->user->getUserId(), $this->recipe->getRecipeId());
-			$this->assertNull($pdoCookbook);
+			$pdoCookbook = Recipe::getCookbookByRecipeIdAndCookbookUserId($this->getPDO(), $cookbook->getRecipeId());
+			$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("cookbook"));
+			$this->assertEquals($pdoCookbook->getCookbookRecipeId(), $cookbook->getCookbookRecipeId()->toString());
+			$this->assertEquals($pdoCookbook->getCookbookRecipeUserId(), $cookbook->getCookbookUserId()->toString());
+			// !!! May need assert null
 		}
-	}
+
 
 	/**
 	 * Test creating a Cookbook and then deleting it
 	 **/
-	public function testInsertValidCookbook() : void {
+	public function testDeleteValidCookbook() : void {
 		// Create a new Cookbook and insert it into mySQL
 		$cookbook = new Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
 		$cookbook->insert($this->getPDO());
 
 		// Delete Cookbook from mySQL
-		$this->assertEquals Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
+		$this->assertEquals($pdoCookbook->getCookbookUserId(), $cookbook->getCookbookUserId()->toString());
 			$cookbook->delete($this->getPDO());
 
 			// Make sure cookbook doesn't already exist in mySQL
-			$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->user->getUserId(), $this->recipe->getRecipeId());
+			$pdoCookbook = Cookbook::getCookbookByCookbookUserId($this->getPdo(), $this->user->getUserId());
 			$this->assertNull($pdoCookbook);
-
-			}
-
+		}
 
 		/**
 	 * Test inserting a Cookbook and regrabbing it from mySQL
