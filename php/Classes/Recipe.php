@@ -1,5 +1,4 @@
 <?php
-
 namespace TheCatzPajamaz\ScrapsToScrumptious;
 require_once ("autoload.php");
 use Ramsey\Uuid\Uuid;
@@ -331,10 +330,10 @@ class Recipe implements \JsonSerializable {
 	public function update(\PDO $pdo): void {
 
 		// create query template
-		$query = "UPDATE recipe SET recipeId = :recipeId, recipeUserId = :recipeUserId, recipeDescription = :recipedeDescription, recipeIngredients = :recipeIngredients, recipeMedia = :recipeMedia, recipeSteps = :recipeSteps, recipeTitle = :recipeTitle WHERE recipeId = :recipeId";
+		$query = "UPDATE recipe SET recipeId = :recipeId, recipeUserId = :recipeUserId, recipeDescription = :recipeDescription, recipeIngredients = :recipeIngredients, recipeMedia = :recipeMedia, recipeSteps = :recipeSteps, recipeTitle = :recipeTitle WHERE recipeId = :recipeId";
 		$statement = $pdo->prepare($query);
 
-		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeMedia" => $this->recipeMedia];
+		$parameters = ["recipeId" => $this->recipeId->getBytes(), "recipeUserId" => $this->recipeUserId->getBytes(), "recipeDescription"=> $this->recipeDescription, "recipeIngredients"=> $this->recipeIngredients, "recipeMedia" => $this->recipeMedia, "recipeSteps"=> $this->recipeSteps, "recipeTitle"=> $this->recipeTitle];
 		$statement->execute($parameters);
 	}
 
@@ -347,7 +346,7 @@ class Recipe implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
-	public static function getRecipeByRecipeId(\PDO $pdo, $recipeId): Recipe {
+	public static function getRecipeByRecipeId(\PDO $pdo, $recipeId): ?Recipe {
 		// sanitize the recipeId before searching
 		try {
 			$recipeId = self::validateUuid($recipeId);
@@ -355,7 +354,7 @@ class Recipe implements \JsonSerializable {
 			throw(new \PDOException(($exception->getMessage()), 0, $exception));
 		}
 		//  create query template
-		$query = "SELECT recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle FROM recipe WHERE recipeTitle = : recipeTitle";
+		$query = "SELECT recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle FROM recipe WHERE recipeId = :recipeId";
 
 		$statement = $pdo->prepare($query);
 
@@ -395,7 +394,7 @@ class Recipe implements \JsonSerializable {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		// create query template
-		$query = "SELECT recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle FROM recipe WHERE recipeTitle = : recipeTitle";
+		$query = "SELECT recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle FROM recipe WHERE recipeUserId = :recipeUserId";
 
 		$statement = $pdo->prepare($query);
 
@@ -437,7 +436,7 @@ class Recipe implements \JsonSerializable {
 			throw(new \PDOException("not a valid recipe title"));
 		}
 		// create query template
-		$query = "SELECT recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle FROM recipe WHERE recipeTitle = : recipeTitle";
+		$query = "SELECT recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle FROM recipe WHERE recipeTitle = :recipeTitle";
 
 		$statement = $pdo->prepare($query);
 
@@ -459,6 +458,38 @@ class Recipe implements \JsonSerializable {
 			}
 		}
 		return ($recipes);
+	}
+
+	/**
+	 * get the recipes
+	 * @param \PDO $pdo PDO connection object
+	 * @return \SplFixedArray Recipe found or null if not found
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError when a variable are not the correct data type
+	 **/
+	public static function getAllRecipes(\PDO $pdo): \SplFixedArray {
+		// create query template
+		$query = "SELECT recipeId, recipeUserId, recipeDescription, recipeIngredients, recipeMedia, recipeSteps, recipeTitle FROM recipe ";
+
+		$statement = $pdo->prepare($query);
+
+		$statement->execute();
+
+		// build an array of recipes
+		$recipes = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], $row["recipeDescription"], $row["recipeIngredients"], $row["recipeMedia"], $row["recipeSteps"], $row["recipeTitle"]);
+				$recipes [$recipes->key()] = $recipe;
+				$recipes->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return ($recipes);
+
 	}
 	/**
 	 * formats the state variables for JSON serialization

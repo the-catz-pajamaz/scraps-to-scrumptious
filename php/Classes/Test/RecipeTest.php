@@ -70,11 +70,11 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 		// run the default setUp() method first
 		parent::setUp();
 		$password = "abc123";
-		$this->VALID_PROFILE_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$hash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
 		$activationToken = bin2hex(random_bytes(16));
 
 		// create and insert a User to own the test Recipe
-		$this->user = new User(generateUuidV4(), $activationToken, "a@bc.com", "jack", "jackLinks", $this->VALID_PROFILE_HASH, "sasquatch");
+		$this->user = new User(generateUuidV4(), $activationToken, "a@bc.com", "jack", "jackLinks", $hash, "sasquatch");
 		$this->user->insert($this->getPDO());
 
 	}
@@ -95,7 +95,7 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 		$pdoRecipe = Recipe::getRecipeByRecipeId($this->getPDO(), $recipe->getRecipeId());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
 		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
-		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->recipe->getRecipeId());
+		$this->assertEquals($pdoRecipe->getRecipeUserId(), $recipe->getRecipeUserId()->toString());
 		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
 		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
 		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
@@ -117,15 +117,15 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 		$recipe->insert($this->getPDO());
 
 		// edit the Recipe and update it in mySQL
-		$recipe->setRecipeDescription($this->VALID_RECIPE_DESCRIPTION2);
+		$recipe->setRecipeDescription($this->VALID_RECIPE_DESCRIPTION_2);
 		$recipe->update($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoRecipe = Recipe::getRecipeByRecipeId($this->getPDO(), $recipe->getRecipeId());
-		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
-		$this->assertEquals($pdoRecipe->getRecipeId(), $this->recipe->getRecipeId());
-		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION2);
+		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
+		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->user->getUserId());
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION_2);
 		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
 		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
 		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
@@ -156,69 +156,6 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 	}
 
 	/**
-	 * test inserting a Recipe and re-grabbing it from mySQL
-	 **/
-	public function testGetValidRecipeByRecipeId() {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("recipe");
-
-		// create a new Recipe and insert to into mySQL
-		$recipeId = generateUuidV4();
-		$recipe = new Recipe($recipeId, $this->user->getUserId(), $this->VALID_RECIPE_DESCRIPTION, $this->VALID_RECIPE_INGREDIENTS, $this->VALID_RECIPE_MEDIA, $this->VALID_RECIPE_STEPS, $this->VALID_RECIPE_TITLE);
-		$recipe->insert($this->getPDO());
-
-		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Recipe::getRecipeByRecipeId($this->getPDO(), $recipe->getReciepId());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
-		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
-
-		// grab the result from the array and validate it
-		$pdoRecipe = $results[0];
-
-		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
-		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->recipe->getRecipeUserId());
-		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
-		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
-		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
-		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
-		$this->assertEquals($pdoRecipe->getRecipeTitle(), $this->VALID_RECIPE_TITLE);
-
-	}
-
-	/**
-	 * test grabbing a Recipe by recipe description
-	 **/
-	public function testGetValidRecipeByRecipeDescription(): void {
-		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("recipe");
-
-		// create a new Recipe and insert to into mySQL
-		$recipeId = generateUuidV4();
-		$recipe = new Recipe($recipeId, $this->user->getUserId(), $this->VALID_RECIPE_DESCRIPTION, $this->VALID_RECIPE_INGREDIENTS, $this->VALID_RECIPE_MEDIA, $this->VALID_RECIPE_STEPS, $this->VALID_RECIPE_TITLE);
-		$recipe->insert($this->getPDO());
-
-		// grab the data from mySQL and enforce the fields match our expectations
-		$results = Recipe::getRecipeByRecipeDescription($this->getPDO(), $recipe->getRecipeDescription());
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
-		$this->assertCount(1, $results);
-
-		// enforce no other objects are bleeding into the test
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
-
-		// grab the result from the array and validate it
-		$pdoRecipe = $results[0];
-		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
-		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->recipe->getRecipeId());
-		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
-		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
-		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
-		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
-		$this->assertEquals($pdoRecipe->getRecipeTitle(), $this->VALID_RECIPE_TITLE);
-
-	}
-
-	/**
 	 * test grabbing all Recipes
 	 **/
 	public function testGetAllValidRecipes(): void {
@@ -234,12 +171,12 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 		$results = Recipe::getAllRecipes($this->getPDO());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\ScrapsToScrumptious\\Recipe", $results);
+		$this->assertContainsOnlyInstancesOf("TheCatzPajamaz\\ScrapsToScrumptious\\Recipe", $results);
 
 		// grab the result from the array and validate it
 		$pdoRecipe = $results[0];
 		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
-		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->recipe->getRecipeUserId());
+		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->user->getUserId());
 		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
 		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
 		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
