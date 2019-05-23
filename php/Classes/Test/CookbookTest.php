@@ -56,6 +56,9 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 		$this->user = new User(generateUuidV4(), $activationToken, "a@bc.com", "jack", "jackLinks", $hash, "sasquatch");
 		$this->user->insert($this->getPDO());
 
+		$this->recipe = new Recipe(generateUuidV4(), $this->user->getUserId(), "Food", "blue", "www.google.com", "steps", "This Recipe");
+		$this->recipe->insert($this->getPDO());
+
 	}
 		/**
 		 * test inserting a valid Cookbook and verify that the mySQL data matches
@@ -65,15 +68,17 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 			$numRows = $this->getConnection()->getRowCount("cookbook");
 
 			// Create a new Cookbook and insert it into mySQL
-			$cookbook = new Cookbook($this->user->getUserId(), $this->recipe->getRecipeId());
+			$cookbook = new Cookbook($this->recipe->getRecipeId(), $this->user->getUserId());
 			$cookbook->insert($this->getPDO());
 
 			// Make sure cookbook doesn't already exist in mySQL
-			$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->user->getUserId(), $this->recipe->getRecipeId());
+			$pdoCookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPdo(), $this->recipe->getRecipeId(), $this->user->getUserId());
 			$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("cookbook"));
 			$this->assertEquals($pdoCookbook->getCookbookRecipeId(), $cookbook->getCookbookRecipeId()->toString());
 			$this->assertEquals($pdoCookbook->getCookbookUserId(), $cookbook->getCookbookUserId()->toString());
-			// !!! May need assert null
+
+			$this->assertNull($pdoCookbook);
+			$this->assertEquals($numRows, $this->getConnection()->getRowCount("cookbook"));
 		}
 
 

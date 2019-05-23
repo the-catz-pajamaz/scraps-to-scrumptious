@@ -242,7 +242,7 @@ class Cookbook implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$cookbook = new Cookbook($row["cookbookRecipeId"], $row["cookbookUserId"]);
+				$cookbook = new Cookbook($row->cookbookRecipeId, $row->cookbookUserId);
 			}
 		} catch(\Exception $exception) {
 			//if the row can't be converted, rethrow
