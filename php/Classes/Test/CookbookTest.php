@@ -76,9 +76,6 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 			$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("cookbook"));
 			$this->assertEquals($pdoCookbook->getCookbookRecipeId(), $cookbook->getCookbookRecipeId()->toString());
 			$this->assertEquals($pdoCookbook->getCookbookUserId(), $cookbook->getCookbookUserId()->toString());
-
-			$this->assertNull($pdoCookbook);
-			$this->assertEquals($numRows, $this->getConnection()->getRowCount("cookbook"));
 		}
 
 

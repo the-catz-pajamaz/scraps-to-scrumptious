@@ -30,7 +30,7 @@ class Cookbook implements \JsonSerializable {
 	 * constructor for cookbook
 	 */
 
-	public function __construct(Uuid $newCookbookRecipeId, Uuid $newCookbookUserId) {
+	public function __construct($newCookbookRecipeId, $newCookbookUserId) {
 		try {
 			$this->setCookbookRecipeId($newCookbookRecipeId);
 			$this->setCookbookUserId($newCookbookUserId);
@@ -232,6 +232,7 @@ class Cookbook implements \JsonSerializable {
 		//Create the query template.
 		$query = "SELECT cookbookRecipeId, cookbookUserId FROM cookbook WHERE cookbookRecipeId = :cookbookRecipeId AND cookbookUserId = :cookbookUserId";
 		$statement = $pdo->prepare($query);
+
 		//Bind the cookbookRecipeId abd cookbookUserId to the template placeholder.
 		$parameters = ["cookbookRecipeId" => $cookbookRecipeId->getBytes(), "cookbookUserId" => $cookbookUserId->getBytes()];
 		$statement->execute($parameters);
@@ -242,7 +243,7 @@ class Cookbook implements \JsonSerializable {
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			$row = $statement->fetch();
 			if($row !== false) {
-				$cookbook = new Cookbook($row->cookbookRecipeId, $row->cookbookUserId);
+				$cookbook = new Cookbook($row["cookbookRecipeId"], $row["cookbookUserId"]);
 			}
 		} catch(\Exception $exception) {
 			//if the row can't be converted, rethrow
