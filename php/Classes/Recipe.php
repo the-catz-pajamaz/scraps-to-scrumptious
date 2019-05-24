@@ -441,7 +441,7 @@ class Recipe implements \JsonSerializable {
 		$statement = $pdo->prepare($query);
 
 		// bind the recipe title to the place holder in the template
-		$parameters = ["recipeTitle" => $recipeTitle->getBytes()];
+		$parameters = ["recipeTitle" => $recipeTitle];
 		$statement->execute($parameters);
 
 		// build an array of recipes

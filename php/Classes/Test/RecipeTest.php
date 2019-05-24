@@ -184,6 +184,97 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 		$this->assertEquals($pdoRecipe->getRecipeTitle(), $this->VALID_RECIPE_TITLE);
 
 	}
+
+	/**
+	 * test grabbing all Recipes by recipe id
+	 **/
+	public function testGetValidRecipesByRecipeId(): void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("recipe");
+
+		// create a new Recipe and insert to into mySQL
+		$recipeId = generateUuidV4();
+		$recipe = new Recipe($recipeId, $this->user->getUserId(), $this->VALID_RECIPE_DESCRIPTION, $this->VALID_RECIPE_INGREDIENTS, $this->VALID_RECIPE_MEDIA, $this->VALID_RECIPE_STEPS, $this->VALID_RECIPE_TITLE);
+		$recipe->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Recipe::getAllRecipes($this->getPDO());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("TheCatzPajamaz\\ScrapsToScrumptious\\Recipe", $results);
+
+		// grab the result from the array and validate it
+		$pdoRecipe = $results[0];
+		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
+		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->user->getUserId());
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
+		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
+		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
+		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
+		$this->assertEquals($pdoRecipe->getRecipeTitle(), $this->VALID_RECIPE_TITLE);
+
+	}
+
+	/**
+	 * test grabbing all Recipes by recipe user id
+	 **/
+	public function testGetValidRecipesByRecipeUserId(): void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("recipe");
+
+		// create a new Recipe and insert to into mySQL
+		$recipeId = generateUuidV4();
+		$recipe = new Recipe($recipeId, $this->user->getUserId(), $this->VALID_RECIPE_DESCRIPTION, $this->VALID_RECIPE_INGREDIENTS, $this->VALID_RECIPE_MEDIA, $this->VALID_RECIPE_STEPS, $this->VALID_RECIPE_TITLE);
+		$recipe->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Recipe::getRecipesByRecipeUserId($this->getPDO(), $recipe->getRecipeUserID());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("TheCatzPajamaz\\ScrapsToScrumptious\\Recipe", $results);
+
+		// grab the result from the array and validate it
+		$pdoRecipe = $results[0];
+		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
+		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->user->getUserId());
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
+		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
+		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
+		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
+		$this->assertEquals($pdoRecipe->getRecipeTitle(), $this->VALID_RECIPE_TITLE);
+
+	}
+
+	/**
+	 * test grabbing all Recipes by recipe title
+	 **/
+	public function testGetValidRecipesByRecipeTitle(): void {
+		// count the number of rows and save it for later
+		$numRows = $this->getConnection()->getRowCount("recipe");
+
+		// create a new Recipe and insert to into mySQL
+		$recipeId = generateUuidV4();
+		$recipe = new Recipe($recipeId, $this->user->getUserId(), $this->VALID_RECIPE_DESCRIPTION, $this->VALID_RECIPE_INGREDIENTS, $this->VALID_RECIPE_MEDIA, $this->VALID_RECIPE_STEPS, $this->VALID_RECIPE_TITLE);
+		$recipe->insert($this->getPDO());
+
+		// grab the data from mySQL and enforce the fields match our expectations
+		$results = Recipe::getRecipesByRecipeTitle($this->getPDO(), $recipe->getRecipeTitle());
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("recipe"));
+		$this->assertCount(1, $results);
+		$this->assertContainsOnlyInstancesOf("TheCatzPajamaz\\ScrapsToScrumptious\\Recipe", $results);
+
+		// grab the result from the array and validate it
+		$pdoRecipe = $results[0];
+		$this->assertEquals($pdoRecipe->getRecipeId(), $recipeId);
+		$this->assertEquals($pdoRecipe->getRecipeUserId(), $this->user->getUserId());
+		$this->assertEquals($pdoRecipe->getRecipeDescription(), $this->VALID_RECIPE_DESCRIPTION);
+		$this->assertEquals($pdoRecipe->getRecipeIngredients(), $this->VALID_RECIPE_INGREDIENTS);
+		$this->assertEquals($pdoRecipe->getRecipeMedia(), $this->VALID_RECIPE_MEDIA);
+		$this->assertEquals($pdoRecipe->getRecipeSteps(), $this->VALID_RECIPE_STEPS);
+		$this->assertEquals($pdoRecipe->getRecipeTitle(), $this->VALID_RECIPE_TITLE);
+
+	}
+
 }
 
 
