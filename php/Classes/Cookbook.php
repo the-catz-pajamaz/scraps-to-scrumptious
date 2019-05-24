@@ -30,7 +30,7 @@ class Cookbook implements \JsonSerializable {
 	 * constructor for cookbook
 	 */
 
-	public function __construct(Uuid $newCookbookRecipeId, Uuid $newCookbookUserId) {
+	public function __construct($newCookbookRecipeId, $newCookbookUserId) {
 		try {
 			$this->setCookbookRecipeId($newCookbookRecipeId);
 			$this->setCookbookUserId($newCookbookUserId);
@@ -216,7 +216,7 @@ class Cookbook implements \JsonSerializable {
 	 * @return Cookbook the cookbook with both cookbookRecipeId and cookbookUserId
 	 * @throws \PDOException if we get a PDO error.
 	 */
-	public static function getCookbookByCookbookRecipeIdAndCookbookUserId(\PDO $pdo, $cookbookRecipeId, $cookbookUserId): Cookbook {
+	public static function getCookbookByCookbookRecipeIdAndCookbookUserId(\PDO $pdo, $cookbookRecipeId, $cookbookUserId): ?Cookbook {
 		//Sanitize the cookbookRecipeId and cookbookUserId before accessing
 		try {
 			$cookbookRecipeId = self::validateUuid($cookbookRecipeId);
@@ -232,6 +232,7 @@ class Cookbook implements \JsonSerializable {
 		//Create the query template.
 		$query = "SELECT cookbookRecipeId, cookbookUserId FROM cookbook WHERE cookbookRecipeId = :cookbookRecipeId AND cookbookUserId = :cookbookUserId";
 		$statement = $pdo->prepare($query);
+
 		//Bind the cookbookRecipeId abd cookbookUserId to the template placeholder.
 		$parameters = ["cookbookRecipeId" => $cookbookRecipeId->getBytes(), "cookbookUserId" => $cookbookUserId->getBytes()];
 		$statement->execute($parameters);
