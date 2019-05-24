@@ -216,7 +216,7 @@ class Cookbook implements \JsonSerializable {
 	 * @return Cookbook the cookbook with both cookbookRecipeId and cookbookUserId
 	 * @throws \PDOException if we get a PDO error.
 	 */
-	public static function getCookbookByCookbookRecipeIdAndCookbookUserId(\PDO $pdo, $cookbookRecipeId, $cookbookUserId): Cookbook {
+	public static function getCookbookByCookbookRecipeIdAndCookbookUserId(\PDO $pdo, $cookbookRecipeId, $cookbookUserId): ?Cookbook {
 		//Sanitize the cookbookRecipeId and cookbookUserId before accessing
 		try {
 			$cookbookRecipeId = self::validateUuid($cookbookRecipeId);
