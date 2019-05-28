@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
-require_once dirname(__DIR__, 3) . "/classes/autoload.php";
+require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
@@ -27,19 +27,22 @@ try {
 	$pdo = $secrets->getPdoObject();
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
+
+	// sanitize input
+	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$userEmail = filter_input(INPUT_GET, "userEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$userFirstName = filter_input(INPUT_GET, "userFirstName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$userHandle = filter_input(INPUT_GET, "userHandle", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$userLastName = filter_input(INPUT_GET, "userLastName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
 	if($method === "POST") {
 		//decode the json and turn it into a php object
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		//user id is a required field
-		if(empty($requestObject->userId) === true) {
-			throw(new \InvalidArgumentException) ("No user ID present", 405);
-		}
-
 		//user email is a required field
 		if(empty($requestObject->userEmail) === true) {
-			throw(new \InvalidArgumentException) ("No user email present", 405);
+			throw(new \InvalidArgumentException ("No user email present", 405));
 		}
 
 		//user first name is a required field
