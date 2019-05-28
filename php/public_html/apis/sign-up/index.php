@@ -6,6 +6,8 @@ require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 use TheCatzPajamaz\ScrapsToScrumptious;
+use TheCatzPajamaz\ScrapsToScrumptious\User;
+
 /**
  * api for signing up too DDC ScrapsToScrumptious
  *
@@ -21,7 +23,7 @@ $reply->status = 200;
 $reply->data = null;
 try {
 	//grab the mySQL connection
-	$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddcscraps.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/scraps.ini");
 	$pdo = $secrets->getPdoObject();
 	//determine which HTTP method was used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
@@ -51,7 +53,7 @@ try {
 		}
 
 		//user last name is a required field
-		if(empty($requestObject->userlastName) === true) {
+		if(empty($requestObject->userLastName) === true) {
 			throw(new \InvalidArgumentException ("Please enter last name", 405));
 		}
 
@@ -71,7 +73,7 @@ try {
 		$hash = password_hash($requestObject->userPassword, PASSWORD_ARGON2I, ["time_cost" => 384]);
 		$userActivationToken = bin2hex(random_bytes(16));
 		//create the user object and prepare to insert into the database
-		$user = new User(generateUuidV4(), $userActivationToken, $requestObject->userAtHandle, "null", $requestObject->userEmail, $hash);
+		$user = new User(generateUuidV4(), $userActivationToken, $requestObject->userEmail, $requestObject->userFirstName, $requestObject->userHandle, $hash, $requestObject->userLastName);
 		//insert the user into the database
 		$user->insert($pdo);
 		//compose the email message to send with th activation token
@@ -85,15 +87,14 @@ try {
 		$confirmLink = "https://" . $_SERVER["SERVER_NAME"] . $urlglue;
 		//compose message to send with email
 		$message = <<< EOF
-<h2>Welcome to DDCTwitter.</h2>
-<p>In order to start posting tweets of cats you must confirm your account </p>
+<h2>Thanks for signing up :-)).</h2>
 <p><a href="$confirmLink">$confirmLink</a></p>
 EOF;
 		//create swift email
 		$swiftMessage = new Swift_Message();
 		// attach the sender to the message
 		// this takes the form of an associative array where the email is the key to a real name
-		$swiftMessage->setFrom(["gkephart@cnm.edu" => "Gkephart"]);
+		$swiftMessage->setFrom(["NOREPLY@scrapstoscrumptious.com" => "NOREPLY@scrapstoscrumptious.com"]);
 		/**
 		 * attach recipients to the message
 		 * notice this is an array that can include or omit the recipient's name
@@ -137,7 +138,7 @@ EOF;
 			throw(new RuntimeException("unable to send email", 400));
 		}
 		// update reply
-		$reply->message = "Thank you for creating a user with DDC-Twitter";
+		$reply->message = "Thank you for being a user of Scraps to Scrumptious";
 	} else {
 		throw (new InvalidArgumentException("invalid http request"));
 	}
