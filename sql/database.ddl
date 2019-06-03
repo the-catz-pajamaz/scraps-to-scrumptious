@@ -8,7 +8,7 @@ drop table if exists user;
 
 
 
--- creates user entity
+-- creates user-api entity
 create table user (
 	userId binary(16) not null,
 	userActivationToken char(32),
