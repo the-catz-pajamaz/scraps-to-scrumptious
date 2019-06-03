@@ -33,12 +33,15 @@
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
 	</head>
 	<body>
+		<!-- Footer Section -->
 		<footer class="bg-dark small text-center text-white py-3">
 			<div>
-				<!-- in your body -->
-				<i class="devicon-github-plain font-size: 32rem"></i>
-				Want to contribute?
+				<!-- devicon GitHub icon -->
+				<div id="footer">
+				<i class="devicon-github-plain"><a href="https://github.com/the-catz-pajamaz/scraps-to-scrumptious/" class="text-white"> Contribute</a></i>
+				</div>
 			</div>
+		</footer>
 		</footer>
 	</body>
 </html>
