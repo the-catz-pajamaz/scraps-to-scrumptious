@@ -20,7 +20,6 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
  * @see User
  **/
 
-class UserTest extends ScrapsToScrumptiousTest {
 
 	/**
 	 * placeholder until account activation is created

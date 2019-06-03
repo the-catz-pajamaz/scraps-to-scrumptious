@@ -59,8 +59,8 @@ try {
 		if(empty($id) === false) {
 			$reply->data = User::getUserByUserId($pdo, $id);
 
-		} else if(empty($userAtHandle) === false) {
-			$reply->data = User::getUserByUserAtHandle($pdo, $userHandle);
+		} else if(empty($userHandle) === false) {
+			$reply->data = User::getUserByUserHandle($pdo, $userHandle);
 
 		} else if(empty($userEmail) === false) {
 
