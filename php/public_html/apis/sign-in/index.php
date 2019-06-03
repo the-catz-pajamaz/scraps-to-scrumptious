@@ -47,6 +47,7 @@ try {
 		} else {
 			$userPassword = $requestObject->userPassword;
 		}
+		var_dump($userEmail);
 		//grab the user from the database by the email provided
 		$user = User::getUserByUserEmail($pdo, $userEmail);
 		if(empty($user) === true) {
