@@ -23,6 +23,15 @@
 		<title>My Cookbook</title>
 	</head>
 	<body>
-
+		<!-- Parallax Img -->
+		<div class="parallax-container" data-parallax="scroll" data-bleed="10" data-speed="0.2"
+			  data-image-src="cookbook-background.jpg" data-natural-width="1920" data-natural-height="1280" id="titleBackground"
+			  style="height: 650px;">
+			<div class="card bg-dark text-black text-border-dark border-0">
+				<div class="card-img-overlay" id="titleText">
+					<h1 class="card-title text-center" id="title">My Cookbook</h1>
+					<p class="card-text text-center"></p>
+				</div>
+			</div>
 	</body>
 </html>
