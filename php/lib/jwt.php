@@ -6,7 +6,7 @@ use Lcobucci\JWT\{
 };
 /**
  * this method creates a JWT that will be used on the front end to authenticate users, activate protected routes, and verification of who is logged in.
- * this token is viewable by anyone and SHOULD NOT contain any sensitive information about the user.
+ * this token is viewable by anyone and SHOULD NOT contain any sensitive information about the user-api.
  *
  * @see https://github.com/lcobucci/jwt/blob/3.2/README.md documentation for the composer package used for JWT
  * @param string $value name of the custom object that will be used for validation.

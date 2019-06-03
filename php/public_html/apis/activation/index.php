@@ -5,7 +5,7 @@ require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 use TheCatzPajamaz\ScrapsToScrumptious;
 /**
- * API to check user activation status
+ * API to check user-api activation status
  * @author Gkephart
  */
 // Check the session. If it is not active, start the session.
@@ -22,7 +22,7 @@ try{
 	$pdo = $secrets->getPdoObject();
 	//check the HTTP method being used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
-	//sanitize input (never trust the end user
+	//sanitize input (never trust the end user-api
 	$activation = filter_input(INPUT_GET, "activation", FILTER_SANITIZE_STRING);
 	// make sure the activation token is the correct size
 	if(strlen($activation) !== 32){
@@ -36,18 +36,18 @@ try{
 	if($method === "GET"){
 		// set XSRF Cookie
 		setXsrfCookie();
-		//find user associated with the activation token
+		//find user-api associated with the activation token
 		$user = User::getUserByUserActivationToken($pdo, $activation);
-		//verify the user is not null
+		//verify the user-api is not null
 		if($user !== null){
 			//make sure the activation token matches
 			if($activation === $user->getUserActivationToken()) {
 				//set activation to null
 				$user->setUserActivationToken(null);
-				//update the user in the database
+				//update the user-api in the database
 				$user->update($pdo);
-				//set the reply for the end user
-				$reply->data = "Thank you for activating your account, you will be auto-redirected to your user shortly.";
+				//set the reply for the end user-api
+				$reply->data = "Thank you for activating your account, you will be auto-redirected to your user-api shortly.";
 			}
 		} else {
 			//throw an exception if the activation token does not exist

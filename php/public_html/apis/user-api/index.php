@@ -10,8 +10,8 @@ require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 
 
-use TheCatzPajamaz\ScrapsToScrumptious; {
-	User;
+use TheCatzPajamaz\ScrapsToScrumptious\ {
+	User
 };
 
 /**
@@ -72,12 +72,12 @@ try {
 		//enforce that the XSRF token is present in the header
 		verifyXsrf();
 
-		//enforce the end user has a JWT token
+		//enforce the end user-api has a JWT token
 		//validateJwtHeader();
 
-		//enforce the user is signed in and only trying to edit their own user
-		if(empty($_SESSION["user"]) === true || $_SESSION["user"]->getUserId()->toString() !== $id) {
-			throw(new \InvalidArgumentException("You are not allowed to access this user", 403));
+		//enforce the user-api is signed in and only trying to edit their own user-api
+		if(empty($_SESSION["user-api"]) === true || $_SESSION["user-api"]->getUserId()->toString() !== $id) {
+			throw(new \InvalidArgumentException("You are not allowed to access this user-api", 403));
 		}
 
 		validateJwtHeader();
@@ -86,21 +86,21 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		//retrieve the user to be updated
+		//retrieve the user-api to be updated
 		$user = User::getUserByUserId($pdo, $id);
 		if($user === null) {
 			throw(new RuntimeException("User does not exist", 404));
 		}
 
 
-		//user handle
+		//user-api handle
 		if(empty($requestObject->userHandle) === true) {
-			throw(new \InvalidArgumentException ("No user handle", 405));
+			throw(new \InvalidArgumentException ("No user-api handle", 405));
 		}
 
-		//user email is a required field
+		//user-api email is a required field
 		if(empty($requestObject->userEmail) === true) {
-			throw(new \InvalidArgumentException ("No user email present", 405));
+			throw(new \InvalidArgumentException ("No user-api email present", 405));
 		}
 
 		$user->setUserHandle($requestObject->userHandle);
@@ -116,7 +116,7 @@ try {
 		//verify the XSRF Token
 		verifyXsrf();
 
-		//enforce the end user has a JWT token
+		//enforce the end user-api has a JWT token
 		//validateJwtHeader();
 
 		$user = User::getUserByUserId($pdo, $id);
@@ -124,9 +124,9 @@ try {
 			throw (new RuntimeException("User does not exist"));
 		}
 
-		//enforce the user is signed in and only trying to edit their own user
-		if(empty($_SESSION["user"]) === true || $_SESSION["user"]->getUserId()->toString() !== $user->getUserId()->toString()) {
-			throw(new \InvalidArgumentException("You are not allowed to access this user", 403));
+		//enforce the user-api is signed in and only trying to edit their own user-api
+		if(empty($_SESSION["user-api"]) === true || $_SESSION["user-api"]->getUserId()->toString() !== $user->getUserId()->toString()) {
+			throw(new \InvalidArgumentException("You are not allowed to access this user-api", 403));
 		}
 
 		validateJwtHeader();

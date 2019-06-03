@@ -14,7 +14,7 @@ class Recipe implements \JsonSerializable {
 	private $recipeId;
 
 	/**
-	 * recipe user id for this recipe
+	 * recipe user-api id for this recipe
 	 * @var $recipeUserId
 	 */
 	private $recipeUserId;
@@ -124,9 +124,9 @@ class Recipe implements \JsonSerializable {
 	}
 
 	/**
-	 * mutator method for recipe user id
+	 * mutator method for recipe user-api id
 	 *
-	 * @param Uuid|string $newRecipeUserId value of new recipe user id
+	 * @param Uuid|string $newRecipeUserId value of new recipe user-api id
 	 * @throws |RangeException if $newRecipeUserId value is not
 	 */
 	public function setRecipeUserId($newRecipeUserId): void {
@@ -138,7 +138,7 @@ class Recipe implements \JsonSerializable {
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 
-		// convert and store the recipe user id
+		// convert and store the recipe user-api id
 		$this->recipeUserId = $uuid;
 	}
 
@@ -381,7 +381,7 @@ class Recipe implements \JsonSerializable {
 	 * get the recipe by recipeUserId
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $recipeUserId user id to search for
+	 * @param Uuid|string $recipeUserId user-api id to search for
 	 * @return Recipe|null Recipe found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when a variable are not the correct data type
@@ -398,7 +398,7 @@ class Recipe implements \JsonSerializable {
 
 		$statement = $pdo->prepare($query);
 
-		// bind the recipe user id to the place holder in the template
+		// bind the recipe user-api id to the place holder in the template
 		$parameters = ["recipeUserId" => $recipeUserId->getBytes()];
 		$statement->execute($parameters);
 

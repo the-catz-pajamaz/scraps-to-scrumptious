@@ -118,7 +118,7 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 		 * test grabbing a Cookbook that doesn't exist
 		 */
 		public function testGetInvalidCookbookByCookbookRecipeIdAndCookbookUserId() :void {
-			// grab a recipe id and user id that exceeds the max character limit
+			// grab a recipe id and user-api id that exceeds the max character limit
 			$cookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($this->getPDO(), generateUuidV4(), generateUuidV4());
 			$this->assertNull($cookbook);
 		}
@@ -150,7 +150,7 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 	 **/
 //	public function testGetValidCookbookByRecipeId() : void {
 //		// Create a new Cookbook and insert it into mySQL
-//		$cookbook = new Cookbook($this->recipe->getRecipeId(), $this->user->getUserId());
+//		$cookbook = new Cookbook($this->recipe->getRecipeId(), $this->user-api->getUserId());
 //		$cookbook->insert($this->getPDO());
 //
 //		$results = Cookbook::getCookbooksbyCookbookRecipeId($this->getPDO(), $this->recipe->getRecipeId());
@@ -158,6 +158,6 @@ class CookbookTest extends ScrapsToScrumptiousTest {
 //		// grab result from the array and validate it
 //		$pdoCookbook = $results[0];
 //		$this->assertEquals($pdoCookbook->getCookbookRecipeId(), $this->recipe->getCookbookRecipeId());
-//		$this->assertEquals($pdoCookbook->getCookbookUserId(), $this->user->getUserId());
+//		$this->assertEquals($pdoCookbook->getCookbookUserId(), $this->user-api->getUserId());
 //	}
 }

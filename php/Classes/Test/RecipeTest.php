@@ -23,7 +23,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 class RecipeTest extends ScrapsToScrumptiousTest {
 	/**
 	 * User that created the Recipe; this is for foreign key relations
-	 * @var User user
+	 * @var User user-api
 	 **/
 	protected $user = null;
 
@@ -216,7 +216,7 @@ class RecipeTest extends ScrapsToScrumptiousTest {
 	}
 
 	/**
-	 * test grabbing all Recipes by recipe user id
+	 * test grabbing all Recipes by recipe user-api id
 	 **/
 	public function testGetValidRecipesByRecipeUserId(): void {
 		// count the number of rows and save it for later

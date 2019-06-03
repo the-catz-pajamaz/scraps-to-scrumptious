@@ -6,13 +6,13 @@ namespace TheCatzPajamaz\ScrapsToScrumptious;
 require_once ("autoload.php");
 use Ramsey\Uuid\Uuid;
 
-// create class for table 'user'
+// create class for table 'user-api'
 class User{
 	// validate uuid for pk, create private variables for all table elements
 	use ValidateUuid;
 
 	/**
-	 * Id for user, this is primary key
+	 * Id for user-api, this is primary key
 	 * @var Uuid $userId
 	 */
 	private $userId;
@@ -30,7 +30,7 @@ class User{
 	private $userEmail;
 
 	/**
-	 * This is the user's first name
+	 * This is the user-api's first name
 	 * @var $userFirstName
 	 */
 	private $userFirstName;
@@ -42,26 +42,26 @@ class User{
 	private $userHandle;
 
 	/**
-	 * hash for user password
+	 * hash for user-api password
 	 * @var $userHash
 	 */
 	private $userHash;
 
 	/**
-	 *this is the user's last name
+	 *this is the user-api's last name
 	 * @var $userLastName
 	 */
 	private $userLastName;
 
 	/**
-	 * constructor method for table user
-	 * @param Uuid $newUserId id of this user
+	 * constructor method for table user-api
+	 * @param Uuid $newUserId id of this user-api
 	 * @param string $newUserActivationToken to protect against malicious accounts
-	 * @param string $newUserEmail string with user's email
-	 * @param string $newUserFirstName string with user's first name
-	 * @param string $newUserHandle string with user's handle
-	 * @param string $newUserHash string with user's hash
-	 * @param string $newUserLastName string with user's last name
+	 * @param string $newUserEmail string with user-api's email
+	 * @param string $newUserFirstName string with user-api's first name
+	 * @param string $newUserHandle string with user-api's handle
+	 * @param string $newUserHash string with user-api's hash
+	 * @param string $newUserLastName string with user-api's last name
 	 * @throws \RangeException if strings are the improper character count or negative values
 	 * @throws \TypeError if data violates something specific to that objects requirements
 	 * @throws \Exception in the event of some other nonsense
@@ -134,7 +134,7 @@ class User{
 				return;
 			}
 		if(ctype_xdigit($newUserActivationToken) === false) {
-			throw(new\RangeException("user activation is not valid"));
+			throw(new\RangeException("user-api activation is not valid"));
 		}
 		$this->userActivationToken = $newUserActivationToken;
 	}
@@ -222,7 +222,7 @@ class User{
 	}
 
 	/**
-	 *accessor method for user hash
+	 *accessor method for user-api hash
 	 *
 	 * @return string value userHash
 	 */
@@ -231,7 +231,7 @@ class User{
 	}
 
 	/**
-	 * Mutator method for user hash
+	 * Mutator method for user-api hash
 	 * @param string $newUserHash
 	 * @throws \InvalidArgumentException if the hash is empty, or not a hash
 	 * @throws \RangeException if the hash is not exactly 97 characters
@@ -246,10 +246,10 @@ class User{
 		//enforce that it is an argon hash
 		$newUserHashInfo = password_get_info($newUserHash);
 		if($newUserHashInfo["algoName"] !== "argon2i") {
-			throw(new \InvalidArgumentException("user hash is not a valid hash"));
+			throw(new \InvalidArgumentException("user-api hash is not a valid hash"));
 		}
 		if(strlen($newUserHash) !== 97) {
-			throw(new \RangeException("user hash must be 97 characters"));
+			throw(new \RangeException("user-api hash must be 97 characters"));
 		}
 		$this->userHash = $newUserHash;
 	}
@@ -282,7 +282,7 @@ class User{
 	}
 
 	/**
-	 * inserts user into mySQL
+	 * inserts user-api into mySQL
 	 *
 	 * @param \PDO
 	 * @throws \PDOException when mySQL errors happen
@@ -291,7 +291,7 @@ class User{
 	public function insert (\PDO $pdo) : void {
 
 		//query template
-		$query = "insert into `user`(userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName) 
+		$query = "insert into `user-api`(userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName) 
 					values (:userId, :userActivationToken, :userEmail, :userFirstName, :userHandle, :userHash, :userLastName)";
 		$statement = $pdo->prepare($query);
 
@@ -309,7 +309,7 @@ class User{
 	}
 
 	/**
-	 * delete statement for table user
+	 * delete statement for table user-api
 	 * @param \PDO
 	 * @throws \PDOException when mySQL errors happen
 	 * @throws \TypeError when \PDO errors happen
@@ -317,7 +317,7 @@ class User{
 	public function delete(\PDO $pdo) : void {
 
 		//query template
-		$query = "delete from `user` where userId = :userId";
+		$query = "delete from `user-api` where userId = :userId";
 		$statement = $pdo->prepare($query);
 
 		//bind variables to template
@@ -328,7 +328,7 @@ class User{
 	public function update(\PDO $pdo) : void {
 
 		//query template
-		$query = "update `user` set 
+		$query = "update `user-api` set 
     		userActivationToken = :userActivationToken, 
     		userEmail = :userEmail, 
     		userFirstName = :userFirstName, 
@@ -352,7 +352,7 @@ class User{
 	}
 
 	/**
-	 * gets user by userId
+	 * gets user-api by userId
 	 * @param PDO $pdo
 	 * @param Uuid $userId
 	 * @return User|null
@@ -365,7 +365,7 @@ class User{
 	catch (\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception){
 	throw(new \PDOException($exception->getMessage(), 0, $exception));
 	}
-	$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user` where userId = :userId";
+	$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user-api` where userId = :userId";
 		$statement = $pdo->prepare($query);
 		
 		$parameters = ["userId" => $userId->getBytes()];
@@ -387,7 +387,7 @@ class User{
 
 
 	/**
-	 * get user by email
+	 * get user-api by email
 	 * @param PDO $pdo
 	 * @param $userEmail
 	 * @return User
@@ -405,7 +405,7 @@ class User{
 			throw(new \RangeException("User Email is too large"));
 		}
 
-		$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user` where userEmail = :userEmail";
+		$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user-api` where userEmail = :userEmail";
 		$statement = $pdo->prepare($query);
 
 		$parameters = ["userEmail" => $userEmail];
@@ -427,7 +427,7 @@ class User{
 	}
 
 	/**
-	 * gets user by activation token
+	 * gets user-api by activation token
 	 * @param \PDO $pdo
 	 * @param $userActivationToken
 	 * @return User|null
@@ -436,9 +436,9 @@ class User{
 	 */
 	public static function getUserByUserActivationToken (\PDO $pdo, $userActivationToken) : ?User {
 		if(ctype_xdigit($userActivationToken) === false) {
-			throw(new\RangeException("user activation is not valid"));
+			throw(new\RangeException("user-api activation is not valid"));
 		}
-		$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user` where userActivationToken = :userActivationToken";
+		$query = "select userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName from `user-api` where userActivationToken = :userActivationToken";
 		$statement = $pdo->prepare($query);
 
 		$parameters = ["userActivationToken" => $userActivationToken];
