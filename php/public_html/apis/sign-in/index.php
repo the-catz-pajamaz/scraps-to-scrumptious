@@ -66,7 +66,7 @@ try {
 			"userId" =>$user->getUserId(),
 			"userHandle" => $user->getUserHandle()
 		];
-		// create and set th JWT TOKEN
+		// create and set the JWT TOKEN
 		setJwtAndAuthHeader("auth",$authObject);
 		$reply->message = "Sign in was successful.";
 	} else {
