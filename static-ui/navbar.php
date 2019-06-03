@@ -30,6 +30,10 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
+
+	<!-- reference your copy Font Awesome here (from our CDN or by hosting yourself) -->
+	<script src="https://kit.fontawesome.com/b099c8aaf7.js"></script>
+
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -43,10 +47,17 @@
 					<a class="nav-item nav-link" href="#">Cookbook</a>
 					<a class="nav-item nav-link" href="#">Login</a>
 					<a class="nav-item nav-link" href="#">Upload</a>
-					<input type="text" placeholder="Search..">
+					<!-- Collapsible content -->
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+
 					</div>
+					</div>
+				<form class="form-inline my-2 my-lg-0 ml-auto">
+					<input class="form-control" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-danger" type="reset"><i class="fa fa-search"></i></button>
+				</form>
 				</div>
 			</div>
 		</nav>
-	</body>
 </html>
