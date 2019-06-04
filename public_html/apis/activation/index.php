@@ -1,11 +1,11 @@
 
 <?php
-require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
-require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
+require_once dirname(__DIR__, 3) . "/php/Classes/autoload.php";
+require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
-use TheCatzPajamaz\ScrapsToScrumptious;
+use TheCatzPajamaz\ScrapsToScrumptious\User;
 /**
- * API to check user-api activation status
+ * API to check user activation status
  * @author Gkephart
  */
 // Check the session. If it is not active, start the session.
@@ -22,13 +22,13 @@ try{
 	$pdo = $secrets->getPdoObject();
 	//check the HTTP method being used
 	$method = array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER) ? $_SERVER["HTTP_X_HTTP_METHOD"] : $_SERVER["REQUEST_METHOD"];
-	//sanitize input (never trust the end user-api
+	//sanitize input (never trust the end user)
 	$activation = filter_input(INPUT_GET, "activation", FILTER_SANITIZE_STRING);
 	// make sure the activation token is the correct size
 	if(strlen($activation) !== 32){
 		throw(new InvalidArgumentException("activation has an incorrect length", 405));
 	}
-	// verify that the activation token is a string value of a hexadeciaml
+	// verify that the activation token is a string value of a hexadecimal
 	if(ctype_xdigit($activation) === false) {
 		throw (new \InvalidArgumentException("activation is empty or has invalid contents", 405));
 	}
@@ -46,8 +46,8 @@ try{
 				$user->setUserActivationToken(null);
 				//update the user-api in the database
 				$user->update($pdo);
-				//set the reply for the end user-api
-				$reply->data = "Thank you for activating your account, you will be auto-redirected to your user-api shortly.";
+				//set the reply for the end user
+				$reply->data = "Thank you for activating your account, you will be auto-redirected to your user shortly.";
 			}
 		} else {
 			//throw an exception if the activation token does not exist

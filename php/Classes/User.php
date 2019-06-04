@@ -461,7 +461,19 @@ class User{
 		return($user);
 	}
 
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() {
+		$fields = get_object_vars($this);
+		$fields["userId"] = $this->userId->toString();
+		unset($fields["userActivation"]);
+		unset($fields["userHash"]);
+		return ($fields);
 
+	}
 
 
 }
