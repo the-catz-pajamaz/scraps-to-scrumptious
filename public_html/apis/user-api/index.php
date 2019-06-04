@@ -13,7 +13,9 @@ require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
 require_once dirname(__DIR__, 3) . "/php/lib/jwt.php";
 require_once dirname(__DIR__, 3) . "/php/lib/uuid.php";
+
 use TheCatzPajamaz\ScrapsToScrumptious\User;
+
 /**
  * API for User
  *
@@ -30,7 +32,8 @@ $reply->data = null;
 try {
 	//verify the session, if it is not active start it
 	if(session_status() !== PHP_SESSION_ACTIVE) {
-		session_start();}
+		session_start();
+	}
 	//grab the mySQL connection
 	$secrets = new \Secrets("/etc/apache2/capstone-mysql/scraps.ini");
 	$pdo = $secrets->getPdoObject();
@@ -39,7 +42,9 @@ try {
 	// sanitize input
 	$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userEmail = filter_input(INPUT_GET, "userEmail", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$userFirstName = filter_input(INPUT_GET, "userFirstName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	$userHandle = filter_input(INPUT_GET, "userHandle", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	$userLastName = filter_input(INPUT_GET, "userLastName", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	// make sure the id is valid for methods that require it
 	if(($method === "DELETE" || $method === "PUT") && (empty($id) === true)) {
 		throw(new InvalidArgumentException("id cannot be empty or negative", 405));
@@ -54,8 +59,6 @@ try {
 			$reply->data = User::getUserByUserId($pdo, $id);
 		} else if(empty($userEmail) === false) {
 			$reply->data = User::getUserByUserEmail($pdo, $userEmail);
-		} else if(empty($userHandle) === false) {
-			$reply->data = User::getUserByUserHandle($pdo, $userHandle);
 		}
 	} elseif($method === "PUT") {
 		//enforce that the XSRF token is present in the header
@@ -76,26 +79,40 @@ try {
 			throw(new RuntimeException("User does not exist", 404));
 		}
 		//user email is a required field
-		if(empty($requestObject->userEmail) === true) {
-			throw(new \InvalidArgumentException ("No user email present", 405));
-		}
-		//userHandle
-		if(empty($requestObject->userHandle) === true) {
-			throw(new \InvalidArgumentException ("No userHandle", 405));
-		}
-		// Do i include id here too?
-		$user->setUserEmail($requestObject->userEmail);
-		$user->setUserHandle($requestObject->userHandle);
-		$user->update($pdo);
-		// update reply
-		$reply->message = "User information updated";
-	}
-	// catch any exceptions that were thrown and update the status and message state variable fields
-} catch
-(\Exception | \TypeError $exception) {
-	$reply->status = $exception->getCode();
-	$reply->message = $exception->getMessage();
-}
+			//user email is a required field
+			if(empty($requestObject->userEmail) === true) {
+				throw(new \InvalidArgumentException ("No user email present", 405));
+			}
+
+			//user email is a required field
+			if(empty($requestObject->userFirstName) === true) {
+				throw(new \InvalidArgumentException ("No first name", 405));
+			}
+				//userHandle
+				if(empty($requestObject->userHandle) === true) {
+					throw(new \InvalidArgumentException ("No userHandle", 405));
+				}
+
+				//user email is a required field
+				if(empty($requestObject->userLastName) === true) {
+					throw(new \InvalidArgumentException ("No user last name", 405));
+				}
+					// Do i include id here too?$user->setUserEmail($requestObject->userEmail);
+					$user->setUserEmail($requestObject->userEmail);
+					$user->setUserFirstName($requestObject->userFirstName);
+					$user->setUserHandle($requestObject->userHandle);
+					$user->setUserLastName($requestObject->userLastName);
+					$user->update($pdo);
+					// update reply
+					$reply->message = "User information updated";
+				}
+				// catch any exceptions that were thrown and update the status and message state variable fields
+			}
+		catch
+			(\Exception | \TypeError $exception) {
+				$reply->status = $exception->getCode();
+				$reply->message = $exception->getMessage();
+			}
 header("Content-type: application/json");
 if($reply->data === null) {
 	unset($reply->data);
