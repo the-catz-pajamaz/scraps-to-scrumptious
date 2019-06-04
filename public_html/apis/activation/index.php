@@ -36,9 +36,9 @@ try{
 	if($method === "GET"){
 		// set XSRF Cookie
 		setXsrfCookie();
-		//find user-api associated with the activation token
+		//find user associated with the activation token
 		$user = User::getUserByUserActivationToken($pdo, $activation);
-		//verify the user-api is not null
+		//verify the user is not null
 		if($user !== null){
 			//make sure the activation token matches
 			if($activation === $user->getUserActivationToken()) {

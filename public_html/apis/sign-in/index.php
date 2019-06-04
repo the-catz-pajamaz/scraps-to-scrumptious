@@ -23,8 +23,10 @@ try {
 			session_start();
 	}
 	//grab mySQL statement
-	$secrets = new\Secrets("/etc/apache2/capstone-mysql/scraps.ini");
+	$secrets = new \Secrets("/etc/apache2/capstone-mysql/scraps.ini");
 	$pdo = $secrets->getPdoObject();
+//	$secrets = new \Secrets("/etc/apache2/capstone-mysql/scraps.ini");
+//	$pdo = $secrets->getPdoObject();
 
 	//determine which HTTP method is being used
 	//determine which HTTP method is being used
@@ -47,14 +49,17 @@ try {
 		} else {
 			$userPassword = $requestObject->userPassword;
 		}
-		var_dump($userEmail);
+
+
 		//grab the user from the database by the email provided
 		$user = User::getUserByUserEmail($pdo, $userEmail);
+
 		if(empty($user) === true) {
 			throw(new InvalidArgumentException("Invalid Email", 401));
 		}
 		$user->setUserActivationToken(null);
 		$user->update($pdo);
+
 		//verify hash is correct
 		if(password_verify($requestObject->userPassword, $user->getUserHash()) === false) {
 			throw(new \InvalidArgumentException("Password or email is incorrect.", 401));
@@ -67,6 +72,7 @@ try {
 			"userId" =>$user->getUserId(),
 			"userHandle" => $user->getUserHandle()
 		];
+
 		// create and set the JWT TOKEN
 		setJwtAndAuthHeader("auth",$authObject);
 		$reply->message = "Sign in was successful.";

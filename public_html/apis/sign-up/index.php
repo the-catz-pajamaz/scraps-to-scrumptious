@@ -85,7 +85,7 @@ try {
 		//make sure URL is /public_html/api/activation/$activation
 		$basePath = dirname($_SERVER["SCRIPT_NAME"], 3);
 		//create the path
-		$urlglue = $basePath . "/api/activation/?activation=" . $userActivationToken;
+		$urlglue = $basePath . "/apis/activation/?activation=" . $userActivationToken;
 		//create the redirect link
 		$confirmLink = "https://" . $_SERVER["SERVER_NAME"] . $urlglue;
 		//compose message to send with email
@@ -141,7 +141,7 @@ EOF;
 			throw(new RuntimeException("unable to send email", 400));
 		}
 		// update reply
-		$reply->message = "Thank you for being a user-api of Scraps to Scrumptious";
+		$reply->message = "Thank you for being a user of Scraps to Scrumptious";
 	} else {
 		throw (new InvalidArgumentException("invalid http request"));
 	}
