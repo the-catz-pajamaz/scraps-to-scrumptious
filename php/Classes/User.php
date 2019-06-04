@@ -7,7 +7,7 @@ require_once ("autoload.php");
 use Ramsey\Uuid\Uuid;
 
 // create class for table 'user'
-class User{
+class User implements \JsonSerializable {
 	// validate uuid for pk, create private variables for all table elements
 	use ValidateUuid;
 

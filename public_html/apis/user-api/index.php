@@ -101,7 +101,7 @@ if($reply->data === null) {
 	unset($reply->data);
 }
 // encode and return reply to front end caller
-var_dump($reply->data);
+//var_dump($reply->data);
 echo json_encode($reply);
 
 
