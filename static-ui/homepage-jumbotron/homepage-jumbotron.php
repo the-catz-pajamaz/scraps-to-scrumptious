@@ -24,7 +24,7 @@
 		<!-- Google Fonts -->
 		<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 
-		<title>My Cookbook</title>
+		<title>Home</title>
 	</head>
 	<body>
 		<!-- Parallax Img -->
