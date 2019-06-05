@@ -1,15 +1,13 @@
 <?php
-require_once dirname(__DIR__, 3) . "/php/vendor/autoload.php";
-require_once dirname(__DIR__, 3) . "/php/Classes/autoload.php";
+require_once dirname(__DIR__, 2) . "/php/vendor/autoload.php";
+require_once dirname(__DIR__, 2) . "/php/Classes/autoload.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
-require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
-require_once dirname(__DIR__, 3) . "/php/lib/jwt.php";
-require_once dirname(__DIR__, 3) . "/php/lib/uuid.php";
+require_once dirname(__DIR__, 2) . "/php/lib/xsrf.php";
+require_once dirname(__DIR__, 2) . "/php/lib/jwt.php";
+require_once dirname(__DIR__, 2) . "/php/lib/uuid.php";
 
-use TheCatzPajamaz\ScrapsToScrumptious\ {
-	
-	// we only use the user class for testing purposes
-	User, Recipe
+use TheCatzPajamaz\ScrapsToScrumptious\Recipe; {
+
 };
 /**
  * api for the Recipe class
@@ -114,7 +112,7 @@ try {
 			$recipe = new Recipe(generateUuidV4(), $_SESSION["user"]->getUserId(), $requestObject->recipeDescription, $requestObject->recipeIngredients,  $requestObject->recipeMedia, $requestObject->recipeSteps, $requestObject->recipeTitle);
 			$recipe->insert($pdo);
 			// update reply
-			$reply->message = "Recipe created OK";
+			$reply->message = "Recipe created OK " . $recipe->getRecipeId();
 		}
 	} else if($method === "DELETE") {
 		//enforce that the end user has a XSRF token.
