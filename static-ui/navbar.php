@@ -46,7 +46,6 @@
 					<a class="nav-item nav-link" href="#">Home</a>
 					<a class="nav-item nav-link" href="#">Cookbook</a>
 					<a class="nav-item nav-link" href="#">Login</a>
-					<a class="nav-item nav-link" href="#">Upload</a>
 					<!-- Collapsible content -->
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 
