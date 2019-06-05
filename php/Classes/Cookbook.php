@@ -260,8 +260,8 @@ class Cookbook implements \JsonSerializable {
 	public function jsonSerialize() : array {
 		$fields = get_object_vars($this);
 
-		$fields["tweetId"] = $this->cookbookRecipeId->toString();
-		$fields["tweetProfileId"] = $this->cookbookUserId->toString();
+		$fields["cookbookRecipeId"] = $this->cookbookRecipeId->toString();
+		$fields["cookbookUserId"] = $this->cookbookUserId->toString();
 
 		return($fields);
 	}

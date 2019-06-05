@@ -27,14 +27,14 @@ try {
 	//determine which HTTP method was used
 	$method = $_SERVER["HTTP_X_HTTP_METHOD"] ?? $_SERVER["REQUEST_METHOD"];
 	//sanitize the search parameters
-	$cookbookRecipeId = $id = filter_input(INPUT_GET, "cookbookRecipeId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
-	$cookbookUserId = $id = filter_input(INPUT_GET, "cookbookUserId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	$cookbookRecipeId = filter_input(INPUT_GET, "cookbookRecipeId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
+	$cookbookUserId = filter_input(INPUT_GET, "cookbookUserId", FILTER_SANITIZE_STRING,FILTER_FLAG_NO_ENCODE_QUOTES);
 	if($method === "GET") {
 		//set XSRF cookie
 		setXsrfCookie();
 		//gets  a specific cookbook associated based on its composite key
 		if ($cookbookRecipeId !== null && $cookbookUserId !== null) {
-			$cookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($pdo, $cookbookUserId, $cookbookRecipeId);
+			$cookbook = Cookbook::getCookbookByCookbookRecipeIdAndCookbookUserId($pdo, $cookbookRecipeId, $cookbookUserId);
 			if($cookbook!== null) {
 				$reply->data = $cookbook;
 			}
@@ -51,12 +51,13 @@ try {
 		//decode the response from the front end
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
-		if(empty($requestObject->cookbookUserId) === true) {
-			throw (new \InvalidArgumentException("No User linked to the Cookbook", 405));
-		}
 		if(empty($requestObject->cookbookRecipeId) === true) {
 			throw (new \InvalidArgumentException("No recipe linked to the Cookbook", 405));
 		}
+		if(empty($requestObject->cookbookUserId) === true) {
+			throw (new \InvalidArgumentException("No User linked to the Cookbook", 405));
+		}
+
 		if($method === "POST") {
 			//enforce that the end user has a XSRF token.
 			verifyXsrf();
@@ -67,7 +68,7 @@ try {
 				throw(new \InvalidArgumentException("you must be logged in too cookbook posts", 403));
 			}
 			validateJwtHeader();
-			$cookbook = new Cookbook($_SESSION["user"]->getUserId(), $requestObject->cookbookRecipeId);
+			$cookbook = new Cookbook($requestObject->cookbookRecipeId, $_SESSION["user"]->getUserId());
 			$cookbook->insert($pdo);
 			$reply->message = "cookbook recipe successful";
 		} else if($method === "PUT") {
