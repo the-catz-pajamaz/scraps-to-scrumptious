@@ -1,0 +1,8 @@
+.form-group {
+	display: flex;
+	align-content: space-around;
+	justify-content: center;
+	flex-wrap: wrap;
+	height: 20vh;
+	font-size: 4vh;
+}
