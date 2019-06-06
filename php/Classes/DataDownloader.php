@@ -4,14 +4,61 @@ namespace TheCatzPajamaz\ScrapsToScrumptious;
 require_once("autoload.php");
 require_once(dirname(__DIR__, 2) . "/php/vendor/autoload.php");
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
-require_once(dirname(__DIR__, 1) . "/php/lib/uuid.php");
+require_once(dirname(__DIR__, 2) . "/php/lib/uuid.php");
 
 class DataDownloader {
 	public static function pullRecipes() {
 		$newRecipes = null;
-		$urlBase = "https://www.hikingproject.com/data/get-Recipes?lat=35.085470&lon=-106.649072&maxDistance=25&maxResults=500&key=200416450-0de1cd3b087cf27750e880bc07021975";
+		$urlBase = "https://services.campbells.com/api/Recipes//recipe";
 		$newRecipes = self::readDataJson($urlBase);
+		$secrets = new \Secrets("/etc/apache2/capstone-mysql/scraps.ini");
+		$pdo = $secrets->getPdoObject();
+
+
+		foreach($newRecipes as $value) {
+			$recipeId = generateUuidV4();
+			var_dump($value->Id);
+
+			$recipeDescription = $value->Description;
+
+			// hardcoding Erics user id for campbells
+			$recipeUserId = "0bd7303a-00e9-4921-9ffd-91467b4814f8";
+
+			// package ingredients from campbells
+			$ingredients = "";
+			foreach($value->Ingredients as $ingredient) {
+				$recipeIngredient = $ingredient->DescriptionFormatter;
+				if (empty($ingredient->ExternalProduct->Name) !== true) {
+					$recipeIngredient = str_replace("{product}", $ingredient->ExternalProduct->Name, $recipeIngredient);
+				}
+				$amount = $ingredient->Amount;
+				$unit = $ingredient->Unit;
+				$plural = "";
+				if ($amount > 1 ) {
+					$plural = "s";
+				}
+				$ingredientString = $amount;
+				if ($unit !== " ") {
+					$ingredientString = $ingredientString . " " . $unit . $plural;
+				}
+				$ingredientString = $ingredientString . " " . $recipeIngredient;
+				$ingredients = $ingredients . $ingredientString . "<br>";
+			}
+			// package steps for recipe
+			$steps = "";
+			foreach($value->RecipeSteps as $step) {
+				$steps = $steps . $step->Description . "<br>";
+			}
+			$name = $value->Name;
+			try {
+				$recipe = new Recipe($recipeId, $recipeUserId, $recipeDescription, $ingredients, "", $steps, $name);
+//				$recipe->insert($pdo);
+			} catch(\TypeError $typeError) {
+				echo("Error Connecting to database");
+			}
+		}
 	}
+
 
 	public static function readDataJson($url) {
 		$context = stream_context_create(["http" => ["ignore_errors" => true, "method" => "GET"]]);
@@ -23,8 +70,8 @@ class DataDownloader {
 			//decode the Json file
 			$jsonConverted = json_decode($jsonData);
 			//format
-			$jsonFeatures = $jsonConverted->Recipes;
-			$newRecipes = \SplFixedArray::fromArray($jsonFeatures);
+			$jsonFeatures = $jsonConverted->Result;
+			$newRecipes =\SplFixedArray::fromArray($jsonFeatures);
 		} catch(\Exception $exception) {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
