@@ -4,15 +4,19 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import {Route, BrowserRouter,Switch} from "react-router-dom";
 import {Home} from "./pages/home/Home";
+import {Footer} from "./shared/components/Footer";
+import {NavBar} from "./shared/components/NavBar";
 
 
 const Routing = () => (
 	<>
 
 		<BrowserRouter>
+			<NavBar/>
 			<Switch>
 				<Route exact path="/" component={Home}/>
 			</Switch>
+			<Footer/>
 		</BrowserRouter>
 
 	</>
