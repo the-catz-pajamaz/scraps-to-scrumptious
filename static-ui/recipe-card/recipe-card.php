@@ -30,14 +30,10 @@
 		<title>Home</title>
 	</head>
 	<body>
-
-		<h2>Fade in Overlay</h2>
-		<p>Hover over the image to see the effect.</p>
-
-		<div class="container">
+		<div class="container" id="recipe-card">
 			<img src="egg.jpg" alt="Avatar" class="image">
 			<div class="overlay">
-				<div class="text"><a href="egg.jpg">Hello World</a></div>
+				<div class="text" id="text"><a href="egg.jpg">Hello World</a></div>
 			</div>
 		</div>
 	</body>
