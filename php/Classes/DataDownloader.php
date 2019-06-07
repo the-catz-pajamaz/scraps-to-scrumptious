@@ -17,7 +17,6 @@ class DataDownloader {
 
 		foreach($newRecipes as $value) {
 			$recipeId = generateUuidV4();
-			var_dump($value->Id);
 
 			$recipeDescription = $value->Description;
 
@@ -50,9 +49,18 @@ class DataDownloader {
 				$steps = $steps . $step->Description . "<br>";
 			}
 			$name = $value->Name;
+
+			// retrieve and store the picture
+			$pictureUrl = "";
+			foreach($value->RecipeMetaRecords as $meta) {
+				if ($meta->Key === "recipe-image-wide") {
+					$pictureUrl = $meta->Value;
+				}
+			}
+
 			try {
-				$recipe = new Recipe($recipeId, $recipeUserId, $recipeDescription, $ingredients, "", $steps, $name);
-//				$recipe->insert($pdo);
+				$recipe = new Recipe($recipeId, $recipeUserId, $recipeDescription, $ingredients, $pictureUrl, $steps, $name);
+				$recipe->insert($pdo);
 			} catch(\TypeError $typeError) {
 				echo("Error Connecting to database");
 			}
