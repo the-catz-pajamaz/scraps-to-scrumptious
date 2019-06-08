@@ -30,11 +30,14 @@
 		<title>Home</title>
 	</head>
 	<body>
+		<div class="container">
 		<div class="container" id="recipe-card">
 			<img src="egg.jpg" alt="Avatar" class="image">
 			<div class="overlay">
+				<p></p>
 				<div class="text" id="text"><a href="egg.jpg">Hello World</a></div>
 			</div>
+		</div>
 		</div>
 	</body>
 </html>
