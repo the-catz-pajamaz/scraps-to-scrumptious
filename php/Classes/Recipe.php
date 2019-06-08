@@ -14,7 +14,7 @@ class Recipe implements \JsonSerializable {
 	private $recipeId;
 
 	/**
-	 * recipe user-api id for this recipe
+	 * recipe user id for this recipe
 	 * @var $recipeUserId
 	 */
 	private $recipeUserId;
