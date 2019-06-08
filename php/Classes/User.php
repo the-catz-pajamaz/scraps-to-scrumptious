@@ -477,3 +477,4 @@ class User implements \JsonSerializable {
 
 
 }
+
