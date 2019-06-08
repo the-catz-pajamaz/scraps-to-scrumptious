@@ -6,6 +6,7 @@ import {Route, BrowserRouter,Switch} from "react-router-dom";
 import {Home} from "./pages/home/Home";
 import {Footer} from "./shared/components/Footer";
 import {NavBar} from "./shared/components/NavBar";
+import {HomeJumbotron} from "./shared/components/HomeJumbotron";
 
 
 const Routing = () => (
@@ -13,6 +14,7 @@ const Routing = () => (
 
 		<BrowserRouter>
 			<NavBar/>
+			<HomeJumbotron/>
 			<Switch>
 				<Route exact path="/" component={Home}/>
 			</Switch>
