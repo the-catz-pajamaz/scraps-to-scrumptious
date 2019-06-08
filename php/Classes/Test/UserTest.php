@@ -19,7 +19,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
  *
  * @see User
  **/
-
+class UserTest extends ScrapsToScrumptiousTest {
 
 	/**
 	 * placeholder until account activation is created
@@ -74,7 +74,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 	 **/
 	public function testInsertValidUser() : void {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("user-api");
+		$numRows = $this->getConnection()->getRowCount("user");
 		
 		$userId = generateUuidV4();
 
@@ -85,7 +85,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 		$pdoUser = User::getUserByUserId($this->getPDO(), $user->getUserId());
 
 
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user-api"));
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 		$this->assertEquals($pdoUser->getUserId(), $userId);
 		$this->assertEquals($pdoUser->getUserActivationToken(), $this->VALID_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoUser->getUserEmail(), $this->VALID_EMAIL);
@@ -100,7 +100,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 	 **/
 	public function testUpdateValidUser() {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("user-api");
+		$numRows = $this->getConnection()->getRowCount("user");
 
 
 		// create a new User and insert to into mySQL
@@ -116,7 +116,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoUser = User::getUserByUserId($this->getPDO(), $user->getUserId());
 
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user-api"));
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 		$this->assertEquals($pdoUser->getUserId(), $userId);
 		$this->assertEquals($pdoUser->getUserActivationToken(), $this->VALID_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoUser->getUserEmail(), $this->VALID_EMAIL);
@@ -132,28 +132,28 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 	public function testDeleteValidUser() : void {
 
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("user-api");
+		$numRows = $this->getConnection()->getRowCount("user");
 
 		$userId = generateUuidV4();
 		$user = new User($userId, $this->VALID_ACTIVATION_TOKEN, $this->VALID_EMAIL, $this->VALID_FIRST_NAME, $this->VALID_HANDLE, $this->VALID_HASH, $this->VALID_LAST_NAME);
 		$user->insert($this->getPDO());
 
 		// delete the User from mySQL
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user-api"));
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 		$user->delete($this->getPDO());
 
 		// grab the data from mySQL and enforce the User does not exist
 		$pdoUser = User::getUserByUserId($this->getPDO(), $user->getUserId());
 		$this->assertNull($pdoUser);
-		$this->assertEquals($numRows, $this->getConnection()->getRowCount("user-api"));
+		$this->assertEquals($numRows, $this->getConnection()->getRowCount("user"));
 	}
 
 	/**
-	 * test for function that gets a user-api by that user-api's id
+	 * test for function that gets a user by that user's id
 	 **/
 	public function testGetValidUserByUserId() : void {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("user-api");
+		$numRows = $this->getConnection()->getRowCount("user");
 
 		$userId = generateUuidV4();
 		$user = new User($userId, $this->VALID_ACTIVATION_TOKEN, $this->VALID_EMAIL, $this->VALID_FIRST_NAME, $this->VALID_HANDLE, $this->VALID_HASH, $this->VALID_LAST_NAME);
@@ -162,7 +162,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoUser = User::getUserByUserId($this->getPDO(), $user->getUserId());
 
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user-api"));
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 		$this->assertEquals($pdoUser->getUserId(), $userId);
 		$this->assertEquals($pdoUser->getUserActivationToken(), $this->VALID_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoUser->getUserEmail(), $this->VALID_EMAIL);
@@ -177,7 +177,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 	 **/
 	public function testGetInvalidUserByUserId() : void {
 
-		// grab a user-api id that exceeds the maximum allowable user-api id
+		// grab a user id that exceeds the maximum allowable user id
 		$fakeUserId = generateUuidV4();
 		$user = User::getUserByUserId($this->getPDO(), $fakeUserId);
 		$this->assertNull($user);
@@ -185,11 +185,11 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 
 
 	/**
-	 * test for function that gets a user-api by that user-api's id
+	 * test for function that gets a user by that user's id
 	 **/
 	public function testGetValidUserByUserEmail() : void {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("user-api");
+		$numRows = $this->getConnection()->getRowCount("user");
 
 		$userId = generateUuidV4();
 		$user = new User($userId, $this->VALID_ACTIVATION_TOKEN, $this->VALID_EMAIL, $this->VALID_FIRST_NAME, $this->VALID_HANDLE, $this->VALID_HASH, $this->VALID_LAST_NAME);
@@ -198,7 +198,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoUser = User::getUserByUserEmail($this->getPDO(), $user->getUserEmail());
 
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user-api"));
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 		$this->assertEquals($pdoUser->getUserId(), $userId);
 		$this->assertEquals($pdoUser->getUserActivationToken(), $this->VALID_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoUser->getUserEmail(), $this->VALID_EMAIL);
@@ -218,11 +218,11 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 	}
 
 	/**
-	 * tests a valid user-api by their activation token
+	 * tests a valid user by their activation token
 	 */
 	public function testGetValidUserByUserActivationToken() : void {
 		// count the number of rows and save it for later
-		$numRows = $this->getConnection()->getRowCount("user-api");
+		$numRows = $this->getConnection()->getRowCount("user");
 
 		$userId = generateUuidV4();
 		$user = new User($userId, $this->VALID_ACTIVATION_TOKEN, $this->VALID_EMAIL, $this->VALID_FIRST_NAME, $this->VALID_HANDLE, $this->VALID_HASH, $this->VALID_LAST_NAME);
@@ -231,7 +231,7 @@ require_once(dirname(__DIR__, 2) . "/lib/uuid.php");
 		// grab the data from mySQL and enforce the fields match our expectations
 		$pdoUser = User::getUserByUserActivationToken($this->getPDO(), $user->getUserActivationToken());
 
-		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user-api"));
+		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("user"));
 		$this->assertEquals($pdoUser->getUserId(), $userId);
 		$this->assertEquals($pdoUser->getUserActivationToken(), $this->VALID_ACTIVATION_TOKEN);
 		$this->assertEquals($pdoUser->getUserEmail(), $this->VALID_EMAIL);

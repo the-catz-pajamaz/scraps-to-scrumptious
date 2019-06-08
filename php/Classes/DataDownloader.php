@@ -10,61 +10,65 @@ class DataDownloader {
 	public static function pullRecipes() {
 		$newRecipes = null;
 		$urlBase = "https://services.campbells.com/api/Recipes//recipe";
-		$newRecipes = self::readDataJson($urlBase);
-		$secrets = new \Secrets("/etc/apache2/capstone-mysql/scraps.ini");
-		$pdo = $secrets->getPdoObject();
+		for ($i = 0; $i <= 0; $i++) {
+			$newRecipes = self::readDataJson($urlBase . "?pageIndex=" . $i);
+			$secrets = new \Secrets("/etc/apache2/capstone-mysql/scraps.ini");
+			$pdo = $secrets->getPdoObject();
 
 
-		foreach($newRecipes as $value) {
-			$recipeId = generateUuidV4();
+			foreach($newRecipes as $value) {
+				$recipeId = generateUuidV4();
 
-			$recipeDescription = $value->Description;
+				$recipeDescription = $value->Description;
 
-			// hardcoding Erics user id for campbells
-			$recipeUserId = "0bd7303a-00e9-4921-9ffd-91467b4814f8";
+				// hardcoding Erics user id for campbells
+				$recipeUserId = "0bd7303a-00e9-4921-9ffd-91467b4814f8";
 
-			// package ingredients from campbells
-			$ingredients = "";
-			foreach($value->Ingredients as $ingredient) {
-				$recipeIngredient = $ingredient->DescriptionFormatter;
-				if (empty($ingredient->ExternalProduct->Name) !== true) {
-					$recipeIngredient = str_replace("{product}", $ingredient->ExternalProduct->Name, $recipeIngredient);
+				// package ingredients from campbells
+				$ingredients = "";
+				foreach($value->Ingredients as $ingredient) {
+					$recipeIngredient = $ingredient->DescriptionFormatter;
+					if (empty($ingredient->ExternalProduct->Name) !== true) {
+						$recipeIngredient = str_replace("{product}", $ingredient->ExternalProduct->Name, $recipeIngredient);
+					}
+					$amount = $ingredient->Amount;
+					$unit = $ingredient->Unit;
+					$plural = "";
+					if ($amount > 1 ) {
+						$plural = "s";
+					}
+					$ingredientString = $amount;
+					if ($unit !== " ") {
+						$ingredientString = $ingredientString . " " . $unit . $plural;
+					}
+					$ingredientString = $ingredientString . " " . $recipeIngredient;
+					$ingredients = $ingredients . $ingredientString . "<br>";
 				}
-				$amount = $ingredient->Amount;
-				$unit = $ingredient->Unit;
-				$plural = "";
-				if ($amount > 1 ) {
-					$plural = "s";
+				// package steps for recipe
+				$steps = "";
+				foreach($value->RecipeSteps as $step) {
+					$steps = $steps . $step->Description . "<br>";
 				}
-				$ingredientString = $amount;
-				if ($unit !== " ") {
-					$ingredientString = $ingredientString . " " . $unit . $plural;
-				}
-				$ingredientString = $ingredientString . " " . $recipeIngredient;
-				$ingredients = $ingredients . $ingredientString . "<br>";
-			}
-			// package steps for recipe
-			$steps = "";
-			foreach($value->RecipeSteps as $step) {
-				$steps = $steps . $step->Description . "<br>";
-			}
-			$name = $value->Name;
+				$name = $value->Name;
 
-			// retrieve and store the picture
-			$pictureUrl = "";
-			foreach($value->RecipeMetaRecords as $meta) {
-				if ($meta->Key === "recipe-image-wide") {
-					$pictureUrl = $meta->Value;
-				}
-			}
 
-			try {
-				$recipe = new Recipe($recipeId, $recipeUserId, $recipeDescription, $ingredients, $pictureUrl, $steps, $name);
-				$recipe->insert($pdo);
-			} catch(\TypeError $typeError) {
-				echo("Error Connecting to database");
+				// retrieve and store the picture
+				$pictureUrl = "";
+				foreach($value->RecipeMetaRecords as $meta) {
+					if ($meta->Key === "recipe-image-wide") {
+						$pictureUrl = $meta->Value;
+					}
+				}
+
+				try {
+					$recipe = new Recipe($recipeId, $recipeUserId, $recipeDescription, $ingredients, $pictureUrl, $steps, $name);
+					$recipe->insert($pdo);
+				} catch(\TypeError $typeError) {
+					echo("Error Connecting to database");
+				}
 			}
 		}
+
 	}
 
 

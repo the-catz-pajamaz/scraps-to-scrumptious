@@ -42,7 +42,7 @@ try {
 
 		//user-api email is a required field
 		if(empty($requestObject->userEmail) === true) {
-			throw(new \InvalidArgumentException ("No user-api email present", 405));
+			throw(new \InvalidArgumentException ("No user email present", 405));
 		}
 
 		//user-api first name is a required field

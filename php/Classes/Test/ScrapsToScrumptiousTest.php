@@ -40,7 +40,7 @@ abstract class ScrapsToScrumptiousTest extends TestCase {
 		$dataset = new QueryDataSet($this->getConnection());
 		// add all the tables for the project here
 		// THESE TABLES *MUST* BE LISTED IN THE SAME ORDER THEY WERE CREATED!!!!
-		$dataset->addTable("user-api", "SELECT userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName FROM `user-api`");
+		$dataset->addTable("user", "SELECT userId, userActivationToken, userEmail, userFirstName, userHandle, userHash, userLastName FROM `user`");
 		$dataset->addTable("recipe");
 		$dataset->addTable("cookbook");
 		// the second parameter is required because like is also a SQL keyword and is the only way PHPUnit can query the like table
