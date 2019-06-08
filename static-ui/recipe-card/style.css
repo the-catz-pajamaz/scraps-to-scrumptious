@@ -1,45 +1,51 @@
 
-.container {
-	position: relative;
-	width: 400px;
-	height: 400px;
-	margin: 0px;
-	padding: 0px;
-}
 
-.image {
+
+
+
+/*.container {*/
+/*	position: relative;*/
+/*	width: 400px;*/
+/*	height: 400px;*/
+/*	margin: 0px;*/
+/*	padding: 0px;*/
+/*}*/
+
+#recipe-card img {
 	object-fit: cover;
 	height: 400px;
 	width: 400px;
 
 }
 
-.overlay {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	height: 100%;
-	width: 100%;
-	opacity: 0;
-	transition: 1.0s ease;
-	background-color: #D3D3D3;
-}
+/*}*/
 
-.container:hover .overlay {
+/*.overlay {*/
+/*	position: absolute;*/
+/*	top: 0;*/
+/*	bottom: 0;*/
+/*	left: 0;*/
+/*	right: 0;*/
+/*	height: 100%;*/
+/*	width: 100%;*/
+/*	opacity: 0;*/
+/*	transition: 1.0s ease;*/
+/*	background-color: #D3D3D3;*/
+/*}*/
 
-	opacity: 1;
-}
+/*.container:hover .overlay {*/
 
-.text {
-	color: white;
-	font-size: 8rem;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	-webkit-transform: translate(-50%, -50%);
-	-ms-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
-	text-align: center;
-}
+/*	opacity: 1;*/
+/*}*/
+
+/*.text {*/
+/*	color: white;*/
+/*	font-size: 8rem;*/
+/*	position: absolute;*/
+/*	top: 50%;*/
+/*	left: 50%;*/
+/*	-webkit-transform: translate(-50%, -50%);*/
+/*	-ms-transform: translate(-50%, -50%);*/
+/*	transform: translate(-50%, -50%);*/
+/*	text-align: center;*/
+/*}*/

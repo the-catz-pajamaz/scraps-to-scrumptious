@@ -35,50 +35,73 @@
 	</head>
 	<body>
 
-		<section id="recipe-cards">
-			<div class="container mt-5">
+		<section id="recipe-card">
+			<div class="container justify-content-center">
 				<div class="row">
-					<div class="container justify-content-center">
-						<div class="row">
-							<div class="col-lg-3 col-sm-10">
-								<!--					<img class="img-fluid mx-auto d-block rounded-circle my-3" src="stripes.png" width="200px"-->
-								<!--						  height="200px">-->
-								<div class="card">
-									<div class="container">
-										<div class="container" id="recipe-card">
-											<img src="egg.jpg" alt="Avatar" class="image">
-											<div class="overlay">
-												<div class="text" id="text"><a href="egg.jpg">Hello World</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+					<div class="col-lg-3 col-sm-10">
+						<img class="img-fluid mx-auto d-block my-3" src="egg.jpg" width="200px" height="200px">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Card title</h5>
+								<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
 							</div>
 						</div>
 					</div>
-					<div class="container justify-content-center">
-						<div class="row">
-							<div class="col-lg-3 col-sm-10">
-								<!--					<img class="img-fluid mx-auto d-block rounded-circle my-3" src="stripes.png" width="200px"-->
-								<!--						  height="200px">-->
-								<div class="card">
-									<div class="container">
-										<div class="container" id="recipe-card">
-											<img src="egg.jpg" alt="Avatar" class="image">
-											<div class="overlay">
-												<div class="text" id="text"><a href="egg.jpg">Hello World</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+					<div class="col-lg-3 col-sm-10">
+						<img class="img-fluid mx-auto d-block my-3" src="egg.jpg" width="200px" height="200px">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Card title</h5>
+								<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-sm-10">
+						<img class="img-fluid mx-auto d-block my-3" src="egg.jpg" width="200px" height="200px">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Card title</h5>
+								<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-sm-10">
+						<img class="img-fluid mx-auto d-block my-3" src="egg.jpg" width="200px" height="200px">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title">Card title</h5>
+								<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</section>
+
+
+
+
+
+
+
+<!--			<div class="container">-->
+<!--				<div class="card" id="recipe-card">-->
+<!--					<img src="egg.jpg" alt="Avatar" class="image">-->
+<!--					<div class="overlay">-->
+<!--						<p></p>-->
+<!--						<div class="text" id="text"><a href="egg.jpg">Hello World</a></div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--			<div class="container">-->
+<!--				<div class="card" id="recipe-card">-->
+<!--					<img src="egg.jpg" alt="Avatar" class="image">-->
+<!--					<div class="overlay">-->
+<!--						<p></p>-->
+<!--						<div class="text" id="text"><a href="egg.jpg">Hello World</a></div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 	</body>
 </html>
 
@@ -87,18 +110,41 @@
 <!--	<div class="container justify-content-center">-->
 <!--		<div class="row">-->
 <!--			<div class="col-lg-3 col-sm-10">-->
-<!--				<img class="img-fluid mx-auto d-block rounded-circle my-3" src="stripes.png" width="200px" height="200px">-->
+<!--				<img class="img-fluid mx-auto d-block rounded-circle my-3" src="egg.jpg" width="200px" height="200px">-->
 <!--				<div class="card">-->
-<!--					<div class="container">-->
-<!--						<div class="container" id="recipe-card">-->
-<!--							<img src="egg.jpg" alt="Avatar" class="image">-->
-<!--							<div class="overlay">-->
-<!--								<div class="text" id="text"><a href="egg.jpg">Hello World</a></div>-->
-<!--							</div>-->
-<!--						</div>-->
+<!--					<div class="card-body">-->
+<!--						<h5 class="card-title">Card title</h5>-->
+<!--						<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
 <!--					</div>-->
 <!--				</div>-->
 <!--			</div>-->
-<!---->
+<!--			<div class="col-lg-3 col-sm-10">-->
+<!--				<img class="img-fluid mx-auto d-block rounded-circle my-3" src="egg.jpg" width="200px" height="200px">-->
+<!--				<div class="card">-->
+<!--					<div class="card-body">-->
+<!--						<h5 class="card-title">Card title</h5>-->
+<!--						<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--			<div class="col-lg-3 col-sm-10">-->
+<!--				<img class="img-fluid mx-auto d-block rounded-circle my-3" src="egg.jpg" width="200px" height="200px">-->
+<!--				<div class="card">-->
+<!--					<div class="card-body">-->
+<!--						<h5 class="card-title">Card title</h5>-->
+<!--						<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--			<div class="col-lg-3 col-sm-10">-->
+<!--				<img class="img-fluid mx-auto d-block rounded-circle my-3" src="egg.jpg" width="200px" height="200px">-->
+<!--				<div class="card">-->
+<!--					<div class="card-body">-->
+<!--						<h5 class="card-title">Card title</h5>-->
+<!--						<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
 <!--		</div>-->
+<!--	</div>-->
 <!--</section>-->
