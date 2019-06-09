@@ -1,9 +1,12 @@
 import {combineReducers} from "redux"
-import postsReducer from "./recipeReducer";
+
+import userReducer from "./userReducer";
+import recipeReducer from "./recipeReducer";
 
 
 
 export default combineReducers({
-	posts: recipeReducer(),
+	recipes: recipeReducer,
+	users: userReducer
 
 })

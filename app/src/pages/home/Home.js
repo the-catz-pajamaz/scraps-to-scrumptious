@@ -20,6 +20,7 @@ const HomeComponent = ({getAllRecipes, recipes}) => {
 };
 
 const mapStateToProps = ({recipes}) => {
+	console.log(recipes);
 	return{recipes};
 };
 

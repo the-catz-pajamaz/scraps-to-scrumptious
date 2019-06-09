@@ -10,11 +10,11 @@ import {FourOhFour} from "./pages/four-oh-four/FourOhFour";
 import {Provider} from "react-redux";
 import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
-import reducers from "./shared/reducers/recipeReducer.js";
+import reducers from "./shared/reducers";
 
 // import {HomeJumbotron} from "./shared/components/HomeJumbotron";
 
-const store=createStore(reducers, applyMiddleware(thunk));
+const store = createStore(reducers, applyMiddleware(thunk));
 
 const Routing = (store) => (
 	<>
