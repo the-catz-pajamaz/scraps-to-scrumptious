@@ -1,10 +1,28 @@
-import React from 'react';
-const HomeComponent = () => {
+import React, {useEffect} from 'react';
+import {RecipeCard} from "./RecipeCard";
+import {getAllRecipes} from "../../shared/actions";
+import {connect} from "react-redux";
+
+
+const HomeComponent = ({getAllRecipes, recipes}) => {
+	
+	useEffect(() => {
+			getAllRecipes()
+	},
+		[getAllRecipes]
+	);
+	console.log(recipes);
 	return(
 		<main className="container">
-		<h1>yep</h1>
+		<RecipeCard recipes={recipes}/>
 		</main>
 	)
 };
 
-export const Home = (HomeComponent);
+const mapStateToProps = ({recipes}) => {
+	return{recipes};
+};
+
+
+
+export const Home = connect(mapStateToProps, {getAllRecipes})(HomeComponent);

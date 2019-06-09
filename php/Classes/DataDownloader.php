@@ -5,15 +5,22 @@ require_once("autoload.php");
 require_once(dirname(__DIR__, 2) . "/php/vendor/autoload.php");
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 require_once(dirname(__DIR__, 2) . "/php/lib/uuid.php");
-
+use TheCatzPajamaz\ScrapsToScrumptious\User;
 class DataDownloader {
 	public static function pullRecipes() {
 		$newRecipes = null;
 		$urlBase = "https://services.campbells.com/api/Recipes//recipe";
+		$secrets = new \Secrets("/etc/apache2/capstone-mysql/scraps.ini");
+		$pdo = $secrets->getPdoObject();
+		$password = "abc123";
+		$hash = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 384]);
+		$activationToken = bin2hex(random_bytes(16));
+		$user = new User(generateUuidV4(), null, "campbells@api.sucks", "campbells", "campbells", $hash, "soup");
+		$user->insert($pdo);
+
 		for ($i = 0; $i <= 0; $i++) {
 			$newRecipes = self::readDataJson($urlBase . "?pageIndex=" . $i);
-			$secrets = new \Secrets("/etc/apache2/capstone-mysql/scraps.ini");
-			$pdo = $secrets->getPdoObject();
+
 
 
 			foreach($newRecipes as $value) {
@@ -21,8 +28,8 @@ class DataDownloader {
 
 				$recipeDescription = $value->Description;
 
-				// hardcoding Erics user id for campbells
-				$recipeUserId = "0bd7303a-00e9-4921-9ffd-91467b4814f8";
+
+
 
 				// package ingredients from campbells
 				$ingredients = "";
@@ -61,7 +68,7 @@ class DataDownloader {
 				}
 
 				try {
-					$recipe = new Recipe($recipeId, $recipeUserId, $recipeDescription, $ingredients, $pictureUrl, $steps, $name);
+					$recipe = new Recipe($recipeId, $user->getUserId(), $recipeDescription, $ingredients, $pictureUrl, $steps, $name);
 					$recipe->insert($pdo);
 				} catch(\TypeError $typeError) {
 					echo("Error Connecting to database");

@@ -1,10 +1,10 @@
 <?php
-require_once dirname(__DIR__, 3) . "/php/vendor/autoload.php";
-require_once dirname(__DIR__, 3) . "/php/Classes/autoload.php";
+require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
+require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
-require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
-require_once dirname(__DIR__, 3) . "/php/lib/jwt.php";
-require_once dirname(__DIR__, 3) . "/php/lib/uuid.php";
+require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
+require_once dirname(__DIR__, 3) . "/lib/jwt.php";
+require_once dirname(__DIR__, 3) . "/lib/uuid.php";
 
 use TheCatzPajamaz\ScrapsToScrumptious\Recipe; {
 
@@ -54,6 +54,7 @@ try {
 			$reply->data = Recipe::getRecipesByRecipeTitle($pdo, $recipeTitle)->toArray();
 		} else {
 			$reply->data = Recipe::getAllRecipes($pdo)->toArray();
+			var_dump($reply);
 		}
 	} else if($method === "PUT" || $method === "POST") {
 		// enforce the user has a XSRF token

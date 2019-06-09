@@ -25,8 +25,8 @@ export const getRecipesByRecipeTitle = (id) => async dispatch => {
 	dispatch({type: "GET_RECIPES", payload: data})
 };
 
-export const getAllRecipes = (id) => async dispatch => {
-	const {data} = await httpConfig(`/apis/post/${id}`);
+export const getAllRecipes = () => async dispatch => {
+	const {data} = await httpConfig(`/apis/recipe/`);
 	dispatch({type: "GET_ALL_RECIPES", payload: data})
 };
 

@@ -6,22 +6,31 @@ import {Route, BrowserRouter,Switch} from "react-router-dom";
 import {Home} from "./pages/home/Home";
 import {Footer} from "./shared/components/Footer";
 import {NavBar} from "./shared/components/NavBar";
-import {HomeJumbotron} from "./shared/components/HomeJumbotron";
+import {FourOhFour} from "./pages/four-oh-four/FourOhFour";
+import {Provider} from "react-redux";
+import {applyMiddleware, createStore} from "redux";
+import thunk from "redux-thunk";
+import reducers from "./shared/reducers/recipeReducer.js";
 
+// import {HomeJumbotron} from "./shared/components/HomeJumbotron";
 
-const Routing = () => (
+const store=createStore(reducers, applyMiddleware(thunk));
+
+const Routing = (store) => (
 	<>
+		<Provider store={store}>
 
 		<BrowserRouter>
 			<NavBar/>
-			<HomeJumbotron/>
+			{/*<HomeJumbotron/>*/}
 			<Switch>
 				<Route exact path="/" component={Home}/>
+				<Route component={FourOhFour}/>
 			</Switch>
 			<Footer/>
 		</BrowserRouter>
-
+	</Provider>
 	</>
 ) ;
 
-ReactDOM.render(Routing() , document.querySelector('#root'));
+ReactDOM.render(Routing(store) , document.querySelector('#root'));
