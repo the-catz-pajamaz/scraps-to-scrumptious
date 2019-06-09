@@ -11,7 +11,6 @@ const HomeComponent = ({getAllRecipes, recipes}) => {
 	},
 		[getAllRecipes]
 	);
-	console.log(recipes);
 	return(
 		<main className="container">
 		<RecipeCard recipes={recipes}/>
@@ -20,7 +19,6 @@ const HomeComponent = ({getAllRecipes, recipes}) => {
 };
 
 const mapStateToProps = ({recipes}) => {
-	console.log(recipes);
 	return{recipes};
 };
 
