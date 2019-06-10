@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import {Route, BrowserRouter,Switch} from "react-router-dom";
 import {Home} from "./pages/home/Home";
+import {HomeJumbotron} from "./shared/components/HomeJumbotron";
 import {Footer} from "./shared/components/Footer";
 import {NavBar} from "./shared/components/NavBar";
 import {FourOhFour} from "./pages/four-oh-four/FourOhFour";
@@ -22,7 +23,7 @@ const Routing = (store) => (
 
 		<BrowserRouter>
 			<NavBar/>
-			{/*<HomeJumbotron/>*/}
+			<HomeJumbotron/>
 			<Switch>
 				<Route exact path="/" component={Home}/>
 				<Route component={FourOhFour}/>

@@ -2,6 +2,9 @@ import React, {useEffect} from 'react';
 import {RecipeCard} from "./RecipeCard";
 import {getAllRecipes} from "../../shared/actions";
 import {connect} from "react-redux";
+import {HomeJumbotron} from "../../shared/components/HomeJumbotron";
+import {Footer} from "../../shared/components/Footer";
+import {NavBar} from "../../shared/components/NavBar";
 
 
 const HomeComponent = ({getAllRecipes, recipes}) => {
@@ -13,7 +16,9 @@ const HomeComponent = ({getAllRecipes, recipes}) => {
 	);
 	return(
 		<main className="container">
+		<HomeJumbotron/>
 		<RecipeCard recipes={recipes}/>
+
 		</main>
 	)
 };
