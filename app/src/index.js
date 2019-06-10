@@ -13,6 +13,7 @@ import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
 import reducers from "./shared/reducers";
 import {Recipe} from "./pages/Recipe";
+import {Login} from "./pages/Login";
 
 // import {HomeJumbotron} from "./shared/components/HomeJumbotron";
 
@@ -26,6 +27,7 @@ const Routing = (store) => (
 			<NavBar/>
 			<Switch>
 				<Route exact path="/recipe/:recipeId" component={Recipe} recipeId=":recipeId"/>
+				<Route exact path= "/login" component={Login}/>
 				<Route exact path="/" component={Home}/>
 				<Route component={FourOhFour}/>
 			</Switch>

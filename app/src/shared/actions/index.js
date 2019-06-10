@@ -10,7 +10,7 @@ export const getUserByUserEmail = (id) => async dispatch => {
 	dispatch({type: "GET_USER", payload: data})
 };
 
-export const getRecipeByRecipeId = (id) => async dispatch => {
+export const getRecipeByRecipeId = (id) => async (dispatch) => {
 	const {data} = await httpConfig(`/apis/recipe/${id}`);
 	dispatch({type: "GET_RECIPE", payload: data})
 };
