@@ -54,7 +54,6 @@ try {
 			$reply->data = Recipe::getRecipesByRecipeTitle($pdo, $recipeTitle)->toArray();
 		} else {
 			$reply->data = Recipe::getAllRecipes($pdo)->toArray();
-			var_dump($reply);
 		}
 	} else if($method === "PUT" || $method === "POST") {
 		// enforce the user has a XSRF token
