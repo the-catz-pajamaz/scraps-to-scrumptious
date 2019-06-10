@@ -16,8 +16,15 @@ const HomeComponent = ({getAllRecipes, recipes}) => {
 	);
 	return(
 		<main className="container">
-		<HomeJumbotron/>
-		<RecipeCard recipes={recipes}/>
+			<HomeJumbotron/>
+		<div className="card-columns">
+			{
+				recipes.map(recipe=> (
+					<RecipeCard recipe={recipe} key={recipe.recipeId}/>
+					))
+			}
+
+		</div>
 
 		</main>
 	)

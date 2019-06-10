@@ -23,7 +23,6 @@ const Routing = (store) => (
 
 		<BrowserRouter>
 			<NavBar/>
-			<HomeJumbotron/>
 			<Switch>
 				<Route exact path="/" component={Home}/>
 				<Route component={FourOhFour}/>
