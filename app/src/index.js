@@ -12,6 +12,7 @@ import {Provider} from "react-redux";
 import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
 import reducers from "./shared/reducers";
+import {Recipe} from "./pages/Recipe";
 
 // import {HomeJumbotron} from "./shared/components/HomeJumbotron";
 
@@ -24,6 +25,7 @@ const Routing = (store) => (
 		<BrowserRouter>
 			<NavBar/>
 			<Switch>
+				<Route exact path="/recipe/:recipeId" component={Recipe} recipeId=":recipeId"/>
 				<Route exact path="/" component={Home}/>
 				<Route component={FourOhFour}/>
 			</Switch>
