@@ -13,7 +13,7 @@ import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
 import reducers from "./shared/reducers";
 import {Recipe} from "./pages/Recipe";
-import {Login} from "./pages/Login";
+import {Login} from "./pages/login-signup/Login";
 import "./style.css";
 
 // import {HomeJumbotron} from "./shared/components/HomeJumbotron";
