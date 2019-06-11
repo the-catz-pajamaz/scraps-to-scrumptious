@@ -8,15 +8,16 @@ import {NavBar} from "../../shared/components/NavBar";
 
 
 const HomeComponent = ({getAllRecipes, recipes}) => {
-	
+
 	useEffect(() => {
 			getAllRecipes()
 	},
 		[getAllRecipes]
 	);
 	return(
+		<>
+		<HomeJumbotron/>
 		<main className="container">
-			<HomeJumbotron/>
 		<div className="card-columns">
 			{
 				recipes.map(recipe=> (
@@ -27,6 +28,7 @@ const HomeComponent = ({getAllRecipes, recipes}) => {
 		</div>
 
 		</main>
+	</>
 	)
 };
 

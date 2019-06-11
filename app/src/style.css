@@ -1,0 +1,7 @@
+#jumbotron {
+	background-image: url("/app/src/shared/bread.jpg");
+	background-size: cover;
+	background-color: #CD192E;
+	font: wheat;
+}
+
