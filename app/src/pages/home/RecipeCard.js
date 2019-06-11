@@ -8,7 +8,7 @@ export const RecipeCard = ({recipe}) => {
 	return (
 		<>
 			<div className="card" id="recipeCard">
-				<img className="card-img-top" id="cardImg" src={recipe.recipeMedia ? recipe.recipeMedia : "images/egg.jpg"}
+				<img className="card-img-top" id="cardImg" src={recipe.recipeMedia ? recipe.recipeMedia : "images/bloodyMary.jpg"}
 					  alt="Humpty Dumpty"/>
 				<div className="card-body">
 					<h5 className="card-title">{recipe.recipeTitle}</h5>
