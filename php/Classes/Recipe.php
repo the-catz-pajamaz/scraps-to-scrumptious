@@ -460,9 +460,11 @@ class Recipe implements \JsonSerializable {
 		return ($recipes);
 	}
 
-	private static function sanitizeCampbellsText(string $myString) {
-				$toReturn = html_entity_decode($myString);
-				$toReturn = str_replace(['&#39;', '&#174;', '&#160', '&#146;', '&#176;', '&#145;', '&#241;'], ["'", '', '', '"', ' degrees ', '"', 'n']);
+	private static function sanitizeCampbellsText(string $myString) : string {
+		$sanitizedString = html_entity_decode($myString);
+		$sanitizedString = str_replace(['&#39;', '&#174;', '&#160', '&#146;', '&#176;', '&#145;', '&#241;', '\\', '/', '&#133;'], ["'", '', '', "'", ' degrees ', "'", 'n', '', '|', ' '], $sanitizedString);
+
+				return ($sanitizedString);
 				}
 
 	/**
@@ -485,12 +487,10 @@ class Recipe implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], ($row["recipeDescription"]), $row["recipeIngredients"], $row["recipeMedia"], $row["recipeSteps"], $row["recipeTitle"]);
-//				$recipe = new Recipe($row["recipeId"], $row["recipeUserId"], html_entity_decode($row["recipeDescription"], ENT_QUOTES, 'UTF-8'), html_entity_decode($row["recipeIngredients"], ENT_QUOTES, 'UTF-8'), $row["recipeMedia"], html_entity_decode($row["recipeSteps"], ENT_QUOTES, 'UTF-8'), $row["recipeTitle"]);
 
-//				function sanitizeCampbellsText($row["recipeDescription"]) {
-//
-//				}
+				$recipe =  new Recipe($row["recipeId"], $row["recipeUserId"], static :: sanitizeCampbellsText($row ["recipeDescription"]), static :: sanitizeCampbellsText($row["recipeIngredients"]), $row["recipeMedia"], static :: sanitizeCampbellsText($row["recipeSteps"]), $row["recipeTitle"]);
+
+
 
 				$recipes [$recipes->key()] = $recipe;
 				$recipes->next();
