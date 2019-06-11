@@ -1,7 +1,12 @@
 #jumbotron {
-	background-image: url("/app/src/shared/bread.jpg");
+	background-image: url("../src/shared/bread.jpg");
 	background-size: cover;
+	background-position: center;
 	background-color: #CD192E;
-	font: wheat;
+	color: white;
+	font-family: 'Montserrat', sans-serif;
+	text-align: center;
+	align-content: center;
+	height: 20rem;
 }
 
