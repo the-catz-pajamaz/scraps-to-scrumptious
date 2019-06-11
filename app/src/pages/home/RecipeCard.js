@@ -7,9 +7,8 @@ export const RecipeCard = ({recipe}) => {
 
 	return (
 		<>
-			<div className="card">
-				<img className="card-img-top" src={recipe.recipeMedia ? recipe.recipeMedia : "images/egg.jpg"} width="200px"
-					  height="200px"
+			<div className="card" id="recipeCard">
+				<img className="card-img-top" id="cardImg" src={recipe.recipeMedia ? recipe.recipeMedia : "images/egg.jpg"}
 					  alt="Humpty Dumpty"/>
 				<div className="card-body">
 					<h5 className="card-title">{recipe.recipeTitle}</h5>
