@@ -13,14 +13,16 @@ const RecipeComponent= (props) => {
 	console.log(recipe);
 	return (
 		<section>
-		<div className="card">
-			<h1><em>{recipe.recipeTitle}</em></h1>
-			<h3>Description</h3>
-			<p>{recipe.recipeDescription}</p>
-			<h3>Ingredients</h3>
-			<p>{recipe.recipeIngredients}</p>
-			<h3>Steps</h3>
-			{recipe.recipeSteps}
+		<div className="card" id="myCard">
+			<h1 id="title"><em>{recipe.recipeTitle}</em></h1>
+			<img className="card-img-top" id="cardImg" src={recipe.recipeMedia ? recipe.recipeMedia : "/bloodyMary.jpg"}
+				  alt="Humpty Dumpty"/>
+			<h3 id="descriptionTitle">Description</h3>
+			<p id="description">{recipe.recipeDescription}</p>
+			<h3 id="ingredientsTitle">Ingredients</h3>
+			<p id="ingredients">{recipe.recipeIngredients}</p>
+			<h3 id="stepsTitle">Steps</h3>
+			<p id="steps">{recipe.recipeSteps}</p>
 		</div>
 	</section>
 	)

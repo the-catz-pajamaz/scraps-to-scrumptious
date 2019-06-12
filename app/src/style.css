@@ -13,3 +13,38 @@
 #searchbar {
 	padding: 5rem;
 }
+
+#title{
+	text-align: center;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+#descriptionTitle{
+	text-align: center;
+	margin-top: 1em;
+
+}
+
+#stepsTitle {
+	text-align: center;
+	margin-top: 1em;
+}
+
+#ingredientsTitle {
+	text-align: center;
+	margin-top: 1em;
+
+}
+
+#description, #ingredients, #steps {
+	text-align: center;
+}
+
+
+
+/*#myCard{*/
+/*	display: flex;*/
+/*	align-content: space-around;*/
+/*	y u no do wut i want*/
+/*}*/
