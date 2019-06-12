@@ -1,7 +1,8 @@
 
 <?php
-require_once dirname(__DIR__, 3) . "/php/Classes/autoload.php";
-require_once dirname(__DIR__, 3) . "/php/lib/xsrf.php";
+require_once dirname(__DIR__, 3) . "/Classes/autoload.php";
+require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
+require_once dirname(__DIR__, 3) . "/lib/xsrf.php";
 require_once("/etc/apache2/capstone-mysql/Secrets.php");
 use TheCatzPajamaz\ScrapsToScrumptious\User;
 /**
@@ -44,7 +45,7 @@ try{
 			if($activation === $user->getUserActivationToken()) {
 				//set activation to null
 				$user->setUserActivationToken(null);
-				//update the user-api in the database
+				//update the user in the database
 				$user->update($pdo);
 				//set the reply for the end user
 				$reply->data = "Thank you for activating your account, you will be auto-redirected to your user shortly.";

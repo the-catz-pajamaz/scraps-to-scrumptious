@@ -40,27 +40,27 @@ try {
 		$requestContent = file_get_contents("php://input");
 		$requestObject = json_decode($requestContent);
 
-		//user-api email is a required field
+		//user email is a required field
 		if(empty($requestObject->userEmail) === true) {
 			throw(new \InvalidArgumentException ("No user email present", 405));
 		}
 
-		//user-api first name is a required field
+		//user first name is a required field
 		if(empty($requestObject->userFirstName) === true) {
 			throw(new \InvalidArgumentException ("Please enter first name", 405));
 		}
 
-		//user-api handle is a required field
+		//user handle is a required field
 		if(empty($requestObject->userHandle) === true) {
-			throw(new \InvalidArgumentException ("No user-api handle", 405));
+			throw(new \InvalidArgumentException ("No user handle", 405));
 		}
 
-		//user-api last name is a required field
+		//user last name is a required field
 		if(empty($requestObject->userLastName) === true) {
 			throw(new \InvalidArgumentException ("Please enter last name", 405));
 		}
 
-		//verify that user-api password is present
+		//verify that user password is present
 		if(empty($requestObject->userPassword) === true) {
 			throw(new \InvalidArgumentException ("Must input valid password", 405));
 		}
@@ -75,9 +75,9 @@ try {
 		}
 		$hash = password_hash($requestObject->userPassword, PASSWORD_ARGON2I, ["time_cost" => 384]);
 		$userActivationToken = bin2hex(random_bytes(16));
-		//create the user-api object and prepare to insert into the database
+		//create the user object and prepare to insert into the database
 		$user = new User(generateUuidV4(), $userActivationToken, $requestObject->userEmail, $requestObject->userFirstName, $requestObject->userHandle, $hash, $requestObject->userLastName);
-		//insert the user-api into the database
+		//insert the user into the database
 		$user->insert($pdo);
 		//compose the email message to send with th activation token
 		$messageSubject = "One step closer to Sticky Head -- Account Activation";
