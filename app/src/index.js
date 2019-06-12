@@ -27,6 +27,7 @@ const Routing = (store) => (
 			<NavBar/>
 			<Switch>
 				<Route exact path="/recipe/:recipeId" component={Recipe} recipeId=":recipeId"/>
+				{/*<Route exact path="{}*/}
 				<Route exact path="/" component={Home}/>
 				<Route component={FourOhFour}/>
 			</Switch>
