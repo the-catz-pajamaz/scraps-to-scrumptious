@@ -3,6 +3,9 @@ import {httpConfig} from "../../../misc/http-config";
 import {Formik} from "formik/dist/index";
 import * as Yup from "yup";
 import {SignInFormContent} from "./SignInFormContent";
+import { Route } from 'react-router';
+
+
 
 export const SignInForm = ({history}) => {
 	const validator = Yup.object().shape({
@@ -28,7 +31,9 @@ export const SignInForm = ({history}) => {
 				if(reply.status === 200 && reply.headers["x-jwt-token"]) {
 					window.localStorage.removeItem("jwt-token");
 					window.localStorage.setItem("jwt-token", reply.headers["x-jwt-token"]);
-					// history.push('/cookbook/');
+
+
+					// history.push(`/cookbook/${message}`);
 				}
 			});
 	};
@@ -44,3 +49,4 @@ export const SignInForm = ({history}) => {
 		</>
 	)
 };
+

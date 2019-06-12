@@ -40,7 +40,7 @@ export const SignUpFormContent = (props) => {
 					</div>
 					{
 						errors.userEmail && touched.userEmail && (
-							<div className="alert alert-danger">
+							<div className="alert alert-info">
 								{errors.userEmail}
 							</div>
 						)
@@ -70,7 +70,7 @@ export const SignUpFormContent = (props) => {
 					</div>
 					{
 						errors.userHandle && touched.userHandle && (
-							<div className="alert alert-danger">
+							<div className="alert alert-info">
 								{errors.userHandle}
 							</div>
 						)
@@ -97,7 +97,7 @@ export const SignUpFormContent = (props) => {
 						/>
 					</div>
 					{errors.userPassword && touched.userPassword && (
-						<div className="alert alert-danger">{errors.userPassword}</div>
+						<div className="alert alert-info">{errors.userPassword}</div>
 					)}
 				</div>
 				<div className="form-group">
@@ -120,7 +120,7 @@ export const SignUpFormContent = (props) => {
 						/>
 					</div>
 					{errors.userPasswordConfirm && touched.userPasswordConfirm && (
-						<div className="alert alert-danger">{errors.userPasswordConfirm}</div>
+						<div className="alert alert-info">{errors.userPasswordConfirm}</div>
 					)}
 				</div>
 
@@ -146,7 +146,7 @@ export const SignUpFormContent = (props) => {
 					</div>
 					{
 						errors.userFirstName && touched.userFirstName && (
-							<div className="alert alert-danger">
+							<div className="alert alert-info">
 								{errors.userFirstName}
 							</div>
 						)
@@ -174,7 +174,7 @@ export const SignUpFormContent = (props) => {
 					</div>
 					{
 						errors.userLastName && touched.userLastName && (
-							<div className="alert alert-danger">
+							<div className="alert alert-info">
 								{errors.userLastName}
 							</div>
 						)
@@ -182,9 +182,9 @@ export const SignUpFormContent = (props) => {
 					}
 				</div>
 				<div className="form-group">
-					<button className="btn btn-outline-warning mb-2" type="submit">Submit</button>
+					<button className="btn btn-outline-info mb-2" type="submit">Submit</button>
 					<button
-						className="btn btn-outline-warning mb-2"
+						className="btn btn-outline-info mb-2"
 						onClick={handleReset}
 						disabled={!dirty || isSubmitting}
 					>

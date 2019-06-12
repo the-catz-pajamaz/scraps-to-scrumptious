@@ -75,7 +75,7 @@ try {
 
 		// create and set the JWT TOKEN
 		setJwtAndAuthHeader("auth",$authObject);
-		$reply->message = "Sign in was successful. " . $user->getUserId();
+		$reply->message = $user->getUserId();
 	} else {
 		throw(new \InvalidArgumentException("Invalid HTTP method request", 418));
 	}

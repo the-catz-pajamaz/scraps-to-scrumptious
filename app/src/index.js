@@ -14,6 +14,8 @@ import thunk from "redux-thunk";
 import reducers from "./shared/reducers";
 import {Recipe} from "./pages/Recipe";
 import "./style.css";
+import {Cookbook} from "./pages/Cookbook.js";
+
 
 // import {HomeJumbotron} from "./shared/components/HomeJumbotron";
 
@@ -24,10 +26,10 @@ const Routing = (store) => (
 		<Provider store={store}>
 
 		<BrowserRouter>
-			<NavBar/>
+			<NavBar />
 			<Switch>
 				<Route exact path="/recipe/:recipeId" component={Recipe} recipeId=":recipeId"/>
-				{/*<Route exact path="{}*/}
+				<Route exact path="/cookbook/:cookbookUserId" component={Cookbook} cookbookUserId=":cookbookUserId"/>
 				<Route exact path="/" component={Home}/>
 				<Route component={FourOhFour}/>
 			</Switch>
@@ -36,5 +38,10 @@ const Routing = (store) => (
 	</Provider>
 	</>
 ) ;
+
+
+
+
+
 
 ReactDOM.render(Routing(store) , document.querySelector('#root'));

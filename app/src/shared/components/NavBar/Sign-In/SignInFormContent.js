@@ -38,7 +38,7 @@ export const SignInFormContent = (props) => {
 					</div>
 					{
 						errors.userEmail && touched.userEmail && (
-							<div className="alert alert-danger">
+							<div className="alert alert-info">
 								{errors.userEmail}
 							</div>
 						)
@@ -65,21 +65,21 @@ export const SignInFormContent = (props) => {
 						/>
 					</div>
 					{errors.userPassword && touched.userPassword && (
-						<div className="alert alert-danger">{errors.userPassword}</div>
+						<div className="alert alert-info">{errors.userPassword}</div>
 					)}
 				</div>
 
 				<div className="form-group">
-					<button className="btn btn-outline-warning mb-2" type="submit">Submit</button>
+					<button className="btn btn-info mb-2" type="submit">Submit</button>
 					<button
-						className="btn btn-outline-warning mb-2"
+						className="btn btn-info mb-2"
 						onClick={handleReset}
 						disabled={!dirty || isSubmitting}
 					>Reset
 					</button>
 				</div>
 			</form>
-			{status && (<div className={status.type}>{status.message}</div>)}
+			{/*{status && (<div className={status.type}>{status.message}</div>)}*/}
 		</>
 	)
 };
