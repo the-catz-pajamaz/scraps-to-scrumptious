@@ -1,4 +1,3 @@
-
 import React from "react";
 
 export const FormDebugger = props => (
@@ -15,4 +14,4 @@ export const FormDebugger = props => (
 			{JSON.stringify(props, null, 2)}
     </pre>
 	</div>
-);
+)

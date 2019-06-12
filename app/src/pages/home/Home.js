@@ -4,7 +4,7 @@ import {getAllRecipes} from "../../shared/actions";
 import {connect} from "react-redux";
 import {HomeJumbotron} from "../../shared/components/HomeJumbotron";
 import {Footer} from "../../shared/components/Footer";
-import {NavBar} from "../../shared/components/NavBar";
+import {NavBar} from "../../shared/components/NavBar/NavBar";
 
 
 const HomeComponent = ({getAllRecipes, recipes}) => {

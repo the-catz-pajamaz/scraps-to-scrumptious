@@ -1,6 +1,6 @@
 import React from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome/index";
-import {FormDebugger} from "app/src/pages/login-signup/FormDebugger.js";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {FormDebugger} from "../../FormDebugger";
 
 export const SignUpFormContent = (props) => {
 	const {
@@ -42,6 +42,36 @@ export const SignUpFormContent = (props) => {
 						errors.userEmail && touched.userEmail && (
 							<div className="alert alert-danger">
 								{errors.userEmail}
+							</div>
+						)
+
+					}
+				</div>
+
+				{/*controlId must match what is defined by the initialValues object*/}
+				<div className="form-group">
+					<label htmlFor="userHandle">User Handle</label>
+					<div className="input-group">
+						<div className="input-group-prepend">
+							<div className="input-group-text">
+								<i className="far fa-envelope"></i>
+							</div>
+						</div>
+						<input
+							className="form-control"
+							id="userHandle"
+							type="handle"
+							value={values.userHandle}
+							placeholder="@userHandle"
+							onChange={handleChange}
+							onBlur={handleBlur}
+
+						/>
+					</div>
+					{
+						errors.userHandle && touched.userHandle && (
+							<div className="alert alert-danger">
+								{errors.userHandle}
 							</div>
 						)
 
@@ -100,6 +130,7 @@ export const SignUpFormContent = (props) => {
 					<div className="input-group">
 						<div className="input-group-prepend">
 							<div className="input-group-text">
+								<i className="fas fa-user"></i>
 							</div>
 						</div>
 						<input
