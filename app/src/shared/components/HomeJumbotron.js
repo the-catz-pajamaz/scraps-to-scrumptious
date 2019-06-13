@@ -7,7 +7,6 @@ export const HomeJumbotron = () => (
 				<br/>
 				<br/>
 				<h1 className="display-4">Scraps to Scrumptious</h1>
-				<p className="lead"></p>
 			</div>
 		</div>
 );
