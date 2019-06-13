@@ -13,7 +13,7 @@ export const RecipeCard = ({recipe}) => {
 				<div className="card-body">
 					<h5 className="card-title">{recipe.recipeTitle}</h5>
 					<p className="card-text">{recipe.recipeDescription}</p>
-					<Route render={ ({history}) => (<button className="btn btn-primary"  onClick={() => { history.push(`recipe/${recipe.recipeId}`)}}>Recipe</button>)}/>
+					<Route render={ ({history}) => (<button className="btn btn-info"  onClick={() => { history.push(`recipe/${recipe.recipeId}`)}}>Recipe</button>)}/>
 				</div>
 			</div>
 		</>

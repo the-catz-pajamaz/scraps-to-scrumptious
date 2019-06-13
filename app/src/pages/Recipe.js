@@ -10,13 +10,13 @@ const RecipeComponent= (props) => {
 	}, [getAllRecipes]);
 	const filterRecipe = recipes.filter(recipe => recipe.recipeId === match.params.recipeId);
 	const recipe = {...filterRecipe[0]};
-	console.log(recipe);
+
 	return (
 		<section>
 		<div className="card" id="myCard">
 			<h1 id="title"><em>{recipe.recipeTitle}</em></h1>
-			<img className="card-img-top" id="cardImg" src={recipe.recipeMedia ? recipe.recipeMedia : "/bloodyMary.jpg"}
-				  alt="Humpty Dumpty"/>
+			<img className="card-img-top" id="cardImg" src={recipe.recipeMedia ? recipe.recipeMedia : "/images/bloodyMary.jpg"}
+				  alt="recipe image"/>
 			<h3 id="descriptionTitle">Description</h3>
 			<p id="description">{recipe.recipeDescription}</p>
 			<h3 id="ingredientsTitle">Ingredients</h3>
